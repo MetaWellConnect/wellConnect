@@ -1,6 +1,6 @@
-# wellConnect
+# MediScan
 
-[WellConnect Project Plan](https://docs.google.com/document/d/1iA-d1Fv-hoePOz86SkN_60M4Zz-pN-e7sZXpRNA7Uks/edit?usp=sharing)
+[MediScan Project Plan](https://docs.google.com/document/d/1iA-d1Fv-hoePOz86SkN_60M4Zz-pN-e7sZXpRNA7Uks/edit?usp=sharing)
 
 Overview
 Category: Medical
