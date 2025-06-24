@@ -1,0 +1,50 @@
+services:
+  mediscan_db:
+    image: postgres:17
+    container_name: mediscan-db
+    volumes:
+      - mediscan_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    restart: always
+    environment:
+      - POSTGRES_DB=mediscandb
+      - POSTGRES_USER=admin
+      - POSTGRES_PASSWORD=1234
+    networks:
+      - mediscan-network
+    healthcheck:
+      test: ["CMD", "pg_isready", "-q", "-d", "mediscandb", "-U", "admin"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+
+  backend:
+    build: ./backend
+    container_name: mediscan-backend
+    ports:
+      - '8000:8000'
+    depends_on:
+      mediscan_db:
+        condition: service_healthy
+    env_file:
+      - ./backend/.env
+    networks:
+      - mediscan-network
+    stdin_open: true
+    tty: true
+
+  frontend:
+    build: ./frontend
+    container_name: mediscan-frontend
+    ports:
+      - '5173:5173'
+    networks:
+      - mediscan-network
+
+networks:
+  mediscan-network:
+
+volumes:
+  mediscan_data:
