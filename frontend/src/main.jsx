@@ -3,7 +3,6 @@ import './index.css'
 
 import { RouterProvider, createBrowserRouter } from 'react-router'
 
-import App from './App.jsx'
 import AppointmentManager from './Apps/AppointmentManager/AppointmentManagerPage.jsx'
 import LandingPage from './Apps/Landing/LandingPage.jsx'
 import LoginPage from './Auth/pages/LoginPage.jsx'
