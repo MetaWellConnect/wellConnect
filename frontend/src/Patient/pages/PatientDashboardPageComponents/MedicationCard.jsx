@@ -1,9 +1,9 @@
 function MedicationCard({medication}) {
     return(
-        <>
-            <h2>{medication.name}</h2>
+        <div className="bg-body-secondary rounded-3 my-3 p-2">
+            <h3>{medication.name}</h3>
             <p>{medication.description}</p>
-        </>
+        </div>
     );
 }
 

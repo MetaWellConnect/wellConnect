@@ -3,13 +3,13 @@ import { medications } from "../../../../../backend/data.js";
 
 function ListOfMedications() {
     return(
-        <>
-            {medications.map((medication) => {
+        <div className="">
+            {medications.slice(0,5).map((medication, index) => {
                 return (
-                    <MedicationCard medication={medication}/>
+                    <MedicationCard key={index} medication={medication}/>
                 );
             })}
-        </>
+        </div>
     );
 }
 
