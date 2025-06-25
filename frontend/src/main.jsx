@@ -1,7 +1,7 @@
 import 'bootstrap/dist/css/bootstrap.min.css'
 import './index.css'
 
-import { RouterProvider, createBrowserRouter } from 'react-router'
+import { Routes, Route, BrowserRouter, Link } from 'react-router'
 
 import AppointmentManager from './Apps/AppointmentManager/AppointmentManagerPage.jsx'
 import LandingPage from './Apps/Landing/LandingPage.jsx'
@@ -10,59 +10,32 @@ import LogoutPage from './Auth/pages/LogoutPage.jsx'
 import MedicationUploadPage from './Patient/pages/MedicationUploadPage.jsx'
 import MedicationValidationPage from './Provider/pages/MedicationValidationPage.jsx'
 import MessengerPage from './Apps/Messenger/MessengerPage.jsx'
-import NotFound from './Apps/NotFound/NotFoundPage.jsx'
 import PatientDashboardPage from './Patient/pages/PatientDashboardPage.jsx'
 import ProviderDashboardPage from './Provider/pages/ProviderDashboardPage.jsx'
 import RegisterPage from './Auth/pages/RegisterPage.jsx'
-import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 
-const router = createBrowserRouter([
-  {
-    path: '/',
-    element: <LandingPage />,
-    errorElement: <NotFound />
-  },
-  {
-    path: '/login',
-    element: <LoginPage />
-  },
-  {
-    path: '/logout',
-    element: <LogoutPage />
-  },
-  {
-    path: '/register',
-    element: <RegisterPage />
-  },
-  {
-    path: '/patient-dashboard',
-    element: <PatientDashboardPage />
-  },
-  {
-    path: '/medication-upload',
-    element: <MedicationUploadPage />
-  },
-  {
-    path: '/provider-dashboard',
-    element: <ProviderDashboardPage />
-  },
-  {
-    path: '/medication-validation',
-    element: <MedicationValidationPage />
-  },
-  {
-    path: '/appointment-manager',
-    element: <AppointmentManager />
-  },
-  {
-    path: '/messenger',
-    element: <MessengerPage />
-  },
-]);
-
 createRoot(document.getElementById('root')).render(
-  <StrictMode>
-    <RouterProvider router={router} />
-  </StrictMode>,
+  <BrowserRouter>
+    <nav className="navbar navbar-expand-lg bg-body-tertiary">
+      <div className="container-fluid">
+        <Link className="navbar-brand" to="/">MediScan</Link>
+        <Link className="navbar-brand" to="/login">Login</Link>
+      </div>
+    </nav>
+    <Routes>
+
+
+      <Route path="/" element={<LandingPage />} />
+      <Route path="/login" element={<LoginPage />} />
+      <Route path="/logout" element={<LogoutPage />} />
+      <Route path="/register" element={<RegisterPage />} />
+      <Route path="/patient-dashboard" element={<PatientDashboardPage />} />
+      <Route path="/medication-upload" element={<MedicationUploadPage />} />
+      <Route path="/provider-dashboard" element={<ProviderDashboardPage />} />
+      <Route path="/medication-validation" element={<MedicationValidationPage />} />
+      <Route path="/appointment-manager" element={<AppointmentManager />} />
+      <Route path="/messenger" element={<MessengerPage />} />
+    </Routes>
+  </BrowserRouter>
 );
