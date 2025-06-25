@@ -63,6 +63,12 @@ const router = createBrowserRouter([
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
+    <nav className="navbar navbar-expand-lg bg-body-tertiary">
+      <div className="container-fluid">
+        <a className="navbar-brand" href="#">MediScan</a>
+        <a className="navbar-brand" href="#">Login</a>
+      </div>
+    </nav>
     <RouterProvider router={router} />
   </StrictMode>,
 );
