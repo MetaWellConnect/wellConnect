@@ -1,5 +1,7 @@
 import MedicationWebcam from "../PatientComponents/MedicationUploadPageComponents/MedicationCamera";
 import MedicationInformationWidget from "../PatientComponents/MedicationUploadPageComponents/MedicationInformationWidget";
+import ConfirmMedicationPhotoButton from "../PatientComponents/MedicationUploadPageComponents/ConfirmMedicationPhotoButton";
+import RetakeMedicationPhotoButton from "../PatientComponents/MedicationUploadPageComponents/RetakeMedicationPhotoButton";
 
 function MedicationUploadPage() {
     return(
@@ -8,12 +10,14 @@ function MedicationUploadPage() {
             <h2>Take a photo of your medication</h2>
 
             <div className="row d-flex flex-wrap">
-                <div className="col">
+                <div className="col-sm">
                     <MedicationWebcam />
                 </div>
 
-                <div className="col">
+                <div className="col-sm">
                     <MedicationInformationWidget />
+                    <RetakeMedicationPhotoButton />
+                    <ConfirmMedicationPhotoButton />
                 </div>
             </div>
         </div>
