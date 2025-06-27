@@ -1,8 +1,8 @@
 import GoToAppointmentManagerButton from '../../components/GoToAppointmentManagerButton.jsx'
 import GoToChatButton from '../../components/GoToChatButton.jsx';
-import GoToUploadMedicationButton from './PatientDashboardPageComponents/GoToUploadMedicationButton.jsx';
-import ListOfMedications from './PatientDashboardPageComponents/ListOfMedications.jsx'
-import TreatmentOverview from './PatientDashboardPageComponents/TreatmentOverview.jsx';
+import GoToUploadMedicationButton from '../PatientComponents/PatientDashboardPageComponents/GoToUploadMedicationButton.jsx';
+import ListOfMedications from '../PatientComponents/PatientDashboardPageComponents/ListOfMedications.jsx'
+import TreatmentOverview from '../PatientComponents/PatientDashboardPageComponents/TreatmentOverview.jsx';
 import { users } from '../../../../backend/data.js';
 
 function PatientDashboardPage() {
@@ -10,7 +10,7 @@ function PatientDashboardPage() {
         <div className="container text-left justify-content-left">
             <h1>Welcome {users[0].name}!</h1>
             <h2>Prescriptions</h2>
-            
+
             <div className="row d-flex flex-wrap">
                 <div className="col">
                     <ListOfMedications />
