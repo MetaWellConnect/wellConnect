@@ -11,7 +11,7 @@ function MedicationWebcam() {
     }, [webcamRef]);
 
     return (
-        <div className="my-3">
+        <div className="overflow-hidden my-3 rounded-3">
             <Webcam ref={webcamRef}  mirrored style={{objectFit: 'cover'}} />
         </div>
     );
