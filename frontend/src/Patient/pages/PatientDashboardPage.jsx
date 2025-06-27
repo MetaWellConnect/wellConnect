@@ -1,7 +1,7 @@
 import GoToAppointmentManagerButton from '../../components/GoToAppointmentManagerButton.jsx'
 import GoToChatButton from '../../components/GoToChatButton.jsx';
 import GoToUploadMedicationButton from '../PatientComponents/PatientDashboardPageComponents/GoToUploadMedicationButton.jsx';
-import ListOfMedications from '../PatientComponents/PatientDashboardPageComponents/ListOfMedications.jsx'
+import ListOfMedications from '../../components/ListOfMedications.jsx'
 import TreatmentOverview from '../PatientComponents/PatientDashboardPageComponents/TreatmentOverview.jsx';
 import { users } from '../../../../backend/data.js';
 
