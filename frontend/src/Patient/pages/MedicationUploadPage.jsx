@@ -1,4 +1,5 @@
 import MedicationWebcam from "../PatientComponents/MedicationUploadPageComponents/MedicationCamera";
+import MedicationInformationWidget from "../PatientComponents/MedicationUploadPageComponents/MedicationInformationWidget";
 
 function MedicationUploadPage() {
     return(
@@ -12,7 +13,7 @@ function MedicationUploadPage() {
                 </div>
 
                 <div className="col">
-                    
+                    <MedicationInformationWidget />
                 </div>
             </div>
         </div>
