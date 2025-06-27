@@ -7,17 +7,13 @@ function LoginPage() {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
 
-    const loginContainerStyles = {
-        height: "95.85vh"
-    };
-
     const handlLoginSubmit = () => {
         console.log("Button works for now!");
     }
 
     return (
-        <div className="container-fluid overflow-hidden">
-            <div style={loginContainerStyles} className="row text-center no-padding">
+        <div className="container-fluid">
+            <div className="row vh-100 text-center no-padding">
                 <section className="login-page-welcome col-sm text-white bg-primary bg-gradient d-flex flex-column justify-content-center">
                     <h1>Welcome back to MediScan!</h1>
                     <p>Don't have an account?</p>

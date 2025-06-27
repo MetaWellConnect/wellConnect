@@ -1,10 +1,7 @@
 function LogoutPage() {
-    const logoutContainerStyles = {
-        height: "90vh"
-    };
 
     return (
-        <div style={logoutContainerStyles} className="d-flex align-items-center justify-content-center">
+        <div className="d-flex vh-100 align-items-center justify-content-center">
             <h1>You have been successfully logged out of MediScan!</h1>
         </div>
     );

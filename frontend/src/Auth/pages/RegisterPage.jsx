@@ -9,17 +9,13 @@ function RegisterPage() {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
 
-    const signUpContainerStyles = {
-        height: "95.85vh"
-    };
-
     const handleSignUpSubmit = () => {
         console.log("Button works for now!");
     }
 
     return (
-        <div className="container-fluid overflow-hidden">
-            <div style={signUpContainerStyles} className="row text-center no-padding">
+        <div className="container-fluid">
+            <div className="row vh-100 text-center no-padding">
                 <section className="register-page-welcome col-sm text-white bg-primary bg-gradient d-flex flex-column justify-content-center">
                     <h1>Welcome to MediScan!</h1>
                     <p>Already have an account?</p>
