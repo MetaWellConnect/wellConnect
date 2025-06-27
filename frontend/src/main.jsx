@@ -17,7 +17,7 @@ import { createRoot } from 'react-dom/client'
 
 createRoot(document.getElementById('root')).render(
   <BrowserRouter>
-    <nav className="navbar navbar-expand-lg bg-body-tertiary">
+    <nav className="navbar navbar-expand-lg bg-body-tertiary position-fixed container-fluid">
       <div className="container-fluid">
         <Link className="navbar-brand" to="/">MediScan</Link>
         <Link className="navbar-brand" to="/login">Login</Link>
