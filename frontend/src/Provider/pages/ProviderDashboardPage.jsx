@@ -14,7 +14,7 @@ function ProviderDashboardPage() {
             <div className="row d-flex flex-wrap">
                 <div className="col">
                     <h2>Pending Medications</h2>
-                    <ListOfMedications />
+                    <ListOfMedications renderApprovalMedicationCard={true}/>
                 </div>
 
                 <div className="col">
