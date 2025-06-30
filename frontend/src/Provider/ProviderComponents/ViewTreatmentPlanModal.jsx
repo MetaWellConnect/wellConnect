@@ -14,7 +14,7 @@ export default function ApproveModal({ onHide, show }) {
 
             <Modal.Body>
                 {/*
-                    This form has not been finalized as the way this information will be handled hasn't been decided.
+                    This modal has not been finalized as the schema for this information hasn't been decided.
                     This is the general idea of the information the treatment overview will provide
                 */}
                 <p>{treatment.treatmentOverview}</p>
