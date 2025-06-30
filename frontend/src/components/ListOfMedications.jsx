@@ -2,9 +2,11 @@ import MedicationCard from "../Patient/PatientComponents/PatientDashboardPageCom
 import { medications } from "../../../backend/data.js";
 
 function ListOfMedications() {
+    const medicationList = medications.slice(0,5); // Simulates API call to retrieve medications
+
     return(
         <div className="">
-            {medications.slice(0,5).map((medication, index) => {
+            {medicationList.map((medication, index) => {
                 return (
                     <MedicationCard key={index} medication={medication}/>
                 );

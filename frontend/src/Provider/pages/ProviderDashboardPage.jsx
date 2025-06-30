@@ -1,6 +1,7 @@
 import { users } from "../../../../backend/data";
 import GoToAppointmentManagerButton from "../../components/GoToAppointmentManagerButton";
 import GoToChatButton from "../../components/GoToChatButton";
+import ListOfMedications from "../../components/ListOfMedications"
 
 function ProviderDashboardPage() {
     const provider = users[0];
@@ -13,12 +14,12 @@ function ProviderDashboardPage() {
             <div className="row d-flex flex-wrap">
                 <div className="col">
                     <h2>Pending Medications</h2>
-
+                    <ListOfMedications />
                 </div>
 
                 <div className="col">
                     <h2>Patients</h2>
-                    
+
                     <GoToChatButton />
                     <GoToAppointmentManagerButton />
                 </div>
