@@ -11,7 +11,6 @@ export default function ViewTreatmentPlanModal({ patientId, onHide, show }) {
 
     function updateMedicationList(e) {
         medicationList[e.target.id] = e.target.value;
-
         setMedicationList([...medicationList]);
     }
 
