@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router";
+import { registerUser } from "../../api";
 
 
 function RegisterPage() {
@@ -10,8 +11,9 @@ function RegisterPage() {
     const [password, setPassword] = useState("");
     const [accountType, setAccountType] = useState("");
 
-    const handleSignUpSubmit = () => {
-        console.log("Button works for now!");
+    const handleSignUpSubmit = async (e) => {
+        e.preventDefault();
+        registerUser(firstName, lastName, email, password);
     }
 
     const AccountTypes = {
@@ -28,7 +30,7 @@ function RegisterPage() {
                     <button className="btn btn-light rounded-pill w-25 mx-auto" onClick={() => navigate('/login')}>Sign In</button>
                 </section>
 
-                <form className="col-sm my-auto" onSubmit={handleSignUpSubmit}>
+                <form className="col-sm my-auto" onSubmit={(e) => handleSignUpSubmit(e)}>
                     <h2>Register</h2>
 
                     <input type="text" className="rounded-pill form-control w-50 p-3 my-3 mx-auto" placeholder="First name" onChange={(e) => setFirstName(e.target.value)} required />
@@ -40,12 +42,12 @@ function RegisterPage() {
                     <section className="account-type-select w-50 p-3 my-3 mx-auto text-start" name="account-select" onChange={(e) => setAccountType(e.target.value)}>
 
                         <section className="form-check form-check-inline">
-                            <input type="radio" className="form-check-input" value={AccountTypes.PATIENT} name="account-select" />
+                            <input type="radio" className="form-check-input" value={AccountTypes.PATIENT} name="account-select" required />
                             <label className="form-check-label">Patient</label>
                         </section>
 
                         <section className="form-check form-check-inline">
-                            <input type="radio" className="form-check-input" value={AccountTypes.PROVIDER} name="account-select" />
+                            <input type="radio" className="form-check-input" value={AccountTypes.PROVIDER} name="account-select" required />
                             <label className="form-check-label">Provider</label>
                         </section>
                     </section>

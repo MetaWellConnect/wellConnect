@@ -10,7 +10,7 @@ const argon2 = require('argon2')
  * @returns Boolean that indicates if the user was successfully registered
  */
 async function registerUser(user) {
-    const userInDatabase = await prisma.user.findUnique({ where: { email: user.email } })
+    const userInDatabase = await prisma.user.findUnique({ where: { email: user.email } });
 
     if (userInDatabase === null) {
         const passwordHash = await argon2.hash(user.password);
