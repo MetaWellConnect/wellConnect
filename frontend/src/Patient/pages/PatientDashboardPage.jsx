@@ -3,7 +3,7 @@ import GoToChatButton from '../../components/GoToChatButton.jsx';
 import GoToUploadMedicationButton from '../PatientComponents/PatientDashboardPageComponents/GoToUploadMedicationButton.jsx';
 import ListOfMedications from '../PatientComponents/PatientDashboardPageComponents/ListOfMedications.jsx'
 import TreatmentOverview from '../PatientComponents/PatientDashboardPageComponents/TreatmentOverview.jsx';
-import { users } from '../../../../backend/data.js';
+import { users } from '../../../data.js';
 
 function PatientDashboardPage() {
     return (

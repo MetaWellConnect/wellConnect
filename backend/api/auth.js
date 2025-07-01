@@ -10,11 +10,11 @@ const argon2 = require('argon2')
  * @returns Boolean that indicates if the user was successfully registered
  */
 async function registerUser(user) {
-    const userInDatabase = await prisma.User.findUnique({ where: { email: user.email } })
+    const userInDatabase = await prisma.user.findUnique({ where: { email: user.email } })
 
     if (userInDatabase === null) {
         const passwordHash = await argon2.hash(user.password);
-        await prisma.User.create({
+        await prisma.user.create({
             data: {
                 id: user.id,
                 first_name: user.firstName,
@@ -37,7 +37,7 @@ async function registerUser(user) {
  * @returns Boolean that indicates if the credentials are valid
  */
 async function areCredentialsValid(email, password) {
-    const user = await prisma.User.findUnique({ where: { email: email } })
+    const user = await prisma.user.findUnique({ where: { email: email } })
     if (!user) {
         return false;
     }
@@ -57,7 +57,6 @@ async function areCredentialsValid(email, password) {
  */
 async function generateJWT(email) {
     const jwtSecretKey = process.env.JWT_SECRET_KEY;
-    console.log(jwtSecretKey);
     const user = {
         email: email
     }

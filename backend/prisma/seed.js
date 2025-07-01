@@ -6,7 +6,7 @@ const users = [
         first_name: "Alice",
         last_name: "Smith",
         email: "alice.smith@example.com",
-        passwordHash: "hashedpassword1",
+        passwordHash: "$argon2id$v=19$m=65536,t=3,p=4$UdigrfpCxvOFNgGArENqBw$F1SYQVsuK4RDl8YpiCdpQK5Si6e4GFu6kLgDq90r0XI",
     },
     {
         first_name: "Bob",

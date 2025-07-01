@@ -1,4 +1,4 @@
-import { treatments, users } from "../../../../../backend/data";
+import { treatments, users } from "../../../../data";
 
 function TreatmentOverview() {
     return (

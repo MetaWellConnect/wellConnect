@@ -1,5 +1,5 @@
 import MedicationCard from "./MedicationCard.jsx";
-import { medications } from "../../../../../backend/data.js";
+import { medications } from "../../../../data.js";
 
 function ListOfMedications() {
     return(

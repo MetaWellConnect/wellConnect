@@ -4,11 +4,15 @@ const express = require('express');
 const cors = require('cors');
 const helmet = require('helmet');
 const { areCredentialsValid, generateJWT, registerUser } = require('./auth.js');
+const jwt = require('jsonwebtoken');
+var cookieParser = require('cookie-parser');
 
 const server = express();
 server.use(helmet());
 server.use(express.json());
 server.use(cors());
+server.use(cookieParser());
+
 
 server.post('/register', async (req, res, next) => {
     const { user } = req.body;
@@ -33,7 +37,7 @@ server.get('/login', async (req, res, next) => {
 });
 
 server.get('/', async (req, res, next) => {
-    res.status(200).json(`Hello World, and ${req.user}!`);
+    res.status(200).json(`Hello World, and!`);
 });
 
 module.exports = server;
