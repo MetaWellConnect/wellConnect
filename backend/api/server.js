@@ -12,24 +12,24 @@ server.use(cors());
 
 server.post('/register', async (req, res, next) => {
     const { user } = req.body;
-    const registeredSuccessfully = registerUser(user);
+    const registeredSuccessfully = await registerUser(user);
 
     if (registeredSuccessfully) {
-        res.status(200).json("User registered successfully!");
+        return res.status(200).json("User registered successfully!");
     }
-    res.status(400).json("User could not be registered!");
+    return res.status(400).json("User could not be registered!");
 });
 
 server.get('/login', async (req, res, next) => {
     const { email, password } = req.body.user;
 
-    if (areCredentialsValid(email, password)) {
-        const token = generateJWT(email);
+    if (await areCredentialsValid(email, password)) {
+        const token = await generateJWT(email);
 
         res.cookie('token', token, { httpOnly: true });
-        res.status(200).json({ token }); // Returns the token in response, will be removed
+        return res.status(200).json({ token }); // Returns the token in response, will be removed
     }
-    res.status(400).json("Invalid credentials!");
+    return res.status(400).json("Invalid credentials!");
 });
 
 server.get('/', async (req, res, next) => {

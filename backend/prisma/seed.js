@@ -3,19 +3,22 @@ const prisma = new PrismaClient();
 
 const users = [
     {
-        name: "Alice Smith",
+        first_name: "Alice",
+        last_name: "Smith",
         email: "alice.smith@example.com",
-        password: "hashedpassword1",
+        passwordHash: "hashedpassword1",
     },
     {
-        name: "Bob Johnson",
+        first_name: "Bob",
+        last_name: "Johnson",
         email: "bob.johnson@example.com",
-        password: "hashedpassword2",
+        passwordHash: "hashedpassword2",
     },
     {
-        name: "Charlie Lee",
+        first_name: "Charlie",
+        last_name: "Lee",
         email: "charlie.lee@example.com",
-        password: "hashedpassword3",
+        passwordHash: "hashedpassword3",
     },
 ];
 
