@@ -14,12 +14,12 @@ function ProviderDashboardPage() {
 
 
                 <div className="row d-flex flex-wrap">
-                    <div className="col">
+                    <div className="col-sm">
                         <h2>Pending Medications</h2>
                         <ListOfMedications renderApprovalMedicationCard={true} />
                     </div>
 
-                    <div className="col">
+                    <div className="col-sm">
                         <h2>Patients</h2>
                         <ListOfPatients />
                         <GoToChatButton />
