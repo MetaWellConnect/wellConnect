@@ -3,6 +3,7 @@ const prisma = new PrismaClient();
 const express = require('express');
 const cors = require('cors');
 const helmet = require('helmet');
+const {areCredentialsValid, generateJWT} = require('./auth.js');
 
 const server = express();
 server.use(helmet());
@@ -10,10 +11,10 @@ server.use(express.json());
 server.use(cors());
 
 server.get('/login', async (req, res, next) => {
-    const { email, password } = req.user;
+    const { email, password } = req.body.user;
 
     if (areCredentialsValid(email, password)) {
-        const token = generateJWT();
+        const token = generateJWT(email);
 
         res.cookie('token', token, {httpOnly: true});
         res.status(200).json({token}); // Returns the token in response, will be removed
