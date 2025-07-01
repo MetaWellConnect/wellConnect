@@ -2,7 +2,7 @@ import React from "react";
 import Modal from "react-bootstrap/Modal"
 
 
-export default function ApproveModal({ onHide, show, pendingMedication }) {
+export default function ApproveModal({ onHide, show }) {
     function handleMedicationApproval() {
 
     }

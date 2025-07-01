@@ -11,7 +11,7 @@ function MedicationToApproveCard({ pendingMedication }) {
                 <img src={pendingMedication.photoURL} alt={`Photo of medication`} className="rounded-3" />
 
                 <section className="medication-card-buttons">
-                    <ViewTreatmentPlanButton />
+                    <ViewTreatmentPlanButton patientId={pendingMedication.patientId} />
                     <ApproveMedicationButton pendingMedication={pendingMedication} />
                     <DenyMedicationButton />
                 </section>

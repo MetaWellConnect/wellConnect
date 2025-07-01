@@ -1,14 +1,17 @@
 import React, { useState } from "react";
-import ViewMedicatioPlanModal from "./ViewTreatmentPlanModal"
+import ViewTreatmentPlanModal from "./ViewTreatmentPlanModal"
+import ViewEditableTreatmentPlanModal from "./ViewEditableTreatmentPlanModal"
 
-export default function ViewTreatmentPlanButton() {
+export default function ViewTreatmentPlanButton({ patientId, allowTreatmentEdit }) {
   const [toggleModal, setToggleModal] = useState(false);
 
   return (
     <>
       <button className="btn" onClick={() => setToggleModal(true)}>View Treatment Plan</button>
 
-      <ViewMedicatioPlanModal show={toggleModal} onHide={() => setToggleModal(false)} />
+      {allowTreatmentEdit ?
+        <ViewEditableTreatmentPlanModal patientId={patientId} show={toggleModal} onHide={() => setToggleModal(false)} /> :
+        <ViewTreatmentPlanModal patientId={patientId} show={toggleModal} onHide={() => setToggleModal(false)}/>}
     </>
   );
 }

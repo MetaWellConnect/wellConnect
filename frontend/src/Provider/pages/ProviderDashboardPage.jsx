@@ -2,6 +2,7 @@ import { users } from "../../../../backend/data";
 import GoToAppointmentManagerButton from "../../components/GoToAppointmentManagerButton";
 import GoToChatButton from "../../components/GoToChatButton";
 import ListOfMedications from "../../components/ListOfMedications"
+import ListOfPatients from "../ProviderComponents/ListOfPatients";
 
 function ProviderDashboardPage() {
     const provider = users[0];
@@ -20,7 +21,7 @@ function ProviderDashboardPage() {
 
                     <div className="col">
                         <h2>Patients</h2>
-
+                        <ListOfPatients />
                         <GoToChatButton />
                         <GoToAppointmentManagerButton />
                     </div>

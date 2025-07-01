@@ -1,5 +1,6 @@
 export const users = [
     {
+        id: 0,
         name: "Alice Smith",
         email: "alice.smith@example.com",
         password: "hashedpassword1",
@@ -7,18 +8,12 @@ export const users = [
         nextDoseMedication: "Aspirin",
     },
     {
+        id: 1,
         name: "Bob Johnson",
         email: "bob.johnson@example.com",
         password: "hashedpassword2",
         timeUntilNextDose: new Date("2025-06-22T19:30:00Z"),
         nextDoseMedication: "Metformin",
-    },
-    {
-        name: "Charlie Lee",
-        email: "charlie.lee@example.com",
-        password: "hashedpassword3",
-        timeUntilNextDose: new Date("2026-06-23T09:00:00Z"),
-        nextDoseMedication: "Lisinopril",
     },
 ];
 
@@ -136,6 +131,7 @@ export const treatments = [
 
 export const pendingMedications = [
     {
+        patientId: 0,
         name: "Aspirin",
         strength: 500,
         time_of_last_dose: new Date("2025-06-22T08:00:00Z"),
@@ -151,6 +147,7 @@ export const pendingMedications = [
         refill_status: "refill_pending"
     },
     {
+        patientId: 1,
         name: "Metformin",
         strength: 850,
         time_of_last_dose: new Date("2025-06-22T07:30:00Z"),

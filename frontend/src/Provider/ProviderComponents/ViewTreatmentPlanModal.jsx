@@ -3,8 +3,8 @@ import Modal from "react-bootstrap/Modal"
 import { treatments } from "../../../../backend/data";
 
 
-export default function ApproveModal({ onHide, show }) {
-    const treatment = treatments[0] // Simulate API call to retrieve the treatment plan of the patient
+export default function ViewTreatmentPlanModal({ patientId, onHide, show }) {
+    const treatment = treatments[patientId] // Simulate API call to retrieve the treatment plan of the patient
 
     return (
         <Modal show={show} size="lg" centered onHide={onHide}>
