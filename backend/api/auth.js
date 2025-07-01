@@ -30,6 +30,12 @@ async function registerUser(user) {
     return false;
 }
 
+/**
+ * Takes an email and password and validates the credentials with the users in the database
+ * @param {String} email
+ * @param {String} password
+ * @returns Boolean that indicates if the credentials are valid
+ */
 async function areCredentialsValid(email, password) {
     const user = await prisma.User.findUnique({ where: { email: email } })
     if (!user) {
@@ -44,6 +50,11 @@ async function areCredentialsValid(email, password) {
     return false;
 }
 
+/**
+ * Generates a JWT with the user's information
+ * @param {String} email
+ * @returns A JWT token
+ */
 async function generateJWT(email) {
     const jwtSecretKey = process.env.JWT_SECRET_KEY;
     console.log(jwtSecretKey);

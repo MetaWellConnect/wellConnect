@@ -33,7 +33,7 @@ server.get('/login', async (req, res, next) => {
 });
 
 server.get('/', async (req, res, next) => {
-    res.status(200).json("Hello World!");
+    res.status(200).json(`Hello World, and ${req.user}!`);
 });
 
 module.exports = server;
