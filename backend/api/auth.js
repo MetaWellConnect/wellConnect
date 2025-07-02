@@ -14,17 +14,35 @@ async function registerUser(user) {
 
     if (userInDatabase === null) {
         const passwordHash = await argon2.hash(user.password);
-        await prisma.user.create({
+        const createdUser = await prisma.user.create({
             data: {
-                id: user.id,
                 first_name: user.firstName,
                 last_name: user.lastName,
                 email: user.email,
-                password_hash: passwordHash
+                password_hash: passwordHash,
+                role: user.accountType
             }
         });
 
-        return true;
+        if (user.accountType === "PATIENT") {
+            await prisma.patient.create({
+                data: {
+                    id: createdUser.id
+                }
+            });
+
+            return true;
+        }
+
+        if (user.accountType === "PROVIDER") {
+            await prisma.provider.create({
+                data: {
+                    id: createdUser.id
+                }
+            });
+
+            return true;
+        }
     }
 
     return false;

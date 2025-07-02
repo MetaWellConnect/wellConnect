@@ -13,12 +13,12 @@ function RegisterPage() {
 
     const handleSignUpSubmit = async (e) => {
         e.preventDefault();
-        registerUser(firstName, lastName, email, password);
+        registerUser(firstName, lastName, email, password, accountType);
     }
 
     const AccountTypes = {
-        PATIENT: "Patient",
-        PROVIDER: "Provider"
+        PATIENT: "PATIENT",
+        PROVIDER: "PROVIDER"
     }
 
     return (

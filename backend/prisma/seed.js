@@ -7,42 +7,47 @@ const usersSeed = [
         last_name: 'Brown',
         email: 'alice.brown@clinic.com',
         password_hash: '$2b$10$A1ic3Br0wnHashXXXXXXXXXXXXXXX', // Dr Alice Brown (provider)
+        role: 'PROVIDER'
     },
     {
         first_name: 'Bob',
         last_name: 'Green',
         email: 'bob.green@health.org',
         password_hash: '$2b$10$B0bGr33nHashXXXXXXXXXXXXXXX', // Dr Bob Green (provider)
+        role: 'PROVIDER'
     },
     {
         first_name: 'Charlie',
         last_name: 'Smith',
         email: 'charlie.smith@example.com',
         password_hash: '$2b$10$Ch4rl1eSm1thHashXXXXXXXXXX', // patient of Dr Brown
+        role: 'PATIENT'
     },
     {
         first_name: 'Dana',
         last_name: 'White',
         email: 'dana.white@example.com',
         password_hash: '$2b$10$D4n4Wh1t3HashXXXXXXXXXXXXX', // patient of Dr Brown
+        role: 'PATIENT'
     },
     {
         first_name: 'Evan',
         last_name: 'Lee',
         email: 'evan.lee@example.com',
         password_hash: '$2b$10$Ev4nL33HashXXXXXXXXXXXXXXX', // patient of Dr Green
+        role: 'PATIENT'
     },
 ];
 
 const providersSeed = [
-    {},
-    {},
+    { id: 1 },
+    { id: 2 },
 ];
 
 const patientsSeed = [
-    { provider_id: 1 }, // Charlie Smith  -> Dr Brown
-    { provider_id: 1 }, // Dana White     -> Dr Brown
-    { provider_id: 2 }, // Evan Lee       -> Dr Green
+    { id: 3, provider_id: 1 }, // Charlie Smith  -> Dr Brown
+    { id: 4, provider_id: 1 }, // Dana White     -> Dr Brown
+    { id: 5, provider_id: 2 }, // Evan Lee       -> Dr Green
 ];
 
 const medicationsSeed = [
@@ -53,7 +58,7 @@ const medicationsSeed = [
         time_of_last_dose: new Date('2025-07-02T08:00:00Z'),
         time_of_next_dose: new Date('2025-07-02T20:00:00Z'),
         photo_url: 'https://example.com/img/lisinopril.jpg',
-        patient_id: 1, // Charlie Smith
+        patient_id: 3, // Charlie Smith
     },
     {
         name: 'Metformin',
@@ -62,7 +67,7 @@ const medicationsSeed = [
         time_of_last_dose: new Date('2025-07-02T07:30:00Z'),
         time_of_next_dose: new Date('2025-07-02T19:30:00Z'),
         photo_url: 'https://example.com/img/metformin.jpg',
-        patient_id: 1, // Charlie Smith
+        patient_id: 3, // Charlie Smith
     },
     {
         name: 'Amoxicillin',
@@ -71,7 +76,7 @@ const medicationsSeed = [
         time_of_last_dose: new Date('2025-07-01T12:00:00Z'),
         time_of_next_dose: new Date('2025-07-01T20:00:00Z'),
         photo_url: 'https://example.com/img/amoxicillin.jpg',
-        patient_id: 2, // Dana White
+        patient_id: 4, // Dana White
     },
     {
         name: 'Albuterol Inhaler',
@@ -80,7 +85,7 @@ const medicationsSeed = [
         time_of_last_dose: new Date('2025-07-02T06:45:00Z'),
         time_of_next_dose: new Date('2025-07-02T12:45:00Z'),
         photo_url: 'https://example.com/img/albuterol.jpg',
-        patient_id: 3, // Evan Lee
+        patient_id: 5, // Evan Lee
     },
 ];
 

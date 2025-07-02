@@ -35,7 +35,7 @@ model Patient {
   user        User @relation(fields: [id], references: [id])
   medications Medication[]
   provider    Provider? @relation(fields: [provider_id], references: [id])
-  provider_id Int
+  provider_id Int?
 }
 
 model Provider {
@@ -53,5 +53,5 @@ model Medication {
   time_of_next_dose DateTime
   photo_url         String
   patient           Patient? @relation(fields: [patient_id], references: [id])
-  patient_id        Int
+  patient_id        Int?
 }
