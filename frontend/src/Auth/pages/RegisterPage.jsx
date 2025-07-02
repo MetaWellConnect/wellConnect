@@ -13,7 +13,9 @@ function RegisterPage() {
 
     const handleSignUpSubmit = async (e) => {
         e.preventDefault();
-        registerUser(firstName, lastName, email, password, accountType);
+        await registerUser(firstName, lastName, email, password, accountType);
+
+        navigate('/login');
     }
 
     const AccountTypes = {

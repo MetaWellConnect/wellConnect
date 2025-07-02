@@ -23,8 +23,10 @@ function getHttpOptions(httpMethod, bodyContent) {
                 method: 'POST',
                 headers: {
                     accept: 'application/json',
-                    'Content-Type': 'application/json'
+                    'Content-Type': 'application/json',
                 },
+                credentials: 'include',
+
             }
 
             // If the user passed bodyContent, add it to the request
@@ -84,6 +86,32 @@ export async function registerUser(firstName, lastName, email, password, account
     const response = await fetch(`${API_URL}/register`, getHttpOptions("POST", userInfo))
     if (!response.ok) {
         throw new Error("Failed to register user!");
+    }
+
+    console.log(await response.json());
+    return true;
+}
+
+export async function loginUser(email, password) {
+    const userInfo = {
+        user: {
+            email,
+            password
+        }
+    }
+
+    const response = await fetch(`${API_URL}/login`, getHttpOptions("POST", userInfo));
+    if (!response.ok) {
+        throw new Error("Invalid credentials!");
+    }
+
+    console.log(await response.json());
+}
+
+export async function getCurrentUser(cookie) {
+    const response = await fetch(`${API_URL}/login`, getHttpOptions("POST", userInfo));
+    if (!response.ok) {
+        throw new Error("Invalid credentials!");
     }
 
     console.log(await response.json());
