@@ -20,7 +20,7 @@ async function registerUser(user) {
                 first_name: user.firstName,
                 last_name: user.lastName,
                 email: user.email,
-                passwordHash: passwordHash
+                password_hash: passwordHash
             }
         });
 
@@ -42,7 +42,7 @@ async function areCredentialsValid(email, password) {
         return false;
     }
 
-    const passwordHash = user.passwordHash;
+    const passwordHash = user.password_hash;
 
     if (await argon2.verify(passwordHash, password)) {
         return true;

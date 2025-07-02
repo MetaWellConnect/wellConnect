@@ -19,7 +19,7 @@ model User {
   first_name    String
   last_name     String
   email         String @unique
-  passwordHash  String
+  password_hash  String
 }
 
 model Medication {

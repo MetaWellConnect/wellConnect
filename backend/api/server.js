@@ -31,13 +31,13 @@ server.get('/login', async (req, res, next) => {
         const token = await generateJWT(email);
 
         res.cookie('token', token, { httpOnly: true });
-        return res.status(200).json({ token }); // Returns the token in response, will be removed
+        return res.status(200).json("Successfully authenticated!");
     }
     return res.status(400).json("Invalid credentials!");
 });
 
 server.get('/', async (req, res, next) => {
-    res.status(200).json(`Hello World, and!`);
+    res.status(200).json(`Hello World!`);
 });
 
 module.exports = server;
