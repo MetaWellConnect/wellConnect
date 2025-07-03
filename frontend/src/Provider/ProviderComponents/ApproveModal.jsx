@@ -21,11 +21,11 @@ export default function ApproveModal({ onHide, show }) {
                 <div className="container-fluid row">
                     <img className="col-sm" src="https://picsum.photos/200" alt="Photo of medication" />
 
-                    <form className="col-sm" id="medication-approval-form" onSubmit={handleMedicationApproval}>
-                        <input type="text" className="rounded-pill form-control w-75 p-3 my-3 mx-auto" placeholder="Medication Name" required />
-                        <input type="text" className="rounded-pill form-control w-75 p-3 my-3 mx-auto" placeholder="Consumption instructions" required />
-                        <input type="text" className="rounded-pill form-control w-75 p-3 my-3 mx-auto" placeholder="Number of doses" required />
-                        <input type="text" className="rounded-pill form-control w-75 p-3 my-3 mx-auto" placeholder="Interval of doses" required />
+                    <form className="col-sm d-flex flex-column justify-content-center align-items-center" id="medication-approval-form" onSubmit={handleMedicationApproval}>
+                        <input type="text" className="rounded-pill form-control w-75 p-3 m-2 " placeholder="Medication Name" required />
+                        <input type="text" className="rounded-pill form-control w-75 p-3 m-2 " placeholder="Consumption instructions" required />
+                        <input type="text" className="rounded-pill form-control w-75 p-3 m-2 " placeholder="Number of doses" required />
+                        <input type="text" className="rounded-pill form-control w-75 p-3 m-2 " placeholder="Interval of doses" required />
                     </form>
                 </div>
             </Modal.Body>
