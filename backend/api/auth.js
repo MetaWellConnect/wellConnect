@@ -12,37 +12,39 @@ const argon2 = require('argon2')
 async function registerUser(user) {
     const userInDatabase = await prisma.user.findUnique({ where: { email: user.email } });
 
-    if (userInDatabase === null) {
-        const passwordHash = await argon2.hash(user.password);
-        const createdUser = await prisma.user.create({
+    if (!userInDatabase) {
+        return false;
+    }
+
+    const passwordHash = await argon2.hash(user.password);
+    const createdUser = await prisma.user.create({
+        data: {
+            first_name: user.firstName,
+            last_name: user.lastName,
+            email: user.email,
+            password_hash: passwordHash,
+            role: user.accountType
+        }
+    });
+
+    if (user.accountType === "PATIENT") {
+        await prisma.patient.create({
             data: {
-                first_name: user.firstName,
-                last_name: user.lastName,
-                email: user.email,
-                password_hash: passwordHash,
-                role: user.accountType
+                id: createdUser.id
             }
         });
 
-        if (user.accountType === "PATIENT") {
-            await prisma.patient.create({
-                data: {
-                    id: createdUser.id
-                }
-            });
+        return true;
+    }
 
-            return true;
-        }
+    if (user.accountType === "PROVIDER") {
+        await prisma.provider.create({
+            data: {
+                id: createdUser.id
+            }
+        });
 
-        if (user.accountType === "PROVIDER") {
-            await prisma.provider.create({
-                data: {
-                    id: createdUser.id
-                }
-            });
-
-            return true;
-        }
+        return true;
     }
 
     return false;
@@ -75,14 +77,14 @@ async function areCredentialsValid(email, password) {
  */
 async function getUserIdAndRole(email) {
     const user = await prisma.user.findUnique({ where: { email: email } });
-    if(!user) {
+    if (!user) {
         throw new Error(`User with email ${email} not found!`);
     }
 
     const id = user.id;
     const role = user.role;
 
-    return {role, id};
+    return { role, id };
 }
 
 /**
@@ -94,13 +96,13 @@ async function getUserIdAndRole(email) {
  */
 async function generateJWT(email, id, role) {
     const jwtSecretKey = process.env.JWT_SECRET_KEY;
-    const user = {
+    const payload = {
         email,
         id,
         role
     }
 
-    const token = jwt.sign(user, jwtSecretKey);
+    const token = jwt.sign(payload, jwtSecretKey);
     return token;
 }
 

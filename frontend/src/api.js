@@ -1,7 +1,9 @@
 const API_URL = import.meta.env.VITE_API_URL;
 
 function getHttpOptions(httpMethod, bodyContent) {
+    const NUM_OF_ARGS = 2;
     let options;
+
     switch (httpMethod) {
         case "GET":
             options = {
@@ -12,7 +14,7 @@ function getHttpOptions(httpMethod, bodyContent) {
             }
 
             // If the user passed bodyContent, add it to the request
-            if (arguments.length === 2) {
+            if (arguments.length === NUM_OF_ARGS) {
                 options.body = JSON.stringify(bodyContent);
             }
 
@@ -30,7 +32,7 @@ function getHttpOptions(httpMethod, bodyContent) {
             }
 
             // If the user passed bodyContent, add it to the request
-            if (arguments.length === 2) {
+            if (arguments.length === NUM_OF_ARGS) {
                 options.body = JSON.stringify(bodyContent);
             }
 
@@ -46,7 +48,7 @@ function getHttpOptions(httpMethod, bodyContent) {
             }
 
             // If the user passed bodyContent, add it to the request
-            if (arguments.length === 2) {
+            if (arguments.length === NUM_OF_ARGS) {
                 options.body = JSON.stringify(bodyContent);
             }
 
@@ -61,7 +63,7 @@ function getHttpOptions(httpMethod, bodyContent) {
             }
 
             // If the user passed bodyContent, add it to the request
-            if (arguments.length === 2) {
+            if (arguments.length === NUM_OF_ARGS) {
                 options.body = JSON.stringify(bodyContent);
             }
 

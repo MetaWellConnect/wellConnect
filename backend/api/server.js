@@ -7,6 +7,8 @@ const { areCredentialsValid, generateJWT, registerUser, getUserIdAndRole } = req
 const jwt = require('jsonwebtoken');
 var cookieParser = require('cookie-parser');
 
+const MAX_AGE = 2592000;
+
 const server = express();
 server.use(helmet());
 server.use(express.json());
@@ -27,7 +29,7 @@ server.post('/register', async (req, res, next) => {
     if (registeredSuccessfully) {
         return res.status(200).json("User registered successfully!");
     }
-    return res.status(400).json("User could not be registered!");
+    return res.status(409).json("User could not be registered due to user already existing!");
 });
 
 server.post('/login', async (req, res, next) => {
@@ -37,10 +39,10 @@ server.post('/login', async (req, res, next) => {
         const { id, role } = await getUserIdAndRole(email);
         const token = await generateJWT(email, id, role);
 
-        res.cookie('token', token, { maxAge: 2592000 });
+        res.cookie('token', token, { maxAge: MAX_AGE });
         return res.status(200).json("Successfully authenticated!");
     }
-    return res.status(400).json("Invalid credentials!");
+    return res.status(401).json("Invalid credentials!");
 });
 
 server.get('/', async (req, res, next) => {
