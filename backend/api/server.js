@@ -2,7 +2,8 @@ const { PrismaClient } = require('../generated/prisma');
 const prisma = new PrismaClient();
 const express = require('express');
 const helmet = require('helmet');
-const { areCredentialsValid, generateJWT, registerUser } = require('./auth.js');
+const cors = require('cors');
+const { areCredentialsValid, generateJWT, registerUser, getUserIdAndRole } = require('./auth.js');
 const jwt = require('jsonwebtoken');
 var cookieParser = require('cookie-parser');
 
@@ -10,12 +11,12 @@ const server = express();
 server.use(helmet());
 server.use(express.json());
 server.use(cookieParser());
-const cors = {
+const corsOptons = {
     origin: true,
     credentials: true,
 };
 
-server.use(cors(cors));
+server.use(cors(corsOptons));
 
 
 
@@ -33,7 +34,8 @@ server.post('/login', async (req, res, next) => {
     const { email, password } = req.body.user;
 
     if (await areCredentialsValid(email, password)) {
-        const token = await generateJWT(email);
+        const { id, role } = await getUserIdAndRole(email);
+        const token = await generateJWT(email, id, role);
 
         res.cookie('token', token, { maxAge: 2592000 });
         return res.status(200).json("Successfully authenticated!");

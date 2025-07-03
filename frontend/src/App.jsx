@@ -15,6 +15,7 @@ import ProviderDashboardPage from './Provider/pages/ProviderDashboardPage.jsx'
 import RegisterPage from './Auth/pages/RegisterPage.jsx'
 import AuthProvider from './hooks/AuthProvider.jsx'
 import PrivateRoutes from './components/PrivateRoutes.jsx'
+import DashboardRouteHandler from './components/DashboardRouteHandler.jsx'
 
 function App() {
     return (
@@ -34,9 +35,9 @@ function App() {
                     <Route path="/register" element={<RegisterPage />} />
 
                     <Route element={<PrivateRoutes />}>
+                        <Route path="/dashboard" element={<DashboardRouteHandler />} />
                         <Route path="/patient-dashboard" element={<PatientDashboardPage />} />
                         <Route path="/medication-upload" element={<MedicationUploadPage />} />
-                        <Route path="/provider-dashboard" element={<ProviderDashboardPage />} />
                         <Route path="/medication-validation" element={<MedicationValidationPage />} />
                         <Route path="/appointment-manager" element={<AppointmentManager />} />
                         <Route path="/messenger" element={<MessengerPage />} />

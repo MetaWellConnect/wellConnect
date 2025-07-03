@@ -4,7 +4,6 @@ import { Navigate, Outlet } from "react-router"
 
 export default function PrivateRoutes() {
   const  {isLoggedIn}  = useContext(AuthContext);
-  console.log(isLoggedIn);
 
   return (
     <>
