@@ -1,27 +1,42 @@
-import { users } from "../../../../backend/data";
+import { useEffect, useState } from "react";
 import GoToAppointmentManagerButton from "../../components/GoToAppointmentManagerButton";
 import GoToChatButton from "../../components/GoToChatButton";
 import ListOfMedications from "../../components/ListOfMedications"
 import ListOfPatients from "../ProviderComponents/ListOfPatients";
+import { getProvider } from "../../../testAPI";
 
 function ProviderDashboardPage() {
-    const provider = users[0];
+    const [provider, setProvider] = useState("");
+    const [isLoading, setIsLoading] = useState(true);
+
+    useEffect(() => {
+        (async () => {
+            setProvider(await getProvider(4));
+            setIsLoading(false);
+        })();
+    }, []);
+
+    if (isLoading) {
+        return (
+            <h1>Loading...</h1>
+        );
+    }
 
     return (
         <>
             <div className="container text-left justify-content-left">
-                <h1>Welcome {provider.name}!</h1>
+                <h1>Welcome {provider.first_name}!</h1>
 
 
                 <div className="row d-flex flex-wrap">
                     <div className="col-sm">
                         <h2>Pending Medications</h2>
-                        <ListOfMedications renderApprovalMedicationCard={true} />
+                        <ListOfMedications renderApprovalMedicationCard={true} id={provider.id}/>
                     </div>
 
                     <div className="col-sm">
                         <h2>Patients</h2>
-                        <ListOfPatients />
+                        <ListOfPatients providerId={provider.id}/>
                         <GoToChatButton />
                         <GoToAppointmentManagerButton />
                     </div>

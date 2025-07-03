@@ -1,17 +1,29 @@
 import MedicationCard from "../Patient/PatientComponents/PatientDashboardPageComponents/MedicationCard.jsx";
 import MedicationToApproveCard from "../Provider/ProviderComponents/MedicationToApproveCard.jsx"
-import { medications, pendingMedications } from "../../../backend/data.js";
-import { Fragment } from "react";
+import { Fragment, useEffect, useState } from "react";
+import { getPatientMedication, getProviderMedicationsToApprove } from "../../testAPI.js";
 
-function ListOfMedications({ renderApprovalMedicationCard }) {
-    let medicationList;
-    if (renderApprovalMedicationCard) {
-        medicationList = pendingMedications; // Simulates API call to retrieve pending medications
-    } else {
-        medicationList = medications.slice(0, 5); // Simulates API call to retrieve medications
+function ListOfMedications({ renderApprovalMedicationCard, id }) {
+    const [medicationList, setMedicationList] = useState([""]);
+    const [isLoading,setIsLoading] = useState(true);
+
+    useEffect(() => {
+        (async () => {
+            if (renderApprovalMedicationCard) {
+                setMedicationList(await getProviderMedicationsToApprove(id));
+            } else {
+                setMedicationList(await getPatientMedication(id));
+            }
+
+            setIsLoading(false);
+        })();
+    }, []);
+
+    if (isLoading) {
+        return (
+            <h1>Loading...</h1>
+        )
     }
-
-
 
     return (
         <div className="">

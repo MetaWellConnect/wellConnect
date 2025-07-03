@@ -1,28 +1,40 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import Modal from "react-bootstrap/Modal"
-import { treatments } from "../../../../backend/data";
+import { getPatientTreatmentPlan, getPatientMedications } from "../../../testAPI";
 
 
 export default function ViewTreatmentPlanModal({ patientId, onHide, show }) {
-    const treatment = treatments[patientId] // Simulate API call to retrieve the treatment plan of the patient
+    const [treatment, setTreatment] = useState("");
+    const [medications, setMedications] = useState([]);
+    const [isLoading, setIsLoading] = useState(true);
+
+    useEffect(() => {
+        (async () => {
+            setTreatment(await getPatientTreatmentPlan(patientId));
+            setMedications(await getPatientMedications(patientId));
+            setIsLoading(false);
+        })();
+    }, []);
+
+    if (isLoading) {
+        return (
+            <h1>Loading...</h1>
+        );
+    }
 
     return (
         <Modal show={show} size="lg" centered onHide={onHide}>
             <Modal.Header closeButton>
-                <h2>{treatment.user}</h2>
+                <h2>{treatment.patient_id}</h2>
             </Modal.Header>
 
             <Modal.Body>
-                {/*
-                    This modal has not been finalized as the schema for this information hasn't been decided.
-                    This is the general idea of the information the treatment overview will provide
-                */}
-                <p>{treatment.treatmentOverview}</p>
+                <p>{treatment.overview}</p>
 
                 <h3>Medications</h3>
-                {treatment.medications.map((medication, index) => {
+                {medications.map((medication, index) => {
                     return (
-                        <p key={index}>{medication}</p>
+                        <p key={index}>{medication.name}</p>
                     );
                 })}
             </Modal.Body>
