@@ -1,5 +1,6 @@
 export const users = [
     {
+        id: 0,
         name: "Alice Smith",
         email: "alice.smith@example.com",
         password: "hashedpassword1",
@@ -7,18 +8,12 @@ export const users = [
         nextDoseMedication: "Aspirin",
     },
     {
+        id: 1,
         name: "Bob Johnson",
         email: "bob.johnson@example.com",
         password: "hashedpassword2",
         timeUntilNextDose: new Date("2025-06-22T19:30:00Z"),
         nextDoseMedication: "Metformin",
-    },
-    {
-        name: "Charlie Lee",
-        email: "charlie.lee@example.com",
-        password: "hashedpassword3",
-        timeUntilNextDose: new Date("2026-06-23T09:00:00Z"),
-        nextDoseMedication: "Lisinopril",
     },
 ];
 
@@ -133,3 +128,38 @@ export const treatments = [
         medications: ["Lisinopril"],
     }
 ]
+
+export const pendingMedications = [
+    {
+        patientId: 0,
+        name: "Aspirin",
+        strength: 500,
+        time_of_last_dose: new Date("2025-06-22T08:00:00Z"),
+        time_of_next_dose: new Date("2026-06-22T20:00:00Z"),
+        description: "Used to reduce pain, fever, or inflammation.",
+        photoURL: "https://picsum.photos/200",
+        patient: "Alice Smith",
+        status: "pending",
+        prescription_date: new Date("2025-06-15T10:00:00Z"),
+        expiration_date: new Date("2026-06-15T10:00:00Z"),
+        dosage_instructions: "Take one tablet by mouth twice daily",
+        refill_count: 3,
+        refill_status: "refill_pending"
+    },
+    {
+        patientId: 1,
+        name: "Metformin",
+        strength: 850,
+        time_of_last_dose: new Date("2025-06-22T07:30:00Z"),
+        time_of_next_dose: new Date("2025-06-22T19:30:00Z"),
+        description: "Used to treat type 2 diabetes by decreasing glucose production in the liver and increasing insulin sensitivity.",
+        photoURL: "https://picsum.photos/200",
+        patient: "Bob Johnson",
+        status: "pending",
+        prescription_date: new Date("2025-06-10T14:00:00Z"),
+        expiration_date: new Date("2026-06-10T14:00:00Z"),
+        dosage_instructions: "Take one tablet by mouth three times daily",
+        refill_count: 2,
+        refill_status: "refill_pending"
+    }
+];
