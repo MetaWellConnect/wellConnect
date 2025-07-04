@@ -1,4 +1,4 @@
-import { medications } from "../../../../../backend/data";
+import { medications } from "../../../../data";
 
 function MedicationInformationWidget() {
     const medication = medications[0];

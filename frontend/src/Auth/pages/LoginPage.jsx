@@ -1,14 +1,17 @@
 import { useState } from "react";
 import { useNavigate } from "react-router";
-
+import { loginUser } from "../../api";
 
 function LoginPage() {
     const navigate = useNavigate();
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
 
-    const handlLoginSubmit = () => {
-        console.log("Button works for now!");
+    const handlLoginSubmit = async (e) => {
+        e.preventDefault();
+        await loginUser(email, password);
+
+        navigate('/dashboard');
     }
 
     return (
@@ -20,7 +23,7 @@ function LoginPage() {
                     <button className="btn btn-light rounded-pill w-25 mx-auto" onClick={() => navigate('/register')}>Sign Up</button>
                 </section>
 
-                <form className="col-sm my-auto" onSubmit={handlLoginSubmit}>
+                <form className="col-sm my-auto" onSubmit={(e) => handlLoginSubmit(e)}>
                     <h2>Sign In</h2>
 
                     <input type="email" className="rounded-pill form-control w-50 p-3 my-3 mx-auto" placeholder="Email" onChange={(e) => setEmail(e.target.value)} required />
