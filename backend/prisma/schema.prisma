@@ -20,10 +20,10 @@ enum Role {
 }
 
 model User {
-  id            Int @id @default(autoincrement())
+  id            Int       @id @default(autoincrement())
   first_name    String
   last_name     String
-  email         String @unique
+  email         String    @unique
   password_hash String
   role          Role
   provider      Provider?
@@ -31,27 +31,45 @@ model User {
 }
 
 model Patient {
-  id          Int @id
-  user        User @relation(fields: [id], references: [id])
-  medications Medication[]
-  provider    Provider? @relation(fields: [provider_id], references: [id])
-  provider_id Int?
+  id           Int          @id
+  user         User         @relation(fields: [id], references: [id])
+  medications  Medication[]
+  provider     Provider?    @relation(fields: [provider_id], references: [id])
+  provider_id  Int?
+  treatment    Treatment?
+  treatment_id Int?
 }
 
 model Provider {
-  id        Int @id
-  user      User @relation(fields: [id], references: [id])
+  id        Int         @id
+  user      User        @relation(fields: [id], references: [id])
   patients  Patient[]
+  treatment Treatment[]
 }
 
 model Medication {
-  id                Int @id @default(autoincrement())
-  name              String
-  description       String
-  strength          Int
-  time_of_last_dose DateTime
-  time_of_next_dose DateTime
-  photo_url         String
-  patient           Patient? @relation(fields: [patient_id], references: [id])
-  patient_id        Int?
+  id                       Int       @id @default(autoincrement())
+  name                     String
+  description              String
+  strength                 String
+  time_of_last_dose        DateTime
+  time_of_next_dose        DateTime
+  number_of_required_doses Int
+  number_of_taken_doses    Int
+  photo_url                String
+  approved                 Boolean?
+  patient                  Patient   @relation(fields: [patient_id], references: [id])
+  patient_id               Int
+  treatment                Treatment @relation(fields: [treatment_id], references: [id])
+  treatment_id             Int
+}
+
+model Treatment {
+  id          Int          @id @default(autoincrement())
+  overview    String
+  medications Medication[]
+  patient     Patient      @relation(fields: [patient_id], references: [id])
+  patient_id  Int          @unique
+  provider    Provider     @relation(fields: [provider_id], references: [id])
+  provider_id Int          @unique
 }

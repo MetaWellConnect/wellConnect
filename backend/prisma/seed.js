@@ -1,106 +1,176 @@
 const { PrismaClient } = require("../generated/prisma");
 const prisma = new PrismaClient();
 
-const usersSeed = [
+/* ----------  ENUMS  ---------- */
+const Role = {
+    PATIENT: 'PATIENT',
+    PROVIDER: 'PROVIDER',
+}
+
+/* ----------  USER  ---------- */
+const User = [
+    /* Patients */
+    { first_name: 'Lucy', last_name: 'Adams', email: 'a@test.com', password_hash: '$argon2id$v=19$m=65536,t=3,p=4$QfoolOAKk1+gRXHner2BWg$DsUgYqJgjh8DV7/p8Z1Y58lFgFuNQNKuposxeYrS7Kk', role: Role.PATIENT },
+    { first_name: 'Mike', last_name: 'Baker', email: 'mike.baker@example.com', password_hash: '$argon2id$v=19$m=65536,t=3,p=4$QfoolOAKk1+gRXHner2BWg$DsUgYqJgjh8DV7/p8Z1Y58lFgFuNQNKuposxeYrS7Kk', role: Role.PATIENT },
+    { first_name: 'Sara', last_name: 'Clark', email: 'sara.clark@example.com', password_hash: '$argon2id$v=19$m=65536,t=3,p=4$QfoolOAKk1+gRXHner2BWg$DsUgYqJgjh8DV7/p8Z1Y58lFgFuNQNKuposxeYrS7Kk', role: Role.PATIENT },
+    { first_name: 'David', last_name: 'Duncan', email: 'david.duncan@example.com', password_hash: '$argon2id$v=19$m=65536,t=3,p=4$QfoolOAKk1+gRXHner2BWg$DsUgYqJgjh8DV7/p8Z1Y58lFgFuNQNKuposxeYrS7Kk', role: Role.PATIENT },
+    { first_name: 'Emma', last_name: 'Evans', email: 'emma.evans@example.com', password_hash: '$argon2id$v=19$m=65536,t=3,p=4$QfoolOAKk1+gRXHner2BWg$DsUgYqJgjh8DV7/p8Z1Y58lFgFuNQNKuposxeYrS7Kk', role: Role.PATIENT },
+    { first_name: 'Tom', last_name: 'Foster', email: 'tom.foster@example.com', password_hash: '$argon2id$v=19$m=65536,t=3,p=4$QfoolOAKk1+gRXHner2BWg$DsUgYqJgjh8DV7/p8Z1Y58lFgFuNQNKuposxeYrS7Kk', role: Role.PATIENT },
+
+    /* Providers */
+    { first_name: 'Anna', last_name: 'Lee', email: 'b@test.com', password_hash: '$argon2id$v=19$m=65536,t=3,p=4$QfoolOAKk1+gRXHner2BWg$DsUgYqJgjh8DV7/p8Z1Y58lFgFuNQNKuposxeYrS7Kk', role: Role.PROVIDER },
+    { first_name: 'Robert', last_name: 'Young', email: 'robert.young@health.org', password_hash: '$argon2id$v=19$m=65536,t=3,p=4$QfoolOAKk1+gRXHner2BWg$DsUgYqJgjh8DV7/p8Z1Y58lFgFuNQNKuposxeYrS7Kk', role: Role.PROVIDER },
+    { first_name: 'Karen', last_name: 'White', email: 'karen.white@health.org', password_hash: '$argon2id$v=19$m=65536,t=3,p=4$QfoolOAKk1+gRXHner2BWg$DsUgYqJgjh8DV7/p8Z1Y58lFgFuNQNKuposxeYrS7Kk', role: Role.PROVIDER },
+];
+
+/* ----------  PROVIDER  ---------- */
+const Provider = [
+    { id: 7 },
+    { id: 8 },
+    { id: 9 },
+];
+
+/* ----------  PATIENT  ---------- */
+const Patient = [
+    { id: 1, provider_id: 7, treatment_id: 1 },
+    { id: 2, provider_id: 7, treatment_id: null },
+    { id: 3, provider_id: 8, treatment_id: 2 },
+    { id: 4, provider_id: 8, treatment_id: null },
+    { id: 5, provider_id: 9, treatment_id: 3 },
+    { id: 6, provider_id: 9, treatment_id: null },
+];
+
+/* ----------  TREATMENT  ---------- */
+const Treatment = [
     {
-        first_name: 'Alice',
-        last_name: 'Brown',
-        email: 'alice.brown@clinic.com',
-        password_hash: '$2b$10$A1ic3Br0wnHashXXXXXXXXXXXXXXX', // Dr Alice Brown (provider)
-        role: 'PROVIDER'
+        id: 1,
+        overview: 'Hypertension management plan',
+        patient_id: 1,
+        provider_id: 7,
     },
     {
-        first_name: 'Bob',
-        last_name: 'Green',
-        email: 'bob.green@health.org',
-        password_hash: '$2b$10$B0bGr33nHashXXXXXXXXXXXXXXX', // Dr Bob Green (provider)
-        role: 'PROVIDER'
+        id: 2,
+        overview: 'Type 2 diabetes initial regimen',
+        patient_id: 3,
+        provider_id: 8,
     },
     {
-        first_name: 'Charlie',
-        last_name: 'Smith',
-        email: 'charlie.smith@example.com',
-        password_hash: '$2b$10$Ch4rl1eSm1thHashXXXXXXXXXX', // patient of Dr Brown
-        role: 'PATIENT'
-    },
-    {
-        first_name: 'Dana',
-        last_name: 'White',
-        email: 'dana.white@example.com',
-        password_hash: '$2b$10$D4n4Wh1t3HashXXXXXXXXXXXXX', // patient of Dr Brown
-        role: 'PATIENT'
-    },
-    {
-        first_name: 'Evan',
-        last_name: 'Lee',
-        email: 'evan.lee@example.com',
-        password_hash: '$2b$10$Ev4nL33HashXXXXXXXXXXXXXXX', // patient of Dr Green
-        role: 'PATIENT'
+        id: 3,
+        overview: 'Asthma control & education',
+        patient_id: 5,
+        provider_id: 9,
     },
 ];
 
-const providersSeed = [
-    { id: 1 },
-    { id: 2 },
-];
-
-const patientsSeed = [
-    { id: 3, provider_id: 1 }, // Charlie Smith  -> Dr Brown
-    { id: 4, provider_id: 1 }, // Dana White     -> Dr Brown
-    { id: 5, provider_id: 2 }, // Evan Lee       -> Dr Green
-];
-
-const medicationsSeed = [
+/* ----------  MEDICATION  ---------- */
+const Medication = [
+    /* --- Patient 1 / Treatment 1 --- */
     {
+        id: 1,
         name: 'Lisinopril',
-        description: 'ACE-inhibitor for hypertension',
-        strength: 10,
-        time_of_last_dose: new Date('2025-07-02T08:00:00Z'),
-        time_of_next_dose: new Date('2025-07-02T20:00:00Z'),
-        photo_url: 'https://example.com/img/lisinopril.jpg',
-        patient_id: 3, // Charlie Smith
+        description: 'ACE inhibitor for blood-pressure control',
+        strength: '10 mg',
+        time_of_last_dose: new Date('2025-07-06T08:00:00Z'),
+        time_of_next_dose: new Date('2025-07-07T08:00:00Z'),
+        number_of_required_doses: 30,
+        number_of_taken_doses: 5,
+        photo_url: 'https://picsum.photos/seed/lisinopril/200/200',
+        approved: true,
+        patient_id: 1,
+        treatment_id: 1,
     },
     {
+        id: 2,
+        name: 'Amlodipine',
+        description: 'Calcium-channel blocker once daily',
+        strength: '5 mg',
+        time_of_last_dose: new Date('2025-07-06T08:00:00Z'),
+        time_of_next_dose: new Date('2025-07-07T08:00:00Z'),
+        number_of_required_doses: 30,
+        number_of_taken_doses: 5,
+        photo_url: 'https://picsum.photos/seed/amlodipine/200/200',
+        approved: null,
+        patient_id: 1,
+        treatment_id: 1,
+    },
+
+    /* --- Patient 3 / Treatment 2 --- */
+    {
+        id: 3,
         name: 'Metformin',
-        description: 'First-line therapy for type 2 diabetes',
-        strength: 500,
-        time_of_last_dose: new Date('2025-07-02T07:30:00Z'),
-        time_of_next_dose: new Date('2025-07-02T19:30:00Z'),
-        photo_url: 'https://example.com/img/metformin.jpg',
-        patient_id: 3, // Charlie Smith
+        description: 'Biguanide with meals',
+        strength: '500 mg',
+        time_of_last_dose: new Date('2025-07-06T13:00:00Z'),
+        time_of_next_dose: new Date('2025-07-06T19:00:00Z'),
+        number_of_required_doses: 60,
+        number_of_taken_doses: 12,
+        photo_url: 'https://picsum.photos/seed/metformin/200/200',
+        approved: null,
+        patient_id: 3,
+        treatment_id: 2,
     },
     {
-        name: 'Amoxicillin',
-        description: 'Broad-spectrum antibiotic',
-        strength: 500,
-        time_of_last_dose: new Date('2025-07-01T12:00:00Z'),
-        time_of_next_dose: new Date('2025-07-01T20:00:00Z'),
-        photo_url: 'https://example.com/img/amoxicillin.jpg',
-        patient_id: 4, // Dana White
+        id: 4,
+        name: 'Glipizide',
+        description: 'Sulfonylurea before breakfast',
+        strength: '5 mg',
+        time_of_last_dose: new Date('2025-07-06T07:30:00Z'),
+        time_of_next_dose: new Date('2025-07-07T07:30:00Z'),
+        number_of_required_doses: 30,
+        number_of_taken_doses: 6,
+        photo_url: 'https://picsum.photos/seed/glipizide/200/200',
+        approved: false,
+        patient_id: 3,
+        treatment_id: 2,
     },
+
+    /* --- Patient 5 / Treatment 3 --- */
     {
+        id: 5,
         name: 'Albuterol Inhaler',
-        description: 'Rescue inhaler for asthma',
-        strength: 90, // µg per actuation
-        time_of_last_dose: new Date('2025-07-02T06:45:00Z'),
-        time_of_next_dose: new Date('2025-07-02T12:45:00Z'),
-        photo_url: 'https://example.com/img/albuterol.jpg',
-        patient_id: 5, // Evan Lee
+        description: 'SABA — two puffs PRN',
+        strength: '90 µg/puff',
+        time_of_last_dose: new Date('2025-07-06T16:45:00Z'),
+        time_of_next_dose: new Date('2025-07-06T22:45:00Z'),
+        number_of_required_doses: 999,  // PRN rescue
+        number_of_taken_doses: 15,
+        photo_url: 'https://picsum.photos/seed/albuterol/200/200',
+        approved: true,
+        patient_id: 5,
+        treatment_id: 3,
+    },
+    {
+        id: 6,
+        name: 'Budesonide + Formoterol',
+        description: 'ICS/LABA maintenance inhaler, one puff BID',
+        strength: '160/4.5 µg',
+        time_of_last_dose: new Date('2025-07-06T07:00:00Z'),
+        time_of_next_dose: new Date('2025-07-06T19:00:00Z'),
+        number_of_required_doses: 60,
+        number_of_taken_doses: 10,
+        photo_url: 'https://picsum.photos/seed/budesonide/200/200',
+        approved: true,
+        patient_id: 5,
+        treatment_id: 3,
     },
 ];
+
 
 
 async function main() {
-    for (const user of usersSeed) {
+    for (const user of User) {
         await prisma.user.create({ data: user });
     }
-    for (const provider of providersSeed) {
+    for (const provider of Provider) {
         await prisma.provider.create({ data: provider });
     }
-    for (const patient of patientsSeed) {
+    for (const patient of Patient) {
         await prisma.patient.create({ data: patient });
     }
-    for (const medication of medicationsSeed) {
+    for (const treatment of Treatment) {
+        await prisma.treatment.create({ data: treatment });
+    }
+    for (const medication of Medication) {
         await prisma.medication.create({ data: medication });
     }
 
