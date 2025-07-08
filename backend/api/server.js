@@ -145,12 +145,34 @@ server.get('/providers/:providerId/patients', async (req, res, next) => {
 
 server.get('/patients/:patientId/medications', async (req, res, next) => {
     const patientId = Number(req.params.patientId);
+    const patient = await prisma.patient.findUnique({
+        where: { id: patientId },
+        include: { medications: true }
+    });
 
+    if (!patient) {
+        return res.status(204).json(`No patient with id: ${patientId}`);
+    }
+
+    return res.status(200).json(patient.medications);
 });
 
 server.get('/patients/:patientId/medications/:medicationId', async (req, res, next) => {
     const patientId = Number(req.params.patientId);
+    const medicationId = Number(req.params.medicationId);
+    const medication = await prisma.medication.findUnique({
+        where: { id: medicationId },
+    });
 
+    if (!medication) {
+        return res.status(204).json(`No medication with id: ${medicationId}`);
+    }
+
+    if (medication.patient_id != patientId) {
+        return res.status(204).json(`No medication belonging to patient with id: ${patientId}`)
+    }
+
+    return res.status(200).json(medication);
 });
 
 server.post('/patients/:patientId/medications', async (req, res, next) => {
