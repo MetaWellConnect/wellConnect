@@ -244,11 +244,54 @@ server.put('/patients/:patientId/medications/:medicationId', async (req, res, ne
 
 server.get('/patients/:patientId/treatment', async (req, res, next) => {
     const patientId = Number(req.params.patientId);
+    const patient = await prisma.patient.findUnique({
+        where: {id: patientId},
+        include: {
+            treatment: {
+                include: {
+                    medications: true
+                }
+            }
+        }
+    });
 
+    if (!patient) {
+        return res.status(204).json(`No patient with id: ${patientId}`);
+    }
+
+    return res.status(200).json(patient.treatment);
 });
 
 server.put('/patients/:patientId/treatment', async (req, res, next) => {
     const patientId = Number(req.params.patientId);
+    const patient = await prisma.patient.findUnique({
+        where: {id: patientId},
+        include: {
+            treatment: {
+                include: {
+                    medications: true
+                }
+            }
+        }
+    });
+
+    if (!patient) {
+        return res.status(204).json(`No patient with id: ${patientId}`);
+    }
+
+    const treatment_id = patient.treatment_id;
+    const treatmentInformation = req.body;
+
+    try {
+        const treatment = await prisma.treatment.update({
+            where: {id: treatment_id},
+            data: treatmentInformation
+        });
+
+        res.status(200).json(treatment);
+    } catch (e) {
+        res.status(204).json(`Failed to update treatment! Error: ${e.message}`)
+    }
 
 });
 
