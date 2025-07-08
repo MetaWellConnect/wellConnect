@@ -10,8 +10,6 @@ import LogoutPage from './Auth/pages/LogoutPage.jsx'
 import MedicationUploadPage from './Patient/pages/MedicationUploadPage.jsx'
 import MedicationValidationPage from './Provider/pages/MedicationValidationPage.jsx'
 import MessengerPage from './Apps/Messenger/MessengerPage.jsx'
-import PatientDashboardPage from './Patient/pages/PatientDashboardPage.jsx'
-import ProviderDashboardPage from './Provider/pages/ProviderDashboardPage.jsx'
 import RegisterPage from './Auth/pages/RegisterPage.jsx'
 import AuthProvider from './hooks/AuthProvider.jsx'
 import PrivateRoutes from './components/PrivateRoutes.jsx'
@@ -36,7 +34,6 @@ function App() {
 
                     <Route element={<PrivateRoutes />}>
                         <Route path="/dashboard" element={<DashboardRouteHandler />} />
-                        <Route path="/patient-dashboard" element={<PatientDashboardPage />} />
                         <Route path="/medication-upload" element={<MedicationUploadPage />} />
                         <Route path="/medication-validation" element={<MedicationValidationPage />} />
                         <Route path="/appointment-manager" element={<AppointmentManager />} />
