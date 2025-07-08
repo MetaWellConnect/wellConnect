@@ -47,7 +47,8 @@ server.post('/login', async (req, res, next) => {
 });
 
 server.post('/logout', async (req, res, next) => {
-
+    res.clearCookie('token');
+    return res.status(200).json('User logged out!');
 });
 
 
