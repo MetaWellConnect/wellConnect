@@ -69,6 +69,26 @@ server.get('/patients/:patientId', async (req, res, next) => {
 
 server.get('/patients/:patientId/provider', async (req, res, next) => {
     const patientId = Number(req.params.patientId);
+    const patient = await prisma.patient.findUnique({
+        where: { id: patientId },
+        include: { user: true }
+    });
+
+    if (!patient) {
+        return res.status(204).json(`No patient with id: ${patientId}`);
+    }
+
+    const providerId = patient.provider_id;
+    const provider = await prisma.provider.findUnique({
+        where: {id: providerId},
+        include: {user: true}
+    });
+
+    if (!provider) {
+        return res.status(204).json(`No provider with id: ${providerId}`);
+    }
+
+    return res.status(200).json(provider);
 });
 
 server.put('/patients/:patientId', async (req, res, next) => {
