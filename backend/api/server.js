@@ -221,9 +221,22 @@ server.delete('/patients/:patientId/medications/:medicationId', async (req, res,
     return res.status(200).json(medication);
 });
 
-server.put('/patients/:patientId/medications', async (req, res, next) => {
+server.put('/patients/:patientId/medications/:medicationId', async (req, res, next) => {
     const patientId = Number(req.params.patientId);
+    const medicationId = Number(req.params.medicationId);
 
+    const medicationInformation = req.body;
+
+    try {
+        const medication = await prisma.medication.update({
+            where: { id: medicationId, patient_id: patientId },
+            data: medicationInformation
+        });
+
+        return res.status(200).json(medication);
+    } catch (e) {
+        return res.status(204).json(`Failed to update medication! Error: ${e.message}`);
+    }
 });
 
 
