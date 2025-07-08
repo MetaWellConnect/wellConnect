@@ -80,8 +80,8 @@ server.get('/patients/:patientId/provider', async (req, res, next) => {
 
     const providerId = patient.provider_id;
     const provider = await prisma.provider.findUnique({
-        where: {id: providerId},
-        include: {user: true}
+        where: { id: providerId },
+        include: { user: true }
     });
 
     if (!provider) {
@@ -91,8 +91,22 @@ server.get('/patients/:patientId/provider', async (req, res, next) => {
     return res.status(200).json(provider);
 });
 
-server.put('/patients/:patientId', async (req, res, next) => {
+server.put('/patients/:patientId/provider', async (req, res, next) => {
     const patientId = Number(req.params.patientId);
+    const { provider_id } = req.body;
+
+    const patient = await prisma.patient.update({
+        where: { id: patientId },
+        include: { user: true },
+        data: { provider_id: provider_id }
+    });
+
+    if (!patient) {
+        return res.status(204).json(`No patient with id: ${patientId}`);
+    }
+
+    patient.provider_id = provider_id;
+    return res.status(200).json(patient);
 });
 
 
