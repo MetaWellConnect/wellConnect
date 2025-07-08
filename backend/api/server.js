@@ -177,12 +177,48 @@ server.get('/patients/:patientId/medications/:medicationId', async (req, res, ne
 
 server.post('/patients/:patientId/medications', async (req, res, next) => {
     const patientId = Number(req.params.patientId);
+    const { name, description, strength, treatment_id } = req.body;
+    const medicationData = {
+        name,
+        description,
+        strength,
+        patientId,
+        treatment_id
+    }
 
+    try {
+        const medication = await prisma.medication.create({
+            data: {
+                medicationData
+            }
+        });
+
+        return res.status(200).json(medication);
+    } catch (e) {
+        return res.status(204).json(`Failed to create medication! Error: ${e.message}`);
+    }
 });
 
 server.delete('/patients/:patientId/medications/:medicationId', async (req, res, next) => {
     const patientId = Number(req.params.patientId);
+    const medicationId = Number(req.params.medicationId);
+    const medication = await prisma.medication.findUnique({
+        where: { id: medicationId },
+    });
 
+    if (!medication) {
+        return res.status(204).json(`No medication with id: ${medicationId}`);
+    }
+
+    if (medication.patient_id != patientId) {
+        return res.status(204).json(`No medication belonging to patient with id: ${patientId}`)
+    }
+
+    await prisma.medication.delete({
+        where: { id: medicationId }
+    });
+
+    return res.status(200).json(medication);
 });
 
 server.put('/patients/:patientId/medications', async (req, res, next) => {

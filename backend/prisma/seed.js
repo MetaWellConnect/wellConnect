@@ -43,19 +43,16 @@ const Patient = [
 /* ----------  TREATMENT  ---------- */
 const Treatment = [
     {
-        id: 1,
         overview: 'Hypertension management plan',
         patient_id: 1,
         provider_id: 7,
     },
     {
-        id: 2,
         overview: 'Type 2 diabetes initial regimen',
         patient_id: 3,
         provider_id: 8,
     },
     {
-        id: 3,
         overview: 'Asthma control & education',
         patient_id: 5,
         provider_id: 9,
@@ -66,7 +63,6 @@ const Treatment = [
 const Medication = [
     /* --- Patient 1 / Treatment 1 --- */
     {
-        id: 1,
         name: 'Lisinopril',
         description: 'ACE inhibitor for blood-pressure control',
         strength: '10 mg',
@@ -80,7 +76,6 @@ const Medication = [
         treatment_id: 1,
     },
     {
-        id: 2,
         name: 'Amlodipine',
         description: 'Calcium-channel blocker once daily',
         strength: '5 mg',
@@ -96,7 +91,6 @@ const Medication = [
 
     /* --- Patient 3 / Treatment 2 --- */
     {
-        id: 3,
         name: 'Metformin',
         description: 'Biguanide with meals',
         strength: '500 mg',
@@ -110,7 +104,6 @@ const Medication = [
         treatment_id: 2,
     },
     {
-        id: 4,
         name: 'Glipizide',
         description: 'Sulfonylurea before breakfast',
         strength: '5 mg',
@@ -126,7 +119,6 @@ const Medication = [
 
     /* --- Patient 5 / Treatment 3 --- */
     {
-        id: 5,
         name: 'Albuterol Inhaler',
         description: 'SABA — two puffs PRN',
         strength: '90 µg/puff',
@@ -140,7 +132,6 @@ const Medication = [
         treatment_id: 3,
     },
     {
-        id: 6,
         name: 'Budesonide + Formoterol',
         description: 'ICS/LABA maintenance inhaler, one puff BID',
         strength: '160/4.5 µg',
