@@ -54,29 +54,41 @@ server.post('/logout', async (req, res, next) => {
 /* --- Patient Endpoints --- */
 
 server.get('/patients/:patientId', async (req, res, next) => {
+    const patientId = Number(req.params.patientId);
+    const patient = await prisma.patient.findUnique({
+        where: { id: patientId },
+        include: { user: true }
+    });
 
+    if (!patient) {
+        return res.status(204).json(`No patient with id: ${patientId}`);
+    }
+
+    return res.status(200).json(patient);
 });
 
 server.get('/patients/:patientId/provider', async (req, res, next) => {
-
+    const patientId = Number(req.params.patientId);
 });
 
 server.put('/patients/:patientId', async (req, res, next) => {
-
+    const patientId = Number(req.params.patientId);
 });
 
 
 /* --- Patient Endpoints --- */
 
 server.get('/providers/:providerId', async (req, res, next) => {
+    const providerId = Number(req.params.providerId);
+});
+
+server.get('/providers/:providerId/patients', async (req, res, next) => {
+    const providerId = Number(req.params.providerId);
 
 });
 
-server.get('/providers/:patientId/patients', async (req, res, next) => {
-
-});
-
-server.post('/providers/:patientId/patients', async (req, res, next) => {
+server.post('/providers/:providerId/patients', async (req, res, next) => {
+    const providerId = Number(req.params.providerId);
 
 });
 
@@ -84,22 +96,27 @@ server.post('/providers/:patientId/patients', async (req, res, next) => {
 /* --- Medication Endpoints --- */
 
 server.get('/patients/:patientId/medications', async (req, res, next) => {
+    const patientId = Number(req.params.patientId);
 
 });
 
 server.get('/patients/:patientId/medications/:medicationId', async (req, res, next) => {
+    const patientId = Number(req.params.patientId);
 
 });
 
 server.post('/patients/:patientId/medications', async (req, res, next) => {
+    const patientId = Number(req.params.patientId);
 
 });
 
 server.delete('/patients/:patientId/medications/:medicationId', async (req, res, next) => {
+    const patientId = Number(req.params.patientId);
 
 });
 
 server.put('/patients/:patientId/medications', async (req, res, next) => {
+    const patientId = Number(req.params.patientId);
 
 });
 
@@ -107,10 +124,12 @@ server.put('/patients/:patientId/medications', async (req, res, next) => {
 /* --- Treatment Endpoints --- */
 
 server.get('/patients/:patientId/treatment', async (req, res, next) => {
+    const patientId = Number(req.params.patientId);
 
 });
 
 server.put('/patients/:patientId/treatment', async (req, res, next) => {
+    const patientId = Number(req.params.patientId);
 
 });
 
