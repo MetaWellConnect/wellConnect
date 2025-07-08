@@ -93,12 +93,12 @@ server.get('/patients/:patientId/provider', async (req, res, next) => {
 
 server.put('/patients/:patientId/provider', async (req, res, next) => {
     const patientId = Number(req.params.patientId);
-    const { provider_id } = req.body;
+    const { providerId } = req.body;
 
     const patient = await prisma.patient.update({
         where: { id: patientId },
         include: { user: true },
-        data: { provider_id: provider_id }
+        data: { provider_id: providerId }
     });
 
     if (!patient) {
@@ -138,11 +138,6 @@ server.get('/providers/:providerId/patients', async (req, res, next) => {
     }
 
     return res.status(200).json(provider);
-});
-
-server.post('/providers/:providerId/patients', async (req, res, next) => {
-    const providerId = Number(req.params.providerId);
-
 });
 
 
