@@ -71,24 +71,24 @@ server.get('/patients/:patientId/provider', async (req, res, next) => {
     const patientId = Number(req.params.patientId);
     const patient = await prisma.patient.findUnique({
         where: { id: patientId },
-        include: { user: true }
+        include: {
+            provider: {
+                include: {
+                    user: true
+                }
+            }
+        }
     });
 
     if (!patient) {
         return res.status(204).json(`No patient with id: ${patientId}`);
     }
 
-    const providerId = patient.provider_id;
-    const provider = await prisma.provider.findUnique({
-        where: { id: providerId },
-        include: { user: true }
-    });
-
-    if (!provider) {
-        return res.status(204).json(`No provider with id: ${providerId}`);
+    if (!patient.provider) {
+        return res.status(204).json(`No patient has no provider!`);
     }
 
-    return res.status(200).json(provider);
+    return res.status(200).json(patient.provider);
 });
 
 server.put('/patients/:patientId/provider', async (req, res, next) => {
@@ -245,7 +245,7 @@ server.put('/patients/:patientId/medications/:medicationId', async (req, res, ne
 server.get('/patients/:patientId/treatment', async (req, res, next) => {
     const patientId = Number(req.params.patientId);
     const patient = await prisma.patient.findUnique({
-        where: {id: patientId},
+        where: { id: patientId },
         include: {
             treatment: {
                 include: {
@@ -265,7 +265,7 @@ server.get('/patients/:patientId/treatment', async (req, res, next) => {
 server.put('/patients/:patientId/treatment', async (req, res, next) => {
     const patientId = Number(req.params.patientId);
     const patient = await prisma.patient.findUnique({
-        where: {id: patientId},
+        where: { id: patientId },
         include: {
             treatment: {
                 include: {
@@ -284,7 +284,7 @@ server.put('/patients/:patientId/treatment', async (req, res, next) => {
 
     try {
         const treatment = await prisma.treatment.update({
-            where: {id: treatment_id},
+            where: { id: treatment_id },
             data: treatmentInformation
         });
 
