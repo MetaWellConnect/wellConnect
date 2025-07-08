@@ -128,7 +128,16 @@ server.get('/providers/:providerId', async (req, res, next) => {
 
 server.get('/providers/:providerId/patients', async (req, res, next) => {
     const providerId = Number(req.params.providerId);
+    const provider = await prisma.provider.findUnique({
+        where: { id: providerId },
+        include: { patients: true }
+    });
 
+    if (!provider) {
+        return res.status(204).json(`No provider with id: ${providerId}`);
+    }
+
+    return res.status(200).json(provider);
 });
 
 server.post('/providers/:providerId/patients', async (req, res, next) => {
