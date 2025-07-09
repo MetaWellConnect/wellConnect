@@ -110,6 +110,15 @@ export async function loginUser(email, password) {
     console.log(await response.json());
 }
 
+export async function logoutUser() {
+    const response = await fetch(`${API_URL}/logout`, getHttpOptions("POST"));
+    if (!response.ok) {
+        throw new Error("Failed to logout!");
+    }
+
+    console.log(await response.json());
+}
+
 export async function getCurrentUser(cookie) {
     const response = await fetch(`${API_URL}/login`, getHttpOptions("POST", userInfo));
     if (!response.ok) {
