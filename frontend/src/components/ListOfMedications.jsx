@@ -27,6 +27,7 @@ function ListOfMedications({ renderApprovalMedicationCard, id }) {
 
     return (
         <div className="">
+            {console.log(medicationList)}
             {medicationList.map((medication, index) => {
                 return (
                     <Fragment key={index}>

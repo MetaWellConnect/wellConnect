@@ -1,25 +1,38 @@
-import React, { createContext, useContext } from "react";
+import React, { createContext, useContext, useEffect, useState } from "react";
 import Cookies from "js-cookie"
 import { jwtDecode } from "jwt-decode"
-export const AuthContext = createContext();
+const AuthContext = createContext();
+const useAuth = () => useContext(AuthContext);
 
-export default function AuthProvider({ children }) {
-    const token = Cookies.get("token");
-    let user = null;
+function AuthProvider({ children }) {
+    const [user, setUser] = useState(null);
 
-    if (token) {
-        user = jwtDecode(token);
+    useEffect(() => {
+        const token = Cookies.get("token");
+        if (token) {
+            setUser(jwtDecode(token));
+        }
+    }, []);
+
+    const loginFrontend = () => {
+        const token = Cookies.get("token");
+        if (token) {
+            setUser(jwtDecode(token));
+            return "Successfully logged in!";
+        }
+
+        return "No token present!";
     }
 
-    function logout() {
-        user = null;
+    const logout = () => {
+        setUser(null);
+        return "Successfully logged out!";
     }
 
     return (
-        <AuthContext.Provider value={{ logout, user }}>{children}</AuthContext.Provider>
+        <AuthContext.Provider value={{ logout, loginFrontend, user }}>{children}</AuthContext.Provider>
     );
 }
 
-export function useAuth() {
-    return useContext(AuthContext);
-}
+export { AuthContext, useAuth };
+export default AuthProvider;

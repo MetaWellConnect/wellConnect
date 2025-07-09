@@ -1,15 +1,20 @@
 import { useState } from "react";
 import { useNavigate } from "react-router";
 import { loginUser } from "../../api";
+import { useAuth } from "../../hooks/AuthProvider";
 
 function LoginPage() {
     const navigate = useNavigate();
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
+    const { loginFrontend } = useAuth();
+
 
     const handlLoginSubmit = async (e) => {
         e.preventDefault();
+
         await loginUser(email, password);
+        loginFrontend();
 
         navigate('/dashboard');
     }

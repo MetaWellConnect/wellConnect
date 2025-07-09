@@ -11,37 +11,44 @@ import MedicationUploadPage from './Patient/pages/MedicationUploadPage.jsx'
 import MedicationValidationPage from './Provider/pages/MedicationValidationPage.jsx'
 import MessengerPage from './Apps/Messenger/MessengerPage.jsx'
 import RegisterPage from './Auth/pages/RegisterPage.jsx'
-import AuthProvider from './hooks/AuthProvider.jsx'
 import PrivateRoutes from './components/PrivateRoutes.jsx'
 import DashboardRouteHandler from './components/DashboardRouteHandler.jsx'
+import { useAuth } from './hooks/AuthProvider.jsx'
+
 
 function App() {
+    const { user } = useAuth();
+
     return (
-        <AuthProvider>
-            <BrowserRouter>
-                <nav className="navbar navbar-expand-lg bg-body-tertiary position-fixed container-fluid">
-                    <div className="container-fluid">
-                        <Link className="navbar-brand" to="/">MediScan</Link>
-                        <Link className="navbar-brand" to="/login">Login</Link>
-                    </div>
-                </nav>
+        <BrowserRouter>
+            <nav className="navbar navbar-expand-lg bg-body-tertiary position-fixed container-fluid">
+                <div className="container-fluid">
+                    <Link className="navbar-brand" to="/">MediScan</Link>
+                    {
+                        user ?
+                            <Link className="navbar-brand" to="/logout">Logout</Link>
+                            :
+                            <Link className="navbar-brand" to="/login">Login</Link>
+                    }
 
-                <Routes>
-                    <Route path="/" element={<LandingPage />} />
-                    <Route path="/login" element={<LoginPage />} />
-                    <Route path="/logout" element={<LogoutPage />} />
-                    <Route path="/register" element={<RegisterPage />} />
+                </div>
+            </nav>
 
-                    <Route element={<PrivateRoutes />}>
-                        <Route path="/dashboard" element={<DashboardRouteHandler />} />
-                        <Route path="/medication-upload" element={<MedicationUploadPage />} />
-                        <Route path="/medication-validation" element={<MedicationValidationPage />} />
-                        <Route path="/appointment-manager" element={<AppointmentManager />} />
-                        <Route path="/messenger" element={<MessengerPage />} />
-                    </Route>
-                </Routes>
-            </BrowserRouter>
-        </AuthProvider>
+            <Routes>
+                <Route path="/" element={<LandingPage />} />
+                <Route path="/login" element={<LoginPage />} />
+                <Route path="/logout" element={<LogoutPage />} />
+                <Route path="/register" element={<RegisterPage />} />
+
+                {user && <Route element={<PrivateRoutes />}>
+                    <Route path="/dashboard" element={<DashboardRouteHandler />} />
+                    <Route path="/medication-upload" element={<MedicationUploadPage />} />
+                    <Route path="/medication-validation" element={<MedicationValidationPage />} />
+                    <Route path="/appointment-manager" element={<AppointmentManager />} />
+                    <Route path="/messenger" element={<MessengerPage />} />
+                </Route>}
+            </Routes>
+        </BrowserRouter>
     );
 };
 

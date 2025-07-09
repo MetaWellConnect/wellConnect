@@ -14,6 +14,7 @@ function ProviderDashboardPage() {
             setProvider(await getProvider(4));
             setIsLoading(false);
         })();
+        console.log(provider)
     }, []);
 
     if (isLoading) {
