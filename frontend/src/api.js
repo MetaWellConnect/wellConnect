@@ -129,8 +129,8 @@ export async function getCurrentUser(cookie) {
 }
 
 export async function getPatient(patientId) {
-    const response = await fetch(`${API_URL}/patients/${patientId}`,getHttpOptions("GET"));
-    if(!response.ok) {
+    const response = await fetch(`${API_URL}/patients/${patientId}`, getHttpOptions("GET"));
+    if (!response.ok) {
         throw new Error(response);
     }
 
@@ -138,8 +138,8 @@ export async function getPatient(patientId) {
 }
 
 export async function getPatientMedications(patientId) {
-    const response = await fetch(`${API_URL}/patients/${patientId}/medications`,getHttpOptions("GET"));
-    if(!response.ok) {
+    const response = await fetch(`${API_URL}/patients/${patientId}/medications`, getHttpOptions("GET"));
+    if (!response.ok) {
         throw new Error(response);
     }
 
@@ -147,9 +147,29 @@ export async function getPatientMedications(patientId) {
 }
 
 export async function getPatientTreatment(patientId) {
-    const response = await fetch(`${API_URL}/patients/${patientId}/treatment`,getHttpOptions("GET"));
-    if(!response.ok) {
+    const response = await fetch(`${API_URL}/patients/${patientId}/treatment`, getHttpOptions("GET"));
+    if (!response.ok) {
         throw new Error(response);
+    }
+
+    return (await response.json());
+}
+
+export async function getProvider(providerId) {
+    const response = await fetch(`${API_URL}/providers/${providerId}`, getHttpOptions("GET"));
+    if (!response.ok) {
+        const errorResponse = await response.json();
+        throw new Error(`Error ${response.status}: ${errorResponse.message}`);
+    }
+
+    return (await response.json());
+}
+
+export async function getMedicationsToApprove(providerId) {
+    const response = await fetch(`${API_URL}/providers/${providerId}/medicationsToApprove`, getHttpOptions("GET"));
+    if (!response.ok) {
+        const errorResponse = await response.json();
+        throw new Error(`Error ${response.status}: ${errorResponse.message}`);
     }
 
     return (await response.json());
