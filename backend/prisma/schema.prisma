@@ -44,7 +44,7 @@ model Provider {
   id        Int         @id
   user      User        @relation(fields: [id], references: [id])
   patients  Patient[]
-  treatment Treatment[]
+  treatments Treatment[]
 }
 
 model Medication {
