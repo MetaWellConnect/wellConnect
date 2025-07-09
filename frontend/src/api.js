@@ -118,3 +118,30 @@ export async function getCurrentUser(cookie) {
 
     console.log(await response.json());
 }
+
+export async function getPatient(patientId) {
+    const response = await fetch(`${API_URL}/patients/${patientId}`,getHttpOptions("GET"));
+    if(!response.ok) {
+        throw new Error(response);
+    }
+
+    return (await response.json());
+}
+
+export async function getPatientMedications(patientId) {
+    const response = await fetch(`${API_URL}/patients/${patientId}/medications`,getHttpOptions("GET"));
+    if(!response.ok) {
+        throw new Error(response);
+    }
+
+    return (await response.json());
+}
+
+export async function getPatientTreatment(patientId) {
+    const response = await fetch(`${API_URL}/patients/${patientId}/treatment`,getHttpOptions("GET"));
+    if(!response.ok) {
+        throw new Error(response);
+    }
+
+    return (await response.json());
+}
