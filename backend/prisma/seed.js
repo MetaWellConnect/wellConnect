@@ -33,12 +33,13 @@ const Provider = [
 /* ----------  PATIENT  ---------- */
 const Patient = [
     { id: 1, provider_id: 7, treatment_id: 1 },
-    { id: 2, provider_id: 7, treatment_id: null },
-    { id: 3, provider_id: 8, treatment_id: 2 },
-    { id: 4, provider_id: 8, treatment_id: null },
-    { id: 5, provider_id: 9, treatment_id: 3 },
-    { id: 6, provider_id: 9, treatment_id: null },
+    { id: 2, provider_id: 7, treatment_id: 2 },
+    { id: 3, provider_id: 8, treatment_id: 3 },
+    { id: 4, provider_id: 8, treatment_id: 4 },
+    { id: 5, provider_id: 9, treatment_id: 5 },
+    { id: 6, provider_id: 9, treatment_id: 6 },
 ];
+
 
 /* ----------  TREATMENT  ---------- */
 const Treatment = [
@@ -48,8 +49,18 @@ const Treatment = [
         provider_id: 7,
     },
     {
+        overview: 'General wellness assessment',
+        patient_id: 2,
+        provider_id: 7,
+    },
+    {
         overview: 'Type 2 diabetes initial regimen',
         patient_id: 3,
+        provider_id: 8,
+    },
+    {
+        overview: 'Weight management counseling',
+        patient_id: 4,
         provider_id: 8,
     },
     {
@@ -57,7 +68,13 @@ const Treatment = [
         patient_id: 5,
         provider_id: 9,
     },
+    {
+        overview: 'Seasonal allergies treatment',
+        patient_id: 6,
+        provider_id: 9,
+    },
 ];
+
 
 /* ----------  MEDICATION  ---------- */
 const Medication = [

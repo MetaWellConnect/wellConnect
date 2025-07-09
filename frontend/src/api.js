@@ -165,6 +165,17 @@ export async function getProvider(providerId) {
     return (await response.json());
 }
 
+export async function getProviderPatients(providerId) {
+    const response = await fetch(`${API_URL}/providers/${providerId}/patients`, getHttpOptions("GET"));
+    if (!response.ok) {
+        const errorResponse = await response.json();
+        throw new Error(`Error ${response.status}: ${errorResponse.message}`);
+    }
+
+    return (await response.json());
+}
+
+
 export async function getMedicationsToApprove(providerId) {
     const response = await fetch(`${API_URL}/providers/${providerId}/medicationsToApprove`, getHttpOptions("GET"));
     if (!response.ok) {

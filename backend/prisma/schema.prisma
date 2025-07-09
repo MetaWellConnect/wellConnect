@@ -71,5 +71,5 @@ model Treatment {
   patient     Patient      @relation(fields: [patient_id], references: [id])
   patient_id  Int          @unique
   provider    Provider     @relation(fields: [provider_id], references: [id])
-  provider_id Int          @unique
+  provider_id Int
 }

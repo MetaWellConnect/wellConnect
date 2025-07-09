@@ -1,6 +1,6 @@
 import PatientCard from "./PatientCard"
 import React, { useEffect, useState } from "react";
-import {getProviderPatients} from "../../../testAPI"
+import { getProviderPatients } from "../../api";
 
 export default function ListOfPatients({ providerId }) {
     const [patients, setPatients] = useState();
