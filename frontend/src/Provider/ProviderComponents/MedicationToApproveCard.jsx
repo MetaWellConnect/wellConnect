@@ -30,7 +30,7 @@ function MedicationToApproveCard({ pendingMedication }) {
 
                 <section className="medication-card-buttons">
                     <ViewTreatmentPlanButton patient={patient} />
-                    <ApproveMedicationButton pendingMedication={pendingMedication} />
+                    <ApproveMedicationButton patient={patient} pendingMedication={pendingMedication} />
                     <DenyMedicationButton />
                 </section>
             </div>
