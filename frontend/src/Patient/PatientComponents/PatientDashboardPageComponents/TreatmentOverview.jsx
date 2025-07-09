@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { getPatientTreatment } from "../../../api";
 
-function TreatmentOverview() {
+function TreatmentOverview({ id }) {
     const [treatment, setTreatment] = useState(null);
     const [isLoading, setIsLoading] = useState(true);
 
