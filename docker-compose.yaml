@@ -43,8 +43,20 @@ services:
     networks:
       - mediscan-network
 
+  ollama:
+    image: ollama/ollama:latest
+    container_name: ollama
+    restart: unless-stopped
+    ports:
+      - 11434:11434
+    volumes:
+      - ./ollama_data:/root/.ollama
+    entrypoint:
+      /bin/bash -c "ollama serve && ollama run phi3:mini"
+
 networks:
   mediscan-network:
 
 volumes:
   mediscan_data:
+  ollama_data:
