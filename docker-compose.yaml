@@ -46,13 +46,13 @@ services:
   ollama:
     image: ollama/ollama:latest
     container_name: ollama
-    restart: unless-stopped
     ports:
       - 11434:11434
     volumes:
-      - ./ollama_data:/root/.ollama
+      - ollama_data:/root/.ollama
     entrypoint:
-      /bin/bash -c "ollama serve && ollama run phi3:mini"
+      /bin/bash -c "ollama serve & sleep 5 && ollama pull llama3.2:3b"
+    tty: true
 
 networks:
   mediscan-network:
