@@ -144,7 +144,7 @@ const Medication = [
         photo_url: 'https://picsum.photos/seed/metformin/200/200',
         approved: null,
         patient_id: 3,
-        treatment_id: 2,
+        treatment_id: 3,
     },
     {
         name: 'Metformin',
@@ -157,7 +157,7 @@ const Medication = [
         photo_url: 'https://picsum.photos/seed/metformin/200/200',
         approved: null,
         patient_id: 3,
-        treatment_id: 2,
+        treatment_id: 3,
     },
     {
         name: 'Metformin',
@@ -170,7 +170,7 @@ const Medication = [
         photo_url: 'https://picsum.photos/seed/metformin/200/200',
         approved: null,
         patient_id: 3,
-        treatment_id: 2,
+        treatment_id: 3,
     },
     {
         name: 'Glipizide',
@@ -183,7 +183,7 @@ const Medication = [
         photo_url: 'https://picsum.photos/seed/glipizide/200/200',
         approved: false,
         patient_id: 3,
-        treatment_id: 2,
+        treatment_id: 3,
     },
 
     /* --- Patient 5 / Treatment 3 --- */
@@ -198,7 +198,7 @@ const Medication = [
         photo_url: 'https://picsum.photos/seed/albuterol/200/200',
         approved: true,
         patient_id: 5,
-        treatment_id: 3,
+        treatment_id: 5,
     },
     {
         name: 'Budesonide + Formoterol',
@@ -211,7 +211,7 @@ const Medication = [
         photo_url: 'https://picsum.photos/seed/budesonide/200/200',
         approved: true,
         patient_id: 5,
-        treatment_id: 3,
+        treatment_id: 5,
     },
 ];
 
