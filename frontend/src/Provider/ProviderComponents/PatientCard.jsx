@@ -1,4 +1,3 @@
-import React from "react";
 import ViewTreatmentPlanButton from "./ViewTreatmentPlanButton";
 
 export default function PatientCard({ patient }) {

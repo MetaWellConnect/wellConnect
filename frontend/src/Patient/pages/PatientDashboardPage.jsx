@@ -4,7 +4,7 @@ import GoToChatButton from '../../components/GoToChatButton.jsx';
 import GoToUploadMedicationButton from '../PatientComponents/PatientDashboardPageComponents/GoToUploadMedicationButton.jsx';
 import ListOfMedications from '../../components/ListOfMedications.jsx'
 import TreatmentOverview from '../PatientComponents/PatientDashboardPageComponents/TreatmentOverview.jsx';
-import { getPatient } from '../../api.js';
+import * as API from '../../api.js';
 import { useAuth } from "../../hooks/AuthProvider.jsx";
 
 function PatientDashboardPage() {
@@ -14,7 +14,7 @@ function PatientDashboardPage() {
 
     useEffect(() => {
         (async () => {
-            setPatient(await getPatient(user.id));
+            setPatient(await API.getPatient(user.id));
             setIsLoading(false);
         })();
     }, []);

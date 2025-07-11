@@ -3,7 +3,7 @@ import GoToAppointmentManagerButton from "../../components/GoToAppointmentManage
 import GoToChatButton from "../../components/GoToChatButton";
 import ListOfMedications from "../../components/ListOfMedications"
 import ListOfPatients from "../ProviderComponents/ListOfPatients";
-import { getProvider } from "../../api";
+import * as API from "../../api";
 import { useAuth } from "../../hooks/AuthProvider";
 
 function ProviderDashboardPage() {
@@ -13,7 +13,7 @@ function ProviderDashboardPage() {
 
     useEffect(() => {
         (async () => {
-            setProvider(await getProvider(user.id));
+            setProvider(await API.getProvider(user.id));
             setIsLoading(false);
         })();
     }, []);

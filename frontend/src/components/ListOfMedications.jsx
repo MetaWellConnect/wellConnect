@@ -1,7 +1,7 @@
 import MedicationCard from "../Patient/PatientComponents/PatientDashboardPageComponents/MedicationCard.jsx";
 import MedicationToApproveCard from "../Provider/ProviderComponents/MedicationToApproveCard.jsx"
 import { Fragment, useEffect, useState } from "react";
-import { getPatientMedications, getMedicationsToApprove } from "../api.js";
+import * as API from "../api.js";
 
 function ListOfMedications({ renderApprovalMedicationCard, id }) {
     const [medicationList, setMedicationList] = useState([""]);
@@ -10,11 +10,11 @@ function ListOfMedications({ renderApprovalMedicationCard, id }) {
     useEffect(() => {
         (async () => {
             if (renderApprovalMedicationCard) {
-                setMedicationList(await getMedicationsToApprove(id));
+                setMedicationList(await API.getMedicationsToApprove(id));
             }
 
             else {
-                setMedicationList(await getPatientMedications(id));
+                setMedicationList(await API.getPatientMedications(id));
             }
             setIsLoading(false);
         })();

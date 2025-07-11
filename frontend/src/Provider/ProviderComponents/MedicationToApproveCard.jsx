@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import ApproveMedicationButton from "./ApproveMedicationButton";
 import DenyMedicationButton from "./DenyMedicationButton";
 import ViewTreatmentPlanButton from "./ViewTreatmentPlanButton";
-import { getPatient } from "../../api";
+import * as API from "../../api";
 
 function MedicationToApproveCard({ pendingMedication }) {
     const [patient, setPatient] = useState("");
@@ -10,7 +10,7 @@ function MedicationToApproveCard({ pendingMedication }) {
 
     useEffect(() => {
         (async () => {
-            setPatient(await getPatient(pendingMedication.patient_id));
+            setPatient(await API.getPatient(pendingMedication.patient_id));
             setIsLoading(false);
         })();
     }, []);

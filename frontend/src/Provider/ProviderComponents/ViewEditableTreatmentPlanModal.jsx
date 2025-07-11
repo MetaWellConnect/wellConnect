@@ -1,6 +1,6 @@
-import React, {useEffect, useState} from "react";
+import {useEffect, useState} from "react";
 import Modal from "react-bootstrap/Modal"
-import {getPatientTreatment, getPatientMedications} from "../../api"
+import * as API from "../../api"
 
 
 export default function ViewTreatmentPlanModal({ patient, onHide, show }) {
@@ -13,10 +13,10 @@ export default function ViewTreatmentPlanModal({ patient, onHide, show }) {
 
         useEffect(() => {
             (async () => {
-                const treatmentResponse = await getPatientTreatment(patient.id);
+                const treatmentResponse = await API.getPatientTreatment(patient.id);
                 setTreatment(treatmentResponse);
 
-                const medicationsResponse = await getPatientMedications(patient.id);
+                const medicationsResponse = await API.getPatientMedications(patient.id);
                 setMedications(medicationsResponse);
 
                 setTreatmentOverview(treatmentResponse.overview);
