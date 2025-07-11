@@ -63,9 +63,6 @@ CREATE UNIQUE INDEX "User_email_key" ON "User"("email");
 -- CreateIndex
 CREATE UNIQUE INDEX "Treatment_patient_id_key" ON "Treatment"("patient_id");
 
--- CreateIndex
-CREATE UNIQUE INDEX "Treatment_provider_id_key" ON "Treatment"("provider_id");
-
 -- AddForeignKey
 ALTER TABLE "Patient" ADD CONSTRAINT "Patient_id_fkey" FOREIGN KEY ("id") REFERENCES "User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 

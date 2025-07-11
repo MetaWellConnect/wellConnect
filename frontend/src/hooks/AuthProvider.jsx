@@ -24,13 +24,13 @@ function AuthProvider({ children }) {
         return "No token present!";
     }
 
-    const logout = () => {
+    const logoutFrontend = () => {
         setUser(null);
         return "Successfully logged out!";
     }
 
     return (
-        <AuthContext.Provider value={{ logout, loginFrontend, user }}>{children}</AuthContext.Provider>
+        <AuthContext.Provider value={{ logoutFrontend, loginFrontend, user }}>{children}</AuthContext.Provider>
     );
 }
 
