@@ -33,12 +33,13 @@ const Provider = [
 /* ----------  PATIENT  ---------- */
 const Patient = [
     { id: 1, provider_id: 7, treatment_id: 1 },
-    { id: 2, provider_id: 7, treatment_id: null },
-    { id: 3, provider_id: 8, treatment_id: 2 },
-    { id: 4, provider_id: 8, treatment_id: null },
-    { id: 5, provider_id: 9, treatment_id: 3 },
-    { id: 6, provider_id: 9, treatment_id: null },
+    { id: 2, provider_id: 7, treatment_id: 2 },
+    { id: 3, provider_id: 8, treatment_id: 3 },
+    { id: 4, provider_id: 8, treatment_id: 4 },
+    { id: 5, provider_id: 9, treatment_id: 5 },
+    { id: 6, provider_id: 9, treatment_id: 6 },
 ];
+
 
 /* ----------  TREATMENT  ---------- */
 const Treatment = [
@@ -48,8 +49,18 @@ const Treatment = [
         provider_id: 7,
     },
     {
+        overview: 'General wellness assessment',
+        patient_id: 2,
+        provider_id: 7,
+    },
+    {
         overview: 'Type 2 diabetes initial regimen',
         patient_id: 3,
+        provider_id: 8,
+    },
+    {
+        overview: 'Weight management counseling',
+        patient_id: 4,
         provider_id: 8,
     },
     {
@@ -57,7 +68,13 @@ const Treatment = [
         patient_id: 5,
         provider_id: 9,
     },
+    {
+        overview: 'Seasonal allergies treatment',
+        patient_id: 6,
+        provider_id: 9,
+    },
 ];
+
 
 /* ----------  MEDICATION  ---------- */
 const Medication = [
@@ -88,6 +105,32 @@ const Medication = [
         patient_id: 1,
         treatment_id: 1,
     },
+    {
+        name: 'Amlodipine',
+        description: 'Calcium-channel blocker once daily',
+        strength: '5 mg',
+        time_of_last_dose: new Date('2025-07-06T08:00:00Z'),
+        time_of_next_dose: new Date('2025-07-07T08:00:00Z'),
+        number_of_required_doses: 30,
+        number_of_taken_doses: 5,
+        photo_url: 'https://picsum.photos/seed/amlodipine/200/200',
+        approved: null,
+        patient_id: 1,
+        treatment_id: 1,
+    },
+    {
+        name: 'Amlodipine',
+        description: 'Calcium-channel blocker once daily',
+        strength: '5 mg',
+        time_of_last_dose: new Date('2025-07-06T08:00:00Z'),
+        time_of_next_dose: new Date('2025-07-07T08:00:00Z'),
+        number_of_required_doses: 30,
+        number_of_taken_doses: 5,
+        photo_url: 'https://picsum.photos/seed/amlodipine/200/200',
+        approved: null,
+        patient_id: 1,
+        treatment_id: 1,
+    },
 
     /* --- Patient 3 / Treatment 2 --- */
     {
@@ -101,7 +144,33 @@ const Medication = [
         photo_url: 'https://picsum.photos/seed/metformin/200/200',
         approved: null,
         patient_id: 3,
-        treatment_id: 2,
+        treatment_id: 3,
+    },
+    {
+        name: 'Metformin',
+        description: 'Biguanide with meals',
+        strength: '500 mg',
+        time_of_last_dose: new Date('2025-07-06T13:00:00Z'),
+        time_of_next_dose: new Date('2025-07-06T19:00:00Z'),
+        number_of_required_doses: 60,
+        number_of_taken_doses: 12,
+        photo_url: 'https://picsum.photos/seed/metformin/200/200',
+        approved: null,
+        patient_id: 3,
+        treatment_id: 3,
+    },
+    {
+        name: 'Metformin',
+        description: 'Biguanide with meals',
+        strength: '500 mg',
+        time_of_last_dose: new Date('2025-07-06T13:00:00Z'),
+        time_of_next_dose: new Date('2025-07-06T19:00:00Z'),
+        number_of_required_doses: 60,
+        number_of_taken_doses: 12,
+        photo_url: 'https://picsum.photos/seed/metformin/200/200',
+        approved: null,
+        patient_id: 3,
+        treatment_id: 3,
     },
     {
         name: 'Glipizide',
@@ -114,7 +183,7 @@ const Medication = [
         photo_url: 'https://picsum.photos/seed/glipizide/200/200',
         approved: false,
         patient_id: 3,
-        treatment_id: 2,
+        treatment_id: 3,
     },
 
     /* --- Patient 5 / Treatment 3 --- */
@@ -129,7 +198,7 @@ const Medication = [
         photo_url: 'https://picsum.photos/seed/albuterol/200/200',
         approved: true,
         patient_id: 5,
-        treatment_id: 3,
+        treatment_id: 5,
     },
     {
         name: 'Budesonide + Formoterol',
@@ -142,7 +211,7 @@ const Medication = [
         photo_url: 'https://picsum.photos/seed/budesonide/200/200',
         approved: true,
         patient_id: 5,
-        treatment_id: 3,
+        treatment_id: 5,
     },
 ];
 
