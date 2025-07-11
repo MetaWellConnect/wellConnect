@@ -195,7 +195,7 @@ server.get('/providers/:providerId/medicationsToApprove', async (req, res, next)
         include: {
             treatments: {
                 include: {
-                    medications: true
+                    medications: true // Includes patient_id
                 }
             }
         }

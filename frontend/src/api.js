@@ -1,5 +1,19 @@
 const API_URL = import.meta.env.VITE_API_URL;
 
+async function fetchWithErrorHandling(url, options) {
+    const response = await fetch(url, options);
+    if (!response.ok) {
+        const errorMessage = await response.json();
+        const errorStatus = response.status;
+
+        const error = new Error(errorMessage);
+        error.status = errorStatus;
+        throw error;
+    }
+
+    return response;
+}
+
 function getHttpOptions(httpMethod, bodyContent) {
     const NUM_OF_ARGS = 2;
     let options;
@@ -85,11 +99,7 @@ export async function registerUser(firstName, lastName, email, password, account
         }
     }
 
-    const response = await fetch(`${API_URL}/register`, getHttpOptions("POST", userInfo))
-    if (!response.ok) {
-        throw new Error("Failed to register user!");
-    }
-
+    const response = await fetchWithErrorHandling(`${API_URL}/register`, getHttpOptions("POST", userInfo))
     console.log(await response.json());
     return true;
 }
@@ -102,25 +112,19 @@ export async function loginUser(email, password) {
         }
     }
 
-    const response = await fetch(`${API_URL}/login`, getHttpOptions("POST", userInfo));
-    if (!response.ok) {
-        throw new Error("Invalid credentials!");
-    }
+    const response = await fetchWithErrorHandling(`${API_URL}/login`, getHttpOptions("POST", userInfo));
 
     console.log(await response.json());
 }
 
 export async function logoutUser() {
-    const response = await fetch(`${API_URL}/logout`, getHttpOptions("POST"));
-    if (!response.ok) {
-        throw new Error("Failed to logout!");
-    }
+    const response = await fetchWithErrorHandling(`${API_URL}/logout`, getHttpOptions("POST"));
 
     console.log(await response.json());
 }
 
 export async function getCurrentUser(cookie) {
-    const response = await fetch(`${API_URL}/login`, getHttpOptions("POST", userInfo));
+    const response = await fetchWithErrorHandling(`${API_URL}/login`, getHttpOptions("POST", userInfo));
     if (!response.ok) {
         throw new Error("Invalid credentials!");
     }
@@ -129,59 +133,38 @@ export async function getCurrentUser(cookie) {
 }
 
 export async function getPatient(patientId) {
-    const response = await fetch(`${API_URL}/patients/${patientId}`, getHttpOptions("GET"));
-    if (!response.ok) {
-        throw new Error(response);
-    }
+    const response = await fetchWithErrorHandling(`${API_URL}/patients/${patientId}`, getHttpOptions("GET"));
 
     return (await response.json());
 }
 
 export async function getPatientMedications(patientId) {
-    const response = await fetch(`${API_URL}/patients/${patientId}/medications`, getHttpOptions("GET"));
-    if (!response.ok) {
-        throw new Error(response);
-    }
+    const response = await fetchWithErrorHandling(`${API_URL}/patients/${patientId}/medications`, getHttpOptions("GET"));
 
     return (await response.json());
 }
 
 export async function getPatientTreatment(patientId) {
-    const response = await fetch(`${API_URL}/patients/${patientId}/treatment`, getHttpOptions("GET"));
-    if (!response.ok) {
-        throw new Error(response);
-    }
+    const response = await fetchWithErrorHandling(`${API_URL}/patients/${patientId}/treatment`, getHttpOptions("GET"));
 
     return (await response.json());
 }
 
 export async function getProvider(providerId) {
-    const response = await fetch(`${API_URL}/providers/${providerId}`, getHttpOptions("GET"));
-    if (!response.ok) {
-        const errorResponse = await response.json();
-        throw new Error(`Error ${response.status}: ${errorResponse.message}`);
-    }
+    const response = await fetchWithErrorHandling(`${API_URL}/providers/${providerId}`, getHttpOptions("GET"));
 
     return (await response.json());
 }
 
 export async function getProviderPatients(providerId) {
-    const response = await fetch(`${API_URL}/providers/${providerId}/patients`, getHttpOptions("GET"));
-    if (!response.ok) {
-        const errorResponse = await response.json();
-        throw new Error(`Error ${response.status}: ${errorResponse.message}`);
-    }
+    const response = await fetchWithErrorHandling(`${API_URL}/providers/${providerId}/patients`, getHttpOptions("GET"));
 
     return (await response.json());
 }
 
 
 export async function getMedicationsToApprove(providerId) {
-    const response = await fetch(`${API_URL}/providers/${providerId}/medicationsToApprove`, getHttpOptions("GET"));
-    if (!response.ok) {
-        const errorResponse = await response.json();
-        throw new Error(`Error ${response.status}: ${errorResponse.message}`);
-    }
+    const response = await fetchWithErrorHandling(`${API_URL}/providers/${providerId}/medicationsToApprove`, getHttpOptions("GET"));
 
     return (await response.json());
 }
