@@ -12,7 +12,7 @@ const argon2 = require('argon2')
 async function registerUser(user) {
     const userInDatabase = await prisma.user.findUnique({ where: { email: user.email } });
 
-    if (!userInDatabase) {
+    if (userInDatabase) {
         return false;
     }
 

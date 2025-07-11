@@ -1,9 +1,9 @@
-import React, {useEffect, useState} from "react";
+import {useEffect, useState} from "react";
 import Modal from "react-bootstrap/Modal"
-import {getPatientTreatmentPlan, getPatientMedications} from "../../../testAPI"
+import * as API from "../../api"
 
 
-export default function ViewTreatmentPlanModal({ patientId, onHide, show }) {
+export default function ViewTreatmentPlanModal({ patient, onHide, show }) {
         const [treatment, setTreatment] = useState("");
         const [medications, setMedications] = useState([]);
         const [isLoading, setIsLoading] = useState(true);
@@ -13,10 +13,10 @@ export default function ViewTreatmentPlanModal({ patientId, onHide, show }) {
 
         useEffect(() => {
             (async () => {
-                const treatmentResponse = await getPatientTreatmentPlan(patientId);
+                const treatmentResponse = await API.getPatientTreatment(patient.id);
                 setTreatment(treatmentResponse);
 
-                const medicationsResponse = await getPatientMedications(patientId);
+                const medicationsResponse = await API.getPatientMedications(patient.id);
                 setMedications(medicationsResponse);
 
                 setTreatmentOverview(treatmentResponse.overview);
@@ -44,7 +44,7 @@ export default function ViewTreatmentPlanModal({ patientId, onHide, show }) {
     return (
         <Modal show={show} size="lg" centered onHide={onHide}>
             <Modal.Header closeButton>
-                <h2>{treatment.patient_id}</h2>
+                <h2>{patient.user.first_name} {patient.user.last_name}</h2>
             </Modal.Header>
 
             <Modal.Body>
