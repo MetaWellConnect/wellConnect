@@ -1,6 +1,6 @@
 import PatientCard from "./PatientCard"
 import React, { useEffect, useState } from "react";
-import {getProviderPatients} from "../../../testAPI"
+import * as API from "../../api";
 
 export default function ListOfPatients({ providerId }) {
     const [patients, setPatients] = useState();
@@ -8,7 +8,7 @@ export default function ListOfPatients({ providerId }) {
 
     useEffect(() => {
         (async () => {
-            setPatients(await getProviderPatients(providerId));
+            setPatients(await API.getProviderPatients(providerId));
             setIsLoading(false);
         })();
     }, []);

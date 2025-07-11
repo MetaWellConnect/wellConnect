@@ -1,5 +1,11 @@
 const { PrismaClient } = require('../generated/prisma');
-const prisma = new PrismaClient();
+const prisma = new PrismaClient({
+    omit: {
+        user: {
+            password_hash: true
+        }
+    }
+});
 const express = require('express');
 const helmet = require('helmet');
 const cors = require('cors');
@@ -106,7 +112,6 @@ server.put('/patients/:patientId/provider', async (req, res, next) => {
         return res.status(204).json(`No patient with id: ${patientId}`);
     }
 
-    patient.provider_id = provider_id;
     return res.status(200).json(patient);
 });
 
@@ -131,14 +136,21 @@ server.get('/providers/:providerId/patients', async (req, res, next) => {
     const providerId = Number(req.params.providerId);
     const provider = await prisma.provider.findUnique({
         where: { id: providerId },
-        include: { patients: true }
+        include: {
+            patients:
+            {
+                include: {
+                    user: true
+                }
+            }
+        }
     });
 
     if (!provider) {
         return res.status(204).json(`No provider with id: ${providerId}`);
     }
 
-    return res.status(200).json(provider);
+    return res.status(200).json(provider.patients);
 });
 
 
@@ -174,6 +186,30 @@ server.get('/patients/:patientId/medications/:medicationId', async (req, res, ne
     }
 
     return res.status(200).json(medication);
+});
+
+server.get('/providers/:providerId/medicationsToApprove', async (req, res, next) => {
+    const providerId = Number(req.params.providerId);
+    const treatments = await prisma.provider.findUnique({
+        where: {id: providerId},
+        include: {
+            treatments: {
+                include: {
+                    medications: true // Includes patient_id
+                }
+            }
+        }
+    });
+
+    let medications = [];
+    treatments.treatments.forEach((treatment) => {
+        medications = [...medications, ...treatment.medications]
+    });
+
+    // Medications that have a null approved field have yet to be examined by the provider
+    medications = medications.filter((medication) => medication.approved === null);
+
+    return res.status(200).json(medications);
 });
 
 server.post('/patients/:patientId/medications', async (req, res, next) => {

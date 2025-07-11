@@ -3,15 +3,17 @@ import GoToAppointmentManagerButton from "../../components/GoToAppointmentManage
 import GoToChatButton from "../../components/GoToChatButton";
 import ListOfMedications from "../../components/ListOfMedications"
 import ListOfPatients from "../ProviderComponents/ListOfPatients";
-import { getProvider } from "../../../testAPI";
+import * as API from "../../api";
+import { useAuth } from "../../hooks/AuthProvider";
 
 function ProviderDashboardPage() {
     const [provider, setProvider] = useState("");
     const [isLoading, setIsLoading] = useState(true);
+    const { user } = useAuth();
 
     useEffect(() => {
         (async () => {
-            setProvider(await getProvider(4));
+            setProvider(await API.getProvider(user.id));
             setIsLoading(false);
         })();
     }, []);
@@ -25,18 +27,17 @@ function ProviderDashboardPage() {
     return (
         <>
             <div className="container text-left justify-content-left">
-                <h1>Welcome {provider.first_name}!</h1>
-
+                <h1>Welcome {provider.user.first_name}!</h1>
 
                 <div className="row d-flex flex-wrap">
                     <div className="col-sm">
                         <h2>Pending Medications</h2>
-                        <ListOfMedications renderApprovalMedicationCard={true} id={provider.id}/>
+                        <ListOfMedications renderApprovalMedicationCard={true} id={provider.id} />
                     </div>
 
                     <div className="col-sm">
                         <h2>Patients</h2>
-                        <ListOfPatients providerId={provider.id}/>
+                        <ListOfPatients providerId={provider.id} />
                         <GoToChatButton />
                         <GoToAppointmentManagerButton />
                     </div>
