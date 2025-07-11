@@ -15,7 +15,7 @@ def health_check():
 @app.route("/run-ocr", methods=["POST"])
 def run_ocr():
     if 'medicationImage' not in request.files:
-        return jsonify(message="No medication image uploaded!"), 422
+        return jsonify("No medication image uploaded!"), 422
 
     image = request.files["medicationImage"]
     image_data = numpy.array(Image.open(image))
