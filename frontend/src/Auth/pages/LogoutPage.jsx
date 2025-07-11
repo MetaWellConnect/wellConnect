@@ -1,22 +1,35 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useAuth } from "../../hooks/AuthProvider";
 import { logoutUser } from "../../api";
 import { useNavigate } from "react-router";
 
 function LogoutPage() {
+    const [isLoggedOut, setIsLoggedOut] = useState(false);
     const { logoutFrontend } = useAuth();
     const navigate = useNavigate();
 
     useEffect(() => {
         (async () => {
-            logoutFrontend();
-            logoutUser();
+            try {
+                await logoutFrontend();
+                await logoutUser();
+                setIsLoggedOut(true);
+            } catch (error) {
+                console.error(error)
 
-            setTimeout(() => {
+            } finally {
                 navigate('/');
-            }, 3000);
+            }
         })();
     }, []);
+
+    if (!isLoggedOut) {
+        return (
+            <div className="d-flex vh-100 align-items-center justify-content-center">
+                <h1>Failed to log out of MediScan!</h1>
+            </div>
+        );
+    }
 
     return (
         <div className="d-flex vh-100 align-items-center justify-content-center">
