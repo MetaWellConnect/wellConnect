@@ -188,6 +188,30 @@ server.get('/patients/:patientId/medications/:medicationId', async (req, res, ne
     return res.status(200).json(medication);
 });
 
+server.get('/providers/:providerId/medicationsToApprove', async (req, res, next) => {
+    const providerId = Number(req.params.providerId);
+    const treatments = await prisma.provider.findUnique({
+        where: {id: providerId},
+        include: {
+            treatments: {
+                include: {
+                    medications: true // Includes patient_id
+                }
+            }
+        }
+    });
+
+    let medications = [];
+    treatments.treatments.forEach((treatment) => {
+        medications = [...medications, ...treatment.medications]
+    });
+
+    // Medications that have a null approved field have yet to be examined by the provider
+    medications = medications.filter((medication) => medication.approved === null);
+
+    return res.status(200).json(medications);
+});
+
 server.post('/patients/:patientId/medications', async (req, res, next) => {
     const patientId = Number(req.params.patientId);
     const { name, description, strength, treatment_id } = req.body;
