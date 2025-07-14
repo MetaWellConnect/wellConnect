@@ -2,6 +2,7 @@ const { PrismaClient } = require('../generated/prisma');
 const prisma = new PrismaClient();
 const jwt = require('jsonwebtoken')
 const argon2 = require('argon2')
+require('dotenv').config()
 
 /**
  * This function takes the user information and attempts to register it

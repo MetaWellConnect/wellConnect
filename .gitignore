@@ -1,2 +1,5 @@
 .env
 .DS_Store
+.python-version
+node_modules
+PaddleOCR
