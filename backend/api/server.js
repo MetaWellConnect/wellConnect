@@ -29,6 +29,28 @@ const corsOptons = {
 
 server.use(cors(corsOptons));
 
+/* --- OCR Endpoints --- */
+
+server.post('/medications/run-ocr', async (req, res, next) => {
+    const patientId = req.params.patientId;
+
+    if (!req.files) {
+        return res.status(422).json("No medication image uploaded!");
+    }
+
+    const form = new FormData()
+    form.append("medicationImage", req.files.medicationImage, {
+        filename: req.files.medicationImage.name,
+        contentType: req.files.medicationImage.mimetype
+    });
+
+    try {
+        const ocrText = await runOCROnImage(form);
+        return res.status(200).json(ocrText);
+    } catch (e) {
+        return res.status(e.status).json(e.message)
+    }
+});
 
 /* --- Auth Endpoints --- */
 
@@ -53,27 +75,6 @@ server.post('/login', async (req, res, next) => {
         return res.status(200).json("Successfully authenticated!");
     }
     return res.status(401).json("Invalid credentials!");
-});
-
-server.post('/medications/run-ocr', async (req, res, next) => {
-    const patientId = req.params.patientId;
-
-    if (!req.files) {
-        return res.status(422).json("No medication image uploaded!");
-    }
-
-    const form = new FormData()
-    form.append("medicationImage", req.files.medicationImage, {
-        filename: req.files.medicationImage.name,
-        contentType: req.files.medicationImage.mimetype
-    });
-
-    try {
-        const ocrText = await runOCROnImage(form);
-        return res.status(200).json(ocrText);
-    } catch (e) {
-        return res.status(e.status).json(e.message)
-    }
 });
 
 server.post('/logout', async (req, res, next) => {
