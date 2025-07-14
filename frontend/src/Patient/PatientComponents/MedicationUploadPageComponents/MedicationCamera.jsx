@@ -7,11 +7,6 @@ function MedicationWebcam({ imgSrc, setImgSrc, setMedicationInformation }) {
 
     const processCapture = useCallback(() => {
         (async () => {
-            // If we already have an image, reset it
-            if (imgSrc !== null) {
-                setImgSrc(null);
-            }
-
             const image = webcamRef.current.getScreenshot();
             setImgSrc(image);
 
