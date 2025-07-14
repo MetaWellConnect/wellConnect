@@ -216,7 +216,7 @@ server.get('/patients/:patientId/medications/:medicationId', async (req, res, ne
 server.get('/providers/:providerId/medicationsToApprove', async (req, res, next) => {
     const providerId = Number(req.params.providerId);
     const treatments = await prisma.provider.findUnique({
-        where: {id: providerId},
+        where: { id: providerId },
         include: {
             treatments: {
                 include: {
