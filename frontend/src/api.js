@@ -168,3 +168,28 @@ export async function getMedicationsToApprove(providerId) {
 
     return (await response.json());
 }
+
+export async function runOCR(imgSrc) {
+    let imgBlob = await fetch(imgSrc).then(res => res.blob());
+
+    const form = new FormData();
+    form.append("medicationImage", imgBlob, "photo.jpg");
+
+    // Custom options const as POST/medications/run-ocr requiers a form instead of JSON
+    const response = await fetch(`${API_URL}/medications/run-ocr`, {
+        method: "POST",
+        body: form,
+    });
+
+    // If we recieved an error, return a JSON explaining the medication was unable to be parsed to the user
+    if (!response.ok) {
+        const errorResponse = {
+            name: "Unable to identify medication name.",
+            strength: "Unable to identify medication strength."
+        }
+
+        return errorResponse;
+    }
+
+    return (await response.json());
+}

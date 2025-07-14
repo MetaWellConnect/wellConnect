@@ -1,12 +1,23 @@
 import { useCallback, useRef } from 'react';
+import * as API from '../../../api.js'
 import Webcam from 'react-webcam'
 
-function MedicationWebcam({imgSrc, setImgSrc}) {
+function MedicationWebcam({ imgSrc, setImgSrc, setMedicationInformation }) {
     const webcamRef = useRef(null);
 
-    const capture = useCallback(() => {
-        const image = webcamRef.current.getScreenshot();
-        setImgSrc(image);
+    const processCapture = useCallback(() => {
+        (async () => {
+            // If we already have an image, reset it
+            if (imgSrc !== null) {
+                setImgSrc(null);
+            }
+
+            const image = webcamRef.current.getScreenshot();
+            setImgSrc(image);
+
+            const medicationInformation = await API.runOCR(image);
+            setMedicationInformation(medicationInformation);
+        })();
     }, [webcamRef]);
 
     return (
@@ -16,9 +27,10 @@ function MedicationWebcam({imgSrc, setImgSrc}) {
                 imgSrc ?
                     <img src={imgSrc} alt="Image of medication" />
                     :
-                    <Webcam ref={webcamRef} mirrored style={{ objectFit: 'cover' }} />
+                    <Webcam ref={webcamRef} screenshotFormat="image/jpeg"
+                        style={{ objectFit: 'cover', transform: 'scaleX(-1)' }} />
             }
-            <button onClick={capture} className="btn btn-light w-100 p-4 mb-3 rounded-top-0 rounded-bottom-3">Take Photo</button>
+            <button onClick={processCapture} className="btn btn-light w-100 p-4 mb-3 rounded-top-0 rounded-bottom-3">Take Photo</button>
         </div>
     );
 }

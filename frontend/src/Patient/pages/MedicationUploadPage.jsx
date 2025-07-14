@@ -6,6 +6,7 @@ import { useState } from "react";
 
 function MedicationUploadPage() {
     const [imgSrc, setImgSrc] = useState(null);
+    const [medicationInformation, setMedicationInformation] = useState(null);
 
     return (
         <div className="container text-left justify-content-left">
@@ -14,11 +15,11 @@ function MedicationUploadPage() {
 
             <div className="row d-flex flex-wrap">
                 <div className="col-sm">
-                    <MedicationWebcam imgSrc={imgSrc} setImgSrc={setImgSrc} />
+                    <MedicationWebcam imgSrc={imgSrc} setImgSrc={setImgSrc} setMedicationInformation={setMedicationInformation} />
                 </div>
 
                 <div className="col-sm">
-                    <MedicationInformationWidget />
+                    <MedicationInformationWidget medicationInformation={medicationInformation} />
                     <ResetMedicationPhotoButton setImgSrc={setImgSrc} />
                     <ConfirmMedicationPhotoButton />
                 </div>
