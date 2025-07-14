@@ -1,4 +1,5 @@
-require('dotenv').config()
+require('dotenv').config();
+const FormData = require('form-data');
 
 const OLLAMA_API_URL = process.env.OLLAMA_API_URL;
 const OCR_SERVICE_API_URL = process.env.OCR_SERVICE_API_URL;
@@ -41,17 +42,15 @@ async function parseOCRText(text) {
     return (JSON.parse(medicationInformation));
 }
 
-async function runOCROnImage(form) {
+async function runOCROnImage(medicationImage) {
     const url = `${OCR_SERVICE_API_URL}/run-ocr`;
     const options = {
         method: 'POST',
         headers: {
-            accept: 'application/json',
-            'Content-Type': 'multipart/form-data',
+            accept: '*/*',
+            'Content-Type': 'application/octet-stream'
         },
-        body: {
-            form
-        }
+        body: medicationImage.buffer
     }
 
     const response = await fetch(url, options);

@@ -6,22 +6,22 @@ const prisma = new PrismaClient({
         }
     }
 });
+
 const express = require('express');
 const helmet = require('helmet');
-const fileUpload = require('express-fileupload');
+const multer = require('multer');
 const cors = require('cors');
 const { areCredentialsValid, generateJWT, registerUser, getUserIdAndRole } = require('./auth.js');
 const { parseOCRText, runOCROnImage } = require('./utils.js');
-const jwt = require('jsonwebtoken');
-var cookieParser = require('cookie-parser');
+const cookieParser = require('cookie-parser');
 
 const MAX_AGE = 2592000;
+const upload = multer({ storage: multer.memoryStorage() });
 
 const server = express();
 server.use(helmet());
 server.use(express.json());
 server.use(cookieParser());
-server.use(fileUpload());
 const corsOptons = {
     origin: true,
     credentials: true,
@@ -31,22 +31,17 @@ server.use(cors(corsOptons));
 
 /* --- OCR Endpoints --- */
 
-server.post('/medications/run-ocr', async (req, res, next) => {
-    const patientId = req.params.patientId;
+server.post('/medications/run-ocr', upload.single('medicationImage'), async (req, res, next) => {
+    const medicationImage = req.file;
 
-    if (!req.files) {
+    if (!medicationImage) {
         return res.status(422).json("No medication image uploaded!");
     }
 
-    const form = new FormData()
-    form.append("medicationImage", req.files.medicationImage, {
-        filename: req.files.medicationImage.name,
-        contentType: req.files.medicationImage.mimetype
-    });
-
     try {
-        const ocrText = await runOCROnImage(form);
-        return res.status(200).json(ocrText);
+        const ocrText = await runOCROnImage(medicationImage); // Extract text on image
+        const processedOCRText = await parseOCRText(ocrText); // Extract the name and strength of the medication
+        return res.status(200).json(processedOCRText);
     } catch (e) {
         return res.status(e.status).json(e.message)
     }

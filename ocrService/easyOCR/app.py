@@ -1,7 +1,7 @@
 from flask import Flask, request, jsonify
-import numpy
 from PIL import Image
 import easyocr
+import io
 
 app = Flask(__name__)
 reader = easyocr.Reader(["en"])
@@ -14,11 +14,9 @@ def health_check():
 
 @app.route("/run-ocr", methods=["POST"])
 def run_ocr():
-    if 'medicationImage' not in request.files:
+    if not request.data:
         return jsonify("No medication image uploaded!"), 422
 
-    image = request.files["medicationImage"]
-    image_data = numpy.array(Image.open(image))
-
+    image_data = Image.open(io.BytesIO(request.data))
     result = reader.readtext(image_data, detail=0)
     return result
