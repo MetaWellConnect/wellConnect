@@ -43,6 +43,14 @@ services:
     networks:
       - mediscan-network
 
+  reminder_service:
+    build: ./reminderService
+    container_name: reminder-service
+    ports:
+      - '9000:9000'
+    networks:
+      - mediscan-network
+
 networks:
   mediscan-network:
 
