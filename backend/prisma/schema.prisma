@@ -50,18 +50,18 @@ model Provider {
 model Medication {
   id                       Int       @id @default(autoincrement())
   name                     String
-  description              String
   strength                 String
-  time_of_last_dose        DateTime
-  time_of_next_dose        DateTime
-  number_of_required_doses Int
-  number_of_taken_doses    Int
   photo_url                String
-  approved                 Boolean?
   patient                  Patient   @relation(fields: [patient_id], references: [id])
   patient_id               Int
   treatment                Treatment @relation(fields: [treatment_id], references: [id])
   treatment_id             Int
+  approved                 Boolean?
+  time_of_last_dose        DateTime?
+  time_of_next_dose        DateTime?
+  number_of_required_doses Int?
+  number_of_taken_doses    Int?
+  frequency_in_hours       Int?
 }
 
 model Treatment {

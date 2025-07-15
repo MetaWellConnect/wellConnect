@@ -33,16 +33,16 @@ CREATE TABLE "Provider" (
 CREATE TABLE "Medication" (
     "id" SERIAL NOT NULL,
     "name" TEXT NOT NULL,
-    "description" TEXT NOT NULL,
     "strength" TEXT NOT NULL,
-    "time_of_last_dose" TIMESTAMP(3) NOT NULL,
-    "time_of_next_dose" TIMESTAMP(3) NOT NULL,
-    "number_of_required_doses" INTEGER NOT NULL,
-    "number_of_taken_doses" INTEGER NOT NULL,
     "photo_url" TEXT NOT NULL,
-    "approved" BOOLEAN,
     "patient_id" INTEGER NOT NULL,
     "treatment_id" INTEGER NOT NULL,
+    "approved" BOOLEAN,
+    "time_of_last_dose" TIMESTAMP(3),
+    "time_of_next_dose" TIMESTAMP(3),
+    "number_of_required_doses" INTEGER,
+    "number_of_taken_doses" INTEGER,
+    "frequency_in_hours" INTEGER,
 
     CONSTRAINT "Medication_pkey" PRIMARY KEY ("id")
 );

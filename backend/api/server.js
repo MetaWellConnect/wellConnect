@@ -12,6 +12,8 @@ const cors = require('cors');
 const { areCredentialsValid, generateJWT, registerUser, getUserIdAndRole } = require('./auth.js');
 const jwt = require('jsonwebtoken');
 var cookieParser = require('cookie-parser');
+const {StatusCodes} = require('http-status-codes');
+const reminderServiceUtils = require('./reminderServiceUtils.js')
 
 const MAX_AGE = 2592000;
 
@@ -191,7 +193,7 @@ server.get('/patients/:patientId/medications/:medicationId', async (req, res, ne
 server.get('/providers/:providerId/medicationsToApprove', async (req, res, next) => {
     const providerId = Number(req.params.providerId);
     const treatments = await prisma.provider.findUnique({
-        where: {id: providerId},
+        where: { id: providerId },
         include: {
             treatments: {
                 include: {
@@ -332,6 +334,25 @@ server.put('/patients/:patientId/treatment', async (req, res, next) => {
 
 });
 
+/* --- Treatment Endpoints --- */
+
+server.get('/medications/due', async (req, res, next) => {
+    const currentTime = new Date();
+    try {
+        const medicationsDue = await prisma.medication.findMany({
+            where: {
+                time_of_next_dose: {
+                    lte: currentTime
+                }
+            }
+        });
+
+        await reminderServiceUtils.updateMedicationDueReminders(medicationsDue)
+        res.status(StatusCodes.OK).json(medicationsDue);
+    } catch (e) {
+        return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json(`Failed to retrieve medications due for reminders! Error: ${e.message}`);
+    }
+});
 
 /* --- Catch All Endpoints --- */
 
