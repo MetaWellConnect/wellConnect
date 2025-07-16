@@ -12,7 +12,7 @@ const cors = require('cors');
 const { areCredentialsValid, generateJWT, registerUser, getUserIdAndRole } = require('./auth.js');
 const jwt = require('jsonwebtoken');
 var cookieParser = require('cookie-parser');
-const {StatusCodes} = require('http-status-codes');
+const { StatusCodes } = require('http-status-codes');
 const reminderServiceUtils = require('./reminderServiceUtils.js')
 
 const MAX_AGE = 2592000;
@@ -343,6 +343,13 @@ server.get('/medications/due', async (req, res, next) => {
             where: {
                 time_of_next_dose: {
                     lte: currentTime
+                }
+            },
+            include: {
+                patient: {
+                    include: {
+                        user: true
+                    }
                 }
             }
         });

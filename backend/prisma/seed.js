@@ -11,10 +11,10 @@ const Role = {
 const User = [
     /* Patients */
     { first_name: 'Lucy', last_name: 'Adams', email: 'a@test.com', password_hash: '$argon2id$v=19$m=65536,t=3,p=4$QfoolOAKk1+gRXHner2BWg$DsUgYqJgjh8DV7/p8Z1Y58lFgFuNQNKuposxeYrS7Kk', role: Role.PATIENT },
-    { first_name: 'Mike', last_name: 'Baker', email: 'mike.baker@example.com', password_hash: '$argon2id$v=19$m=65536,t=3,p=4$QfoolOAKk1+gRXHner2BWg$DsUgYqJgjh8DV7/p8Z1Y58lFgFuNQNKuposxeYrS7Kk', role: Role.PATIENT },
-    { first_name: 'Sara', last_name: 'Clark', email: 'sara.clark@example.com', password_hash: '$argon2id$v=19$m=65536,t=3,p=4$QfoolOAKk1+gRXHner2BWg$DsUgYqJgjh8DV7/p8Z1Y58lFgFuNQNKuposxeYrS7Kk', role: Role.PATIENT },
+    { first_name: 'Mike', last_name: 'Baker', email: 'th992984@ucf.edu', password_hash: '$argon2id$v=19$m=65536,t=3,p=4$QfoolOAKk1+gRXHner2BWg$DsUgYqJgjh8DV7/p8Z1Y58lFgFuNQNKuposxeYrS7Kk', role: Role.PATIENT },
+    { first_name: 'Sara', last_name: 'Clark', email: 'drt2063@gmail.com', password_hash: '$argon2id$v=19$m=65536,t=3,p=4$QfoolOAKk1+gRXHner2BWg$DsUgYqJgjh8DV7/p8Z1Y58lFgFuNQNKuposxeYrS7Kk', role: Role.PATIENT },
     { first_name: 'David', last_name: 'Duncan', email: 'david.duncan@example.com', password_hash: '$argon2id$v=19$m=65536,t=3,p=4$QfoolOAKk1+gRXHner2BWg$DsUgYqJgjh8DV7/p8Z1Y58lFgFuNQNKuposxeYrS7Kk', role: Role.PATIENT },
-    { first_name: 'Emma', last_name: 'Evans', email: 'emma.evans@example.com', password_hash: '$argon2id$v=19$m=65536,t=3,p=4$QfoolOAKk1+gRXHner2BWg$DsUgYqJgjh8DV7/p8Z1Y58lFgFuNQNKuposxeYrS7Kk', role: Role.PATIENT },
+    { first_name: 'Emma', last_name: 'Evans', email: 'thomastrivino40@gmail.com', password_hash: '$argon2id$v=19$m=65536,t=3,p=4$QfoolOAKk1+gRXHner2BWg$DsUgYqJgjh8DV7/p8Z1Y58lFgFuNQNKuposxeYrS7Kk', role: Role.PATIENT },
     { first_name: 'Tom', last_name: 'Foster', email: 'tom.foster@example.com', password_hash: '$argon2id$v=19$m=65536,t=3,p=4$QfoolOAKk1+gRXHner2BWg$DsUgYqJgjh8DV7/p8Z1Y58lFgFuNQNKuposxeYrS7Kk', role: Role.PATIENT },
 
     /* Providers */
@@ -82,6 +82,7 @@ const Medication = [
   {
     name: 'Lisinopril',
     strength: '10 mg',
+    dose: '10 mg orally once daily',
     photo_url: 'https://picsum.photos/seed/lisinopril/200/200',
     patient_id: 1,
     treatment_id: 1,
@@ -95,6 +96,7 @@ const Medication = [
   {
     name: 'Amlodipine',
     strength: '5 mg',
+    dose: 'Take one tablet by mouth daily',
     photo_url: 'https://picsum.photos/seed/amlodipine/200/200',
     patient_id: 1,
     treatment_id: 1,
@@ -110,12 +112,13 @@ const Medication = [
   {
     name: 'Metformin',
     strength: '500 mg',
+    dose: '1000 mg (two tablets) orally three times a day with meals',
     photo_url: 'https://picsum.photos/seed/metformin/200/200',
     patient_id: 3,
     treatment_id: 3,
     approved: null,
     time_of_last_dose: new Date('2025-07-15T14:00:00Z'),
-    time_of_next_dose: new Date('2025-07-15T20:00:00Z'), // adjusted to reflect TID dosing
+    time_of_next_dose: new Date('2025-07-15T20:00:00Z'),
     number_of_required_doses: 60,
     number_of_taken_doses: 12,
     frequency_in_hours: 6, // assuming with meals (TID)
@@ -123,6 +126,7 @@ const Medication = [
   {
     name: 'Glipizide',
     strength: '5 mg',
+    dose: 'Take one tablet orally before breakfast',
     photo_url: 'https://picsum.photos/seed/glipizide/200/200',
     patient_id: 3,
     treatment_id: 3,
@@ -138,6 +142,7 @@ const Medication = [
   {
     name: 'Albuterol Inhaler',
     strength: '90 µg/puff',
+    dose: '2 puffs as needed for symptoms',
     photo_url: 'https://picsum.photos/seed/albuterol/200/200',
     patient_id: 5,
     treatment_id: 5,
@@ -151,6 +156,7 @@ const Medication = [
   {
     name: 'Budesonide + Formoterol',
     strength: '160/4.5 µg',
+    dose: 'Inhale 2 inhalations twice daily',
     photo_url: 'https://picsum.photos/seed/budesonide/200/200',
     patient_id: 5,
     treatment_id: 5,

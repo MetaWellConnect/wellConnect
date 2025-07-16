@@ -62,6 +62,7 @@ model Medication {
   number_of_required_doses Int?
   number_of_taken_doses    Int?
   frequency_in_hours       Int?
+  dose                     String?
 }
 
 model Treatment {

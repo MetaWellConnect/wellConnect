@@ -43,6 +43,7 @@ CREATE TABLE "Medication" (
     "number_of_required_doses" INTEGER,
     "number_of_taken_doses" INTEGER,
     "frequency_in_hours" INTEGER,
+    "dose" TEXT,
 
     CONSTRAINT "Medication_pkey" PRIMARY KEY ("id")
 );
