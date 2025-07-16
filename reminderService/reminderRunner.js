@@ -62,7 +62,7 @@ async function sendReminder(medication) {
                     <strong style="box-sizing:border-box;margin:0px;">Dosage:</strong> ${medication.dose}
                     </p>
                     <p style="box-sizing:border-box;margin:0px;overflow-wrap:break-word;max-width:none;padding-top:0.2em;font-size:1em;line-height:1.6em;color:#333333;">
-                    Your next dose is scheduled for ${medication.frequency_in_hours} from now!
+                    Your next dose is scheduled for ${medication.frequency_in_hours} hour${medication.frequency_in_hours === 1 ? '' : 's'} from now!
                     </p>
                     <p style="box-sizing:border-box;margin:0px;overflow-wrap:break-word;max-width:none;padding-top:0.2em;font-size:1em;line-height:1.6em;color:#333333;">
                     <img style="box-sizing:border-box;margin:0px;display:inline;max-width:none;height:auto;vertical-align:middle;aspect-ratio:2000/2000;width:62.56%;" src="${medication.photo_url}" width="2000" height="2000">
