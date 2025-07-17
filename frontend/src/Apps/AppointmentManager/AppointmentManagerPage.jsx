@@ -1,7 +1,7 @@
 import { Calendar, momentLocalizer } from "react-big-calendar";
 import "react-big-calendar/lib/css/react-big-calendar.css";
-import { useCallback } from "react";
-import { useEffect } from "react";
+import { useEffect, useState, useCallback } from "react";
+import { useAuth } from "../../hooks/AuthProvider";
 import * as API from '../../api'
 import moment from 'moment'
 
@@ -25,20 +25,24 @@ function AppointmentManagerPage() {
         }
     ]
     */
-    const [appointments, setAppointments] = useState(null);
+    const [appointments, setAppointments] = useState([]);
+    const { user } = useAuth();
 
 
-    const fetchAppointments = useCallback(() => {
+    async function fetchAppointments(id, role) {
+        const appointments = await API.getAppointments(id, role);
+        setAppointments(appointments);
+    }
 
-    });
+    async function fetchAppointmentSuggestions() {
 
-    const fetchAppointmentSuggestions = useCallback(() => {
-
-    });
+    }
 
     useEffect(() => {
-        fetchAppointments();
-        fetchAppointmentSuggestions();
+        (async () => {
+            await fetchAppointments(user.id, user.role);
+            await fetchAppointmentSuggestions();
+        })();
     }, []);
 
 

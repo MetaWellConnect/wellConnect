@@ -57,11 +57,41 @@ CREATE TABLE "Treatment" (
     CONSTRAINT "Treatment_pkey" PRIMARY KEY ("id")
 );
 
+-- CreateTable
+CREATE TABLE "Appointment" (
+    "id" SERIAL NOT NULL,
+    "patient_id" INTEGER NOT NULL,
+    "provider_id" INTEGER NOT NULL,
+    "date" TIMESTAMP(3) NOT NULL,
+    "duration_in_minutes" INTEGER NOT NULL,
+    "name" TEXT NOT NULL,
+
+    CONSTRAINT "Appointment_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "ProviderPreferences" (
+    "id" SERIAL NOT NULL,
+    "provider_id" INTEGER NOT NULL,
+    "start_hour" TEXT NOT NULL DEFAULT '09:00',
+    "end_hour" TEXT NOT NULL DEFAULT '17:00',
+    "available_days" TEXT[] DEFAULT ARRAY['m', 't', 'w', 'tr', 'f']::TEXT[],
+    "max_appointments_per_day" INTEGER NOT NULL DEFAULT 8,
+    "min_buffer_minutes" INTEGER NOT NULL DEFAULT 15,
+    "appointment_lead_time_min" INTEGER NOT NULL DEFAULT 120,
+    "future_appointment_limit" INTEGER NOT NULL DEFAULT 30,
+
+    CONSTRAINT "ProviderPreferences_pkey" PRIMARY KEY ("id")
+);
+
 -- CreateIndex
 CREATE UNIQUE INDEX "User_email_key" ON "User"("email");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "Treatment_patient_id_key" ON "Treatment"("patient_id");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "ProviderPreferences_provider_id_key" ON "ProviderPreferences"("provider_id");
 
 -- AddForeignKey
 ALTER TABLE "Patient" ADD CONSTRAINT "Patient_id_fkey" FOREIGN KEY ("id") REFERENCES "User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
@@ -83,3 +113,12 @@ ALTER TABLE "Treatment" ADD CONSTRAINT "Treatment_patient_id_fkey" FOREIGN KEY (
 
 -- AddForeignKey
 ALTER TABLE "Treatment" ADD CONSTRAINT "Treatment_provider_id_fkey" FOREIGN KEY ("provider_id") REFERENCES "Provider"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "Appointment" ADD CONSTRAINT "Appointment_provider_id_fkey" FOREIGN KEY ("provider_id") REFERENCES "Provider"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "Appointment" ADD CONSTRAINT "Appointment_patient_id_fkey" FOREIGN KEY ("patient_id") REFERENCES "Patient"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "ProviderPreferences" ADD CONSTRAINT "ProviderPreferences_provider_id_fkey" FOREIGN KEY ("provider_id") REFERENCES "Provider"("id") ON DELETE RESTRICT ON UPDATE CASCADE;

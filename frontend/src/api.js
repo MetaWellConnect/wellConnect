@@ -1,5 +1,10 @@
 const API_URL = import.meta.env.VITE_API_URL;
 
+const AccountTypes = {
+    PATIENT: "PATIENT",
+    PROVIDER: "PROVIDER"
+}
+
 async function fetchWithErrorHandling(url, options) {
     const response = await fetch(url, options);
     if (!response.ok) {
@@ -166,5 +171,23 @@ export async function getProviderPatients(providerId) {
 export async function getMedicationsToApprove(providerId) {
     const response = await fetchWithErrorHandling(`${API_URL}/providers/${providerId}/medicationsToApprove`, getHttpOptions("GET"));
 
+    return (await response.json());
+}
+
+export async function getAppointments(id, role) {
+    let providerId = id;
+
+    // If a patient is requesting the information, find out the patient's provider
+    // Then retrieve the censored appointments without other patients information
+    if (role === AccountTypes.PATIENT) {
+        const patient = await getPatient(id);
+        providerId = patient.provider_id;
+
+        const response = await fetchWithErrorHandling(`${API_URL}/providers/${providerId}/appointments?role=${role}?patientId=${id}`, getHttpOptions("GET"));
+        return (await response.json());
+    }
+
+    // If a provider requests the information, return the appointments with all information
+    const response = await fetchWithErrorHandling(`${API_URL}/providers/${providerId}/appointments`, getHttpOptions("GET"));
     return (await response.json());
 }

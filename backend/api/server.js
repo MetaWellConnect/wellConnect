@@ -6,12 +6,19 @@ const prisma = new PrismaClient({
         }
     }
 });
+
+const AccountTypes = {
+    PATIENT: "PATIENT",
+    PROVIDER: "PROVIDER"
+}
+
 const express = require('express');
 const helmet = require('helmet');
 const cors = require('cors');
 const { areCredentialsValid, generateJWT, registerUser, getUserIdAndRole } = require('./auth.js');
 const jwt = require('jsonwebtoken');
 var cookieParser = require('cookie-parser');
+const { StatusCodes } = require('http-status-codes')
 
 const MAX_AGE = 2592000;
 
@@ -191,7 +198,7 @@ server.get('/patients/:patientId/medications/:medicationId', async (req, res, ne
 server.get('/providers/:providerId/medicationsToApprove', async (req, res, next) => {
     const providerId = Number(req.params.providerId);
     const treatments = await prisma.provider.findUnique({
-        where: {id: providerId},
+        where: { id: providerId },
         include: {
             treatments: {
                 include: {
@@ -331,6 +338,52 @@ server.put('/patients/:patientId/treatment', async (req, res, next) => {
     }
 
 });
+
+/* --- Appointment Endpoints --- */
+
+server.get('/providers/:providerId/appointments', async (req, res, next) => {
+    const providerId = Number(req.params.providerId);
+    const patientId = Number(req.query.patientId);
+    const role = req.query.role;
+
+    try {
+        const appointments = await prisma.appointment.findMany({
+            where: {
+                provider_id: providerId
+            },
+            include: {
+                provider: {
+                    include: {
+                        user: true
+                    }
+                },
+                patient: {
+                    include: {
+                        user: true
+                    }
+                }
+            }
+        });
+
+        if (appointments.length === 0) {
+            return res.status(StatusCodes.NO_CONTENT);
+        }
+
+        // Censor outgoing information if requestor is a patient
+        if (role === AccountTypes.PATIENT) {
+            appointments.filter((appointment) => {
+                if (appointment.patient.id !== patientId) {
+                    return appointment.patient = null;
+                }
+                return appointment;
+            });
+        }
+
+        return res.status(StatusCodes.OK).json(appointments);
+    } catch (e) {
+        return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json(`Failed to retrieve appointments! Error: ${e.message}`)
+    }
+})
 
 
 /* --- Catch All Endpoints --- */
