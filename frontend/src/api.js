@@ -183,7 +183,7 @@ export async function getAppointments(id, role) {
         const patient = await getPatient(id);
         providerId = patient.provider_id;
 
-        const response = await fetchWithErrorHandling(`${API_URL}/providers/${providerId}/appointments?role=${role}?patientId=${id}`, getHttpOptions("GET"));
+        const response = await fetchWithErrorHandling(`${API_URL}/providers/${providerId}/appointments?role=${role}&patientId=${id}`, getHttpOptions("GET"));
         return (await response.json());
     }
 
