@@ -2,4 +2,6 @@
 .DS_Store
 .python-version
 node_modules
-PaddleOCR
+
+# Python
+__pycache__

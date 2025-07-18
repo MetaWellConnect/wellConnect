@@ -10,12 +10,13 @@ async function parseOCRText(text) {
     ------------------------------------------------------------------------------------------
     ${text}
     ------------------------------------------------------------------------------------------
-    Return your response as a single, valid JSON object. Do not include any introductory text or any surrounding markdown or other text
+    Return your response as a single, valid JSON object. Do not include any introductory text or any surrounding markdown or other text.
     Here is the format:
     {
         "name":         ""
         "strength":     ""
-    }`;
+    }
+    `;
 
     const url = `${OLLAMA_API_URL}/api/generate`
     const options = {
@@ -32,14 +33,30 @@ async function parseOCRText(text) {
 
     const response = await fetch(url, options)
     if (!response.ok) {
-        const errorResponse = await response.json();
-        throw new Error(`Error ${response.status}: ${errorResponse.message}`);
+        const errorMessage = await response.json();
+        const errorStatus = response.status;
+
+        const error = new Error(errorMessage);
+        error.status = errorStatus;
+        throw error;
     }
 
     const jsonResponse = await response.json();
     const medicationInformation = jsonResponse.response;
 
-    return (JSON.parse(medicationInformation));
+    let parsedMedicationInformation;
+    try {
+        parsedMedicationInformation = JSON.parse(medicationInformation)
+    } catch (e) {
+        const errorMessage = e.message;
+        const errorStatus = 500;
+
+        const error = new Error(errorMessage);
+        error.status = errorStatus;
+        throw error;
+    }
+
+    return (parsedMedicationInformation);
 }
 
 async function runOCROnImage(medicationImage) {
