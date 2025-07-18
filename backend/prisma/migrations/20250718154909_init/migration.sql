@@ -73,13 +73,14 @@ CREATE TABLE "Appointment" (
 CREATE TABLE "ProviderPreferences" (
     "id" SERIAL NOT NULL,
     "provider_id" INTEGER NOT NULL,
-    "start_hour" TEXT NOT NULL DEFAULT '09:00',
-    "end_hour" TEXT NOT NULL DEFAULT '17:00',
+    "start_hour" INTEGER NOT NULL DEFAULT 9,
+    "end_hour" INTEGER NOT NULL DEFAULT 17,
     "available_days" TEXT[] DEFAULT ARRAY['m', 't', 'w', 'tr', 'f']::TEXT[],
     "max_appointments_per_day" INTEGER NOT NULL DEFAULT 8,
     "min_buffer_minutes" INTEGER NOT NULL DEFAULT 15,
     "appointment_lead_time_min" INTEGER NOT NULL DEFAULT 120,
     "future_appointment_limit" INTEGER NOT NULL DEFAULT 30,
+    "timezone" TEXT NOT NULL DEFAULT 'America/Los_Angeles',
 
     CONSTRAINT "ProviderPreferences_pkey" PRIMARY KEY ("id")
 );

@@ -383,7 +383,11 @@ server.get('/providers/:providerId/appointments', async (req, res, next) => {
     } catch (e) {
         return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json(`Failed to retrieve appointments! Error: ${e.message}`)
     }
-})
+});
+
+server.get('/providers/:providerId/appointments/suggested', async (req, res, next) => {
+
+});
 
 
 /* --- Catch All Endpoints --- */
