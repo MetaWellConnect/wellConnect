@@ -92,11 +92,12 @@ model ProviderPreferences {
   id                        Int      @id @default(autoincrement())
   provider                  Provider @relation(fields: [provider_id], references: [id])
   provider_id               Int      @unique
-  start_hour                String   @default(9)
-  end_hour                  String   @default(17)
-  available_days            String[] @default(["m", "t", "w", "tr", "f"])
+  start_hour                Int   @default(9)
+  end_hour                  Int   @default(17)
+  available_days            String[] @default(["sun", "mon", "tue", "wed", "thu", "fri", "sat"])
   max_appointments_per_day  Int      @default(8)
   min_buffer_minutes        Int      @default(15)
   appointment_lead_time_min Int      @default(120)
   future_appointment_limit  Int      @default(30)
+  timezone                  String   @default("America/Los_Angeles")
 }
