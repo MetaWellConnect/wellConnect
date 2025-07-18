@@ -4,6 +4,8 @@ const prisma = new PrismaClient();
 const { fromZonedTime } = require('date-fns-tz')
 const DateFns = require('date-fns');
 
+const SLOT_DURATION = 15;
+
 async function generateSuggestions(providerId, appointmentDuration) {
     const preferences = await prisma.providerPreferences.findUnique({
         where: {
@@ -161,11 +163,44 @@ function getAvailableIntervalsFromBusyIntervals(mergedBusyIntervals, daysRangeSt
 }
 
 function createTimeSlotsFromAvailableIntervals(availableIntervals) {
+    const timeSlots = [];
 
+    availableIntervals.forEach((timeSlot) => {
+        const timeSlotStart = timeSlot.start;
+        const timeSlotEnd = timeSlot.end;
+
+        while (DateFns.addMinutes(timeSlotStart, SLOT_DURATION) <= timeSlotEnd) {
+            timeSlots.push(DateFns.addMinutes(timeSlotStart, SLOT_DURATION));
+            timeSlotStart = DateFns.addMinutes(timeSlotStart, SLOT_DURATION);
+        }
+    });
+
+    return timeSlots;
 }
 
 function findValidStartTimes(timeSlots, appointmentDuration) {
+    const validStartTimes = [];
+    const numberOfContinousSlotsRequired = appointmentDuration / SLOT_DURATION;
 
+    for (let currentTimeSlot = 0; currentTimeSlot <= timeSlots.length - numberOfContinousSlotsRequired; currentTimeSlot++) {
+
+        let isContinous = true;
+        for (let timeSlotAhead = 0; timeSlotAhead < numberOfContinousSlotsRequired; timeSlotAhead++) {
+            const timeOfTimeSlotAhead = DateFns.addMinutes(timeSlots[i], SLOT_DURATION * timeSlotAhead);
+
+            if (timeSlots[i + j].getTime() !== timeOfTimeSlotAhead.getTime()) {
+                isContinous = false;
+
+                break;
+            }
+        }
+
+        if (isContinous) {
+            validStartTimes.push(timeSlots[i]);
+        }
+    }
+
+    return validStartTimes;
 }
 
 function getTimeSlotScore(timeSlot, appointmentDuration, appointments) {
