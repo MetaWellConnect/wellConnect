@@ -196,6 +196,7 @@ export async function runOCR(imgSrc) {
 
         return errorResponse;
     }
+}
 
 export async function getAppointments(id, role) {
     let providerId = id;
