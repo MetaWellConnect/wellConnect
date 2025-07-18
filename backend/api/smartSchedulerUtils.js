@@ -204,7 +204,34 @@ function findValidStartTimes(timeSlots, appointmentDuration) {
 }
 
 function getTimeSlotScore(timeSlot, appointmentDuration, appointments) {
+    const APPOINTMENT_DISTANCE_THRESHHOLD = 30;
 
+    const start = timeSlot;
+    const end = DateFns.addMinutes(timeSlot, appointmentDuration);
+
+    const previousAppointment = appointments.filter(appointment => appointment.date <= start).pop();
+    const nextAppointment = appointments.find(appointment => appointment.date >= end);
+
+    let isAfterPrevious = false;
+    let isBeforePrevious = false;
+
+    if (previousAppointment && DateFns.differenceInMinutes(start, DateFns.addMinutes(previousAppointment.date, previousAppointment.appointmentDuration)) <= APPOINTMENT_DISTANCE_THRESHHOLD) {
+        isAfterPrevious = true;
+    }
+
+    if (nextAppointment && DateFns.differenceInMinutes(nextAppointment.date, end) <= APPOINTMENT_DISTANCE_THRESHHOLD) {
+        isBeforePrevious = true;
+    }
+
+    if (isAfterPrevious && isBeforePrevious) {
+        return 2;
+    }
+
+    if (isAfterPrevious || isBeforePrevious) {
+        return 1;
+    }
+
+    return 0;
 }
 
 module.exports = {
