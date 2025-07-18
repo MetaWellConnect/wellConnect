@@ -31,20 +31,23 @@ model User {
 }
 
 model Patient {
-  id           Int          @id
-  user         User         @relation(fields: [id], references: [id])
+  id           Int           @id
+  user         User          @relation(fields: [id], references: [id])
   medications  Medication[]
-  provider     Provider?    @relation(fields: [provider_id], references: [id])
+  Appointments  Appointment[]
+  provider     Provider?     @relation(fields: [provider_id], references: [id])
   provider_id  Int?
   treatment    Treatment?
   treatment_id Int?
 }
 
 model Provider {
-  id        Int         @id
-  user      User        @relation(fields: [id], references: [id])
-  patients  Patient[]
-  treatments Treatment[]
+  id                  Int                  @id
+  user                User                 @relation(fields: [id], references: [id])
+  appointments        Appointment[]
+  patients            Patient[]
+  treatments          Treatment[]
+  providerPreferences ProviderPreferences?
 }
 
 model Medication {
@@ -73,4 +76,29 @@ model Treatment {
   patient_id  Int          @unique
   provider    Provider     @relation(fields: [provider_id], references: [id])
   provider_id Int
+}
+
+model Appointment {
+  id                  Int       @id @default(autoincrement())
+  patient_id          Int
+  provider_id         Int
+  date                DateTime
+  duration_in_minutes Int
+  name                String
+  provider            Provider? @relation(fields: [provider_id], references: [id])
+  patient             Patient?  @relation(fields: [patient_id], references: [id])
+}
+
+model ProviderPreferences {
+  id                        Int      @id @default(autoincrement())
+  provider                  Provider @relation(fields: [provider_id], references: [id])
+  provider_id               Int      @unique
+  start_hour                Int   @default(9)
+  end_hour                  Int   @default(17)
+  available_days            String[] @default(["sun", "mon", "tue", "wed", "thu", "fri", "sat"])
+  max_appointments_per_day  Int      @default(8)
+  min_buffer_minutes        Int      @default(15)
+  appointment_lead_time_min Int      @default(120)
+  future_appointment_limit  Int      @default(30)
+  timezone                  String   @default("America/Los_Angeles")
 }
