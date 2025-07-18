@@ -1,8 +1,7 @@
 const { PrismaClient } = require("../generated/prisma");
 const prisma = new PrismaClient();
 
-const { fromZonedTime } = require('date-fns-tz');
-const dateFnsTz = require('date-fns-tz');
+const DateFnsTz = require('date-fns-tz');
 const DateFns = require('date-fns');
 
 const SLOT_DURATION = 15;
@@ -27,9 +26,8 @@ async function generateSuggestions(providerId, appointmentDuration) {
     const minBufferMinutes = preferences.min_buffer_minutes;
     const providerTimezone = preferences.timezone;
 
-    const today = new Date('2025-07-18T16:00:00.000Z');
+    const today = new Date();
     const daysRangeStart = DateFns.addMinutes(today, leadTimeMin);
-    console.log(daysRangeStart)
     const daysRangeEnd = DateFns.endOfDay(DateFns.addDays(today, horizonLimit));
 
     const appointments = await prisma.appointment.findMany({
@@ -42,8 +40,6 @@ async function generateSuggestions(providerId, appointmentDuration) {
         },
         orderBy: { date: 'asc' }
     });
-
-    console.log(appointments)
 
     const busyIntervals = getBusyIntervals(appointments, availableDays, providerStartHour, providerEndHour, minBufferMinutes, daysRangeStart, daysRangeEnd, maxAppointmentsPerDay, providerTimezone);
     const mergedBusyIntervals = mergeBusyIntervals(busyIntervals);
@@ -74,7 +70,7 @@ function getBusyIntervals(appointments, availableDays, providerStartHour, provid
         });
     });
 
-    for (let currDay = daysRangeStart; currDay < daysRangeEnd; currDay = DateFns.addDays(currDay, 1)) {
+    for (let currDay = daysRangeStart; currDay <= daysRangeEnd; currDay = DateFns.addDays(currDay, 1)) {
         const dayInWeekIndex = DateFns.getDay(currDay);
 
         // availableDays looks like [null, "mon", "tue", "wed", "thu", "fri", null] where null days are unavailable
@@ -99,7 +95,7 @@ function getBusyIntervals(appointments, availableDays, providerStartHour, provid
             continue;
         }
 
-        const providerTimeZone = dateFnsTz.toZonedTime(currDay, providerTimezone);
+        const providerTimeZone = DateFns.startOfDay(DateFnsTz.toZonedTime(currDay, providerTimezone));
 
         const localProviderStartHour = DateFns.set(providerTimeZone, {
             hours: providerStartHour, minutes: 0, seconds: 0, milliseconds: 0
@@ -108,8 +104,8 @@ function getBusyIntervals(appointments, availableDays, providerStartHour, provid
             hours: providerEndHour, minutes: 0, seconds: 0, milliseconds: 0
         });
 
-        const dayStartHourInUTC = fromZonedTime(localProviderStartHour, providerTimezone);
-        const dayEndHourInUTC = fromZonedTime(localProviderEndHour, providerTimezone);
+        const dayStartHourInUTC = DateFnsTz.fromZonedTime(localProviderStartHour, providerTimezone);
+        const dayEndHourInUTC = DateFnsTz.fromZonedTime(localProviderEndHour, providerTimezone);
 
         busy.push({
             start: DateFns.startOfDay(currDay),
@@ -138,7 +134,7 @@ function mergeBusyIntervals(busyIntervals) {
         const currentInterval = busyIntervals[index];
 
         if (previousInterval.end >= currentInterval.start) {
-            previousInterval.end = new Date(Math.max(previousInterval.end.getTime(), currentInterval.start.getTime()));
+            previousInterval.end = new Date(Math.max(previousInterval.end.getTime(), currentInterval.end.getTime()));
 
             continue;
         }
