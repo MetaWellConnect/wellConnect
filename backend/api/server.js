@@ -19,6 +19,7 @@ const { areCredentialsValid, generateJWT, registerUser, getUserIdAndRole } = req
 const jwt = require('jsonwebtoken');
 var cookieParser = require('cookie-parser');
 const { StatusCodes } = require('http-status-codes')
+const generateSuggestions  = require('./smartSchedulerUtils.js')
 
 const MAX_AGE = 2592000;
 
@@ -386,6 +387,12 @@ server.get('/providers/:providerId/appointments', async (req, res, next) => {
 });
 
 server.get('/providers/:providerId/appointments/suggested', async (req, res, next) => {
+    const providerId = Number(req.params.providerId);
+    const duration = Number(req.query.duration);
+
+
+        const suggestions = await generateSuggestions(providerId, duration);
+        return res.status(StatusCodes.OK).json(suggestions);
 
 });
 

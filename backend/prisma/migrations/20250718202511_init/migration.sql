@@ -75,7 +75,7 @@ CREATE TABLE "ProviderPreferences" (
     "provider_id" INTEGER NOT NULL,
     "start_hour" INTEGER NOT NULL DEFAULT 9,
     "end_hour" INTEGER NOT NULL DEFAULT 17,
-    "available_days" TEXT[] DEFAULT ARRAY['m', 't', 'w', 'tr', 'f']::TEXT[],
+    "available_days" TEXT[] DEFAULT ARRAY['sun', 'mon', 'tue', 'wed', 'thu', 'fri', 'sat']::TEXT[],
     "max_appointments_per_day" INTEGER NOT NULL DEFAULT 8,
     "min_buffer_minutes" INTEGER NOT NULL DEFAULT 15,
     "appointment_lead_time_min" INTEGER NOT NULL DEFAULT 120,

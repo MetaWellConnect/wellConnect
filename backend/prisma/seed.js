@@ -292,6 +292,9 @@ async function main() {
     for (const appointment of Appointment) {
         await prisma.appointment.create({ data: appointment });
     }
+    for (const preferences of ProviderPreferences) {
+        await prisma.providerPreferences.create({ data: preferences });
+    }
 
     console.log("Database seeded successfully!");
 }

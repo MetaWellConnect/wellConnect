@@ -18,6 +18,7 @@ async function generateSuggestions(providerId, appointmentDuration) {
     }
 
     const horizonLimit = preferences.future_appointment_limit;
+    const leadTimeMin = preferences.appointment_lead_time_min
     const availableDays = preferences.available_days;
     const providerStartHour = preferences.start_hour;
     const providerEndHour = preferences.end_hour;
@@ -35,12 +36,12 @@ async function generateSuggestions(providerId, appointmentDuration) {
             date: {
                 gte: daysRangeStart,
                 lte: daysRangeEnd
-            },
-            orderBy: { date: 'asc' }
-        }
+            }
+        },
+        orderBy: { date: 'asc' }
     });
 
-    const busyIntervals = getBusyIntervals(appointments, availableDays, providerStartHour, providerEndHour, minBufferMinutes, daysRangeStart, daysRangeEnd, maxAppointmentsPerDay, providerTimezone);
+    const busyIntervals = getBusyIntervals(appointments, availableDays, providerStartHour, providerEndHour, minBufferMinutes, daysRangeStart, daysRangeEnd, maxAppointmentsPerDay, leadTimeMin, providerTimezone);
     const mergedBusyIntervals = mergeBusyIntervals(busyIntervals);
     const availableIntervals = getAvailableIntervalsFromBusyIntervals(mergedBusyIntervals, daysRangeStart, daysRangeEnd);
     const timeSlots = createTimeSlotsFromAvailableIntervals(availableIntervals);
@@ -50,11 +51,13 @@ async function generateSuggestions(providerId, appointmentDuration) {
         return ({
             timeSlot,
             score: getTimeSlotScore(timeSlot, appointmentDuration, appointments)
-        })
+        });
     });
+
+    return timeSlotsWithScore.sort((a, b) => b.score - a.score).splice(0, 3);
 }
 
-function getBusyIntervals(appointments, availableDays, providerStartHour, providerEndHour, minBufferMinutes, daysRangeStart, daysRangeEnd, maxAppointmentsPerDay, providerTimezone) {
+function getBusyIntervals(appointments, availableDays, providerStartHour, providerEndHour, minBufferMinutes, daysRangeStart, daysRangeEnd, maxAppointmentsPerDay, leadTimeMin, providerTimezone) {
     const busy = [];
 
     appointments.forEach(appointment => {
@@ -67,7 +70,7 @@ function getBusyIntervals(appointments, availableDays, providerStartHour, provid
         });
     });
 
-    for (let currDay = daysRangeStart; currDay < daysRangeEnd; DateFns.addDays(currDay, 1)) {
+    for (let currDay = daysRangeStart; currDay < daysRangeEnd; currDay = DateFns.addDays(currDay, 1)) {
         const dayInWeekIndex = DateFns.getDay(currDay);
 
         // availableDays looks like [null, "mon", "tue", "wed", "thu", "fri", null] where null days are unavailable
@@ -96,7 +99,7 @@ function getBusyIntervals(appointments, availableDays, providerStartHour, provid
         dayStartTime.setHours(providerStartHour);
 
         const dayEndTime = new Date();
-        dayEndTime.setHours(providerEndHour)
+        dayEndTime.setHours(providerEndHour);
 
         const dayStartHourInUTC = fromZonedTime(dayStartTime, providerTimezone);
         const dayEndHourInUTC = fromZonedTime(dayEndTime, providerTimezone);
@@ -108,7 +111,7 @@ function getBusyIntervals(appointments, availableDays, providerStartHour, provid
 
         busy.push({
             start: dayEndHourInUTC,
-            end: DateFns.startOfDay(currDay)
+            end: DateFns.endOfDay(currDay)
         });
     }
 
@@ -122,7 +125,7 @@ function mergeBusyIntervals(busyIntervals) {
 
     busyIntervals.sort((a, b) => a.start.getTime() - b.start.getTime());
 
-    const mergedIntervals = busyIntervals[0]
+    const mergedIntervals = [busyIntervals[0]];
     for (let index = 1; index < busyIntervals.length; index++) {
         const previousInterval = mergedIntervals[mergedIntervals.length - 1];
         const currentInterval = busyIntervals[index];
@@ -166,7 +169,7 @@ function createTimeSlotsFromAvailableIntervals(availableIntervals) {
     const timeSlots = [];
 
     availableIntervals.forEach((timeSlot) => {
-        const timeSlotStart = timeSlot.start;
+        let timeSlotStart = timeSlot.start;
         const timeSlotEnd = timeSlot.end;
 
         while (DateFns.addMinutes(timeSlotStart, SLOT_DURATION) <= timeSlotEnd) {
@@ -185,10 +188,10 @@ function findValidStartTimes(timeSlots, appointmentDuration) {
     for (let currentTimeSlot = 0; currentTimeSlot <= timeSlots.length - numberOfContinousSlotsRequired; currentTimeSlot++) {
 
         let isContinous = true;
-        for (let timeSlotAhead = 0; timeSlotAhead < numberOfContinousSlotsRequired; timeSlotAhead++) {
-            const timeOfTimeSlotAhead = DateFns.addMinutes(timeSlots[i], SLOT_DURATION * timeSlotAhead);
+        for (let timeSlotAhead = 1; timeSlotAhead < numberOfContinousSlotsRequired; timeSlotAhead++) {
+            const timeOfTimeSlotAhead = DateFns.addMinutes(timeSlots[currentTimeSlot], SLOT_DURATION * timeSlotAhead);
 
-            if (timeSlots[i + j].getTime() !== timeOfTimeSlotAhead.getTime()) {
+            if (timeSlots[currentTimeSlot + timeSlotAhead].getTime() !== timeOfTimeSlotAhead.getTime()) {
                 isContinous = false;
 
                 break;
@@ -196,7 +199,7 @@ function findValidStartTimes(timeSlots, appointmentDuration) {
         }
 
         if (isContinous) {
-            validStartTimes.push(timeSlots[i]);
+            validStartTimes.push(timeSlots[currentTimeSlot]);
         }
     }
 
@@ -234,6 +237,4 @@ function getTimeSlotScore(timeSlot, appointmentDuration, appointments) {
     return 0;
 }
 
-module.exports = {
-    generateSuggestions
-}
+module.exports = generateSuggestions;
