@@ -1,7 +1,8 @@
 const { PrismaClient } = require("../generated/prisma");
 const prisma = new PrismaClient();
 
-const { fromZonedTime } = require('date-fns-tz')
+const { fromZonedTime } = require('date-fns-tz');
+const dateFnsTz = require('date-fns-tz');
 const DateFns = require('date-fns');
 
 const SLOT_DURATION = 15;
@@ -61,8 +62,8 @@ function getBusyIntervals(appointments, availableDays, providerStartHour, provid
     const busy = [];
 
     appointments.forEach(appointment => {
-        const appointmentStartTime = DateFns.addMinutes(appointment.Date, appointment.appointmentDuration - minBufferMinutes)
-        const appointmentEndTime = DateFns.addMinutes(appointment.Date, appointment.appointmentDuration + minBufferMinutes)
+        const appointmentStartTime = DateFns.addMinutes(appointment.date, appointment.appointmentDuration - minBufferMinutes)
+        const appointmentEndTime = DateFns.addMinutes(appointment.date, appointment.appointmentDuration + minBufferMinutes)
 
         busy.push({
             start: appointmentStartTime,
@@ -95,14 +96,13 @@ function getBusyIntervals(appointments, availableDays, providerStartHour, provid
             continue;
         }
 
-        const dayStartTime = new Date();
-        dayStartTime.setHours(providerStartHour);
+        const providerTimeZone = dateFnsTz.toZonedTime(currDay, providerTimezone);
 
-        const dayEndTime = new Date();
-        dayEndTime.setHours(providerEndHour);
+        const localProviderStartHour = DateFns.setHours(providerTimeZone, providerStartHour);
+        const localProviderEndHour = DateFns.setHours(providerTimeZone, providerEndHour);
 
-        const dayStartHourInUTC = fromZonedTime(dayStartTime, providerTimezone);
-        const dayEndHourInUTC = fromZonedTime(dayEndTime, providerTimezone);
+        const dayStartHourInUTC = fromZonedTime(localProviderStartHour, providerTimezone);
+        const dayEndHourInUTC = fromZonedTime(localProviderEndHour, providerTimezone);
 
         busy.push({
             start: DateFns.startOfDay(currDay),
@@ -131,7 +131,7 @@ function mergeBusyIntervals(busyIntervals) {
         const currentInterval = busyIntervals[index];
 
         if (previousInterval.end >= currentInterval.start) {
-            previousInterval.end = new Date(Math.max(previousInterval.end, currentInterval.start));
+            previousInterval.end = new Date(Math.max(previousInterval.end.getTime(), currentInterval.start.getTime()));
 
             continue;
         }
@@ -173,7 +173,7 @@ function createTimeSlotsFromAvailableIntervals(availableIntervals) {
         const timeSlotEnd = timeSlot.end;
 
         while (DateFns.addMinutes(timeSlotStart, SLOT_DURATION) <= timeSlotEnd) {
-            timeSlots.push(DateFns.addMinutes(timeSlotStart, SLOT_DURATION));
+            timeSlots.push(timeSlotStart);
             timeSlotStart = DateFns.addMinutes(timeSlotStart, SLOT_DURATION);
         }
     });

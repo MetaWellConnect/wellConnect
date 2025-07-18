@@ -57,12 +57,12 @@ const Appointment = [
   { patient_id: 1, provider_id: 7, date: new Date('2025-07-14T13:00:00Z'), duration_in_minutes: 30, name: 'Monitoring with Provider 7' },
   { patient_id: 2, provider_id: 7, date: new Date('2025-07-14T13:45:00Z'), duration_in_minutes: 30, name: 'Lab results with Provider 7' },
 
-  { patient_id: 1, provider_id: 7, date: new Date('2025-07-16T09:00:00Z'), duration_in_minutes: 30, name: 'Checkup with Provider 7' },
-  { patient_id: 2, provider_id: 7, date: new Date('2025-07-16T09:45:00Z'), duration_in_minutes: 30, name: 'Consultation with Provider 7' },
-  { patient_id: 1, provider_id: 7, date: new Date('2025-07-16T10:30:00Z'), duration_in_minutes: 30, name: 'Follow-up with Provider 7' },
-  { patient_id: 2, provider_id: 7, date: new Date('2025-07-16T11:15:00Z'), duration_in_minutes: 30, name: 'Wellness visit with Provider 7' },
-  { patient_id: 1, provider_id: 7, date: new Date('2025-07-16T13:00:00Z'), duration_in_minutes: 30, name: 'Monitoring with Provider 7' },
-  { patient_id: 2, provider_id: 7, date: new Date('2025-07-16T13:45:00Z'), duration_in_minutes: 30, name: 'Lab results with Provider 7' },
+  { patient_id: 1, provider_id: 7, date: new Date('2025-07-18T09:00:00Z'), duration_in_minutes: 30, name: 'Checkup with Provider 7' },
+  { patient_id: 2, provider_id: 7, date: new Date('2025-07-18T09:45:00Z'), duration_in_minutes: 30, name: 'Consultation with Provider 7' },
+  { patient_id: 1, provider_id: 7, date: new Date('2025-07-18T10:30:00Z'), duration_in_minutes: 30, name: 'Follow-up with Provider 7' },
+  { patient_id: 2, provider_id: 7, date: new Date('2025-07-18T11:15:00Z'), duration_in_minutes: 30, name: 'Wellness visit with Provider 7' },
+  { patient_id: 1, provider_id: 7, date: new Date('2025-07-18T13:00:00Z'), duration_in_minutes: 30, name: 'Monitoring with Provider 7' },
+  { patient_id: 2, provider_id: 7, date: new Date('2025-07-18T13:45:00Z'), duration_in_minutes: 30, name: 'Lab results with Provider 7' },
 
   // Provider 8 — Patients 3 & 4
   { patient_id: 3, provider_id: 8, date: new Date('2025-07-14T09:00:00Z'), duration_in_minutes: 30, name: 'Checkup with Provider 8' },
@@ -72,12 +72,12 @@ const Appointment = [
   { patient_id: 3, provider_id: 8, date: new Date('2025-07-14T13:00:00Z'), duration_in_minutes: 30, name: 'Monitoring with Provider 8' },
   { patient_id: 4, provider_id: 8, date: new Date('2025-07-14T13:45:00Z'), duration_in_minutes: 30, name: 'Lab results with Provider 8' },
 
-  { patient_id: 3, provider_id: 8, date: new Date('2025-07-16T09:00:00Z'), duration_in_minutes: 30, name: 'Checkup with Provider 8' },
-  { patient_id: 4, provider_id: 8, date: new Date('2025-07-16T09:45:00Z'), duration_in_minutes: 30, name: 'Consultation with Provider 8' },
-  { patient_id: 3, provider_id: 8, date: new Date('2025-07-16T10:30:00Z'), duration_in_minutes: 30, name: 'Follow-up with Provider 8' },
-  { patient_id: 4, provider_id: 8, date: new Date('2025-07-16T11:15:00Z'), duration_in_minutes: 30, name: 'Wellness visit with Provider 8' },
-  { patient_id: 3, provider_id: 8, date: new Date('2025-07-16T13:00:00Z'), duration_in_minutes: 30, name: 'Monitoring with Provider 8' },
-  { patient_id: 4, provider_id: 8, date: new Date('2025-07-16T13:45:00Z'), duration_in_minutes: 30, name: 'Lab results with Provider 8' },
+  { patient_id: 3, provider_id: 8, date: new Date('2025-07-18T09:00:00Z'), duration_in_minutes: 30, name: 'Checkup with Provider 8' },
+  { patient_id: 4, provider_id: 8, date: new Date('2025-07-18T09:45:00Z'), duration_in_minutes: 30, name: 'Consultation with Provider 8' },
+  { patient_id: 3, provider_id: 8, date: new Date('2025-07-18T10:30:00Z'), duration_in_minutes: 30, name: 'Follow-up with Provider 8' },
+  { patient_id: 4, provider_id: 8, date: new Date('2025-07-18T11:15:00Z'), duration_in_minutes: 30, name: 'Wellness visit with Provider 8' },
+  { patient_id: 3, provider_id: 8, date: new Date('2025-07-18T13:00:00Z'), duration_in_minutes: 30, name: 'Monitoring with Provider 8' },
+  { patient_id: 4, provider_id: 8, date: new Date('2025-07-18T13:45:00Z'), duration_in_minutes: 30, name: 'Lab results with Provider 8' },
 
   // Provider 9 — Patients 5 & 6
   { patient_id: 5, provider_id: 9, date: new Date('2025-07-14T09:00:00Z'), duration_in_minutes: 30, name: 'Checkup with Provider 9' },
@@ -87,8 +87,8 @@ const Appointment = [
   { patient_id: 5, provider_id: 9, date: new Date('2025-07-14T13:00:00Z'), duration_in_minutes: 30, name: 'Monitoring with Provider 9' },
   { patient_id: 6, provider_id: 9, date: new Date('2025-07-14T13:45:00Z'), duration_in_minutes: 30, name: 'Lab results with Provider 9' },
 
-  { patient_id: 5, provider_id: 9, date: new Date('2025-07-16T09:00:00Z'), duration_in_minutes: 30, name: 'Checkup with Provider 9' },
-  { patient_id: 6, provider_id: 9, date: new Date('2025-07-16T09:45:00Z'), duration_in_minutes: 30, name: 'Consultation with Provider 9' },
+  { patient_id: 5, provider_id: 9, date: new Date('2025-07-18T09:00:00Z'), duration_in_minutes: 30, name: 'Checkup with Provider 9' },
+  { patient_id: 6, provider_id: 9, date: new Date('2025-07-18T09:45:00Z'), duration_in_minutes: 30, name: 'Consultation with Provider 9' },
   { patient_id: 5, provider_id: 9, date: new Date('2025-07-16T10:30:00Z'), duration_in_minutes: 30, name: 'Follow-up with Provider 9' },
   { patient_id: 6, provider_id: 9, date: new Date('2025-07-16T11:15:00Z'), duration_in_minutes: 30, name: 'Wellness visit with Provider 9' },
   { patient_id: 5, provider_id: 9, date: new Date('2025-07-16T13:00:00Z'), duration_in_minutes: 30, name: 'Monitoring with Provider 9' },
