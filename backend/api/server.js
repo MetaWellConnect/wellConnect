@@ -14,14 +14,18 @@ const AccountTypes = {
 
 const express = require('express');
 const helmet = require('helmet');
+const multer = require('multer');
 const cors = require('cors');
 const { areCredentialsValid, generateJWT, registerUser, getUserIdAndRole } = require('./auth.js');
+const { parseOCRText, runOCROnImage } = require('./utils.js');
+const cookieParser = require('cookie-parser');
 const jwt = require('jsonwebtoken');
-var cookieParser = require('cookie-parser');
 const { StatusCodes } = require('http-status-codes')
 const generateSuggestions  = require('./smartSchedulerUtils.js')
 
+
 const MAX_AGE = 2592000;
+const upload = multer({ storage: multer.memoryStorage() });
 
 const server = express();
 server.use(helmet());
@@ -34,6 +38,23 @@ const corsOptons = {
 
 server.use(cors(corsOptons));
 
+/* --- OCR Endpoints --- */
+
+server.post('/medications/run-ocr', upload.single('medicationImage'), async (req, res, next) => {
+    const medicationImage = req.file;
+
+    if (!medicationImage) {
+        return res.status(422).json("No medication image uploaded!");
+    }
+
+    try {
+        const ocrText = await runOCROnImage(medicationImage); // Extract text on image
+        const processedOCRText = await parseOCRText(ocrText); // Extract the name and strength of the medication
+        return res.status(200).json(processedOCRText);
+    } catch (e) {
+        return res.status(e.status).json(e.message)
+    }
+});
 
 /* --- Auth Endpoints --- */
 

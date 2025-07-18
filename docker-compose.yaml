@@ -5,7 +5,7 @@ services:
     volumes:
       - mediscan_data:/var/lib/postgresql/data
     ports:
-      - "5432:5432"
+      - 5432:5432
     restart: always
     environment:
       - POSTGRES_DB=mediscandb
@@ -19,12 +19,11 @@ services:
       timeout: 5s
       retries: 5
 
-
   backend:
     build: ./backend
     container_name: mediscan-backend
     ports:
-      - '8000:8000'
+      - 8000:8000
     depends_on:
       mediscan_db:
         condition: service_healthy
@@ -39,12 +38,36 @@ services:
     build: ./frontend
     container_name: mediscan-frontend
     ports:
-      - '5173:5173'
+      - 5173:5173
     networks:
       - mediscan-network
+
+  ollama:
+    image: ollama/ollama:latest
+    container_name: ollama
+    ports:
+      - 11434:11434
+    networks:
+      - mediscan-network
+    volumes:
+      - ollama_data:/root/.ollama
+    entrypoint:
+      /bin/bash -c "ollama serve & sleep 5 && ollama pull llama3.2:3b && tail -f /dev/null"
+
+  ocr_service:
+    build: ./ocrService/easyOCR
+    container_name: ocr-service
+    ports:
+      - 5000:5000
+    networks:
+      - mediscan-network
+    volumes:
+      - ocr_service_data:/root/.ocr_service_data
 
 networks:
   mediscan-network:
 
 volumes:
   mediscan_data:
+  ollama_data:
+  ocr_service_data:

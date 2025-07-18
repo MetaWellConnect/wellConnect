@@ -1,18 +1,28 @@
-import { medications } from "../../../../data";
+import Spinner from 'react-bootstrap/Spinner';
 
-function MedicationInformationWidget() {
-    const medication = medications[0];
-
+function MedicationInformationWidget({ medicationInformation }) {
     return (
         <>
             <section className="medication-information-view bg-body-secondary rounded-3 p-3 my-3">
                 <h2>Medication Information</h2>
-
-                {/* This information is test data. The way this data will be handled has not yet been decided */}
                 <h3>Name</h3>
-                <p>{medication.name}</p>
+                <div>
+                    {
+                        medicationInformation ?
+                            <p>{medicationInformation.name}</p>
+                            :
+                            <Spinner animation="border" role="status" />
+                    }
+                </div>
                 <h3>Strength</h3>
-                <p>{medication.strength}</p>
+                <div>
+                    {
+                        medicationInformation ?
+                            <p>{medicationInformation.strength}</p>
+                            :
+                            <Spinner animation="border" role="status" />
+                    }
+                </div>
             </section>
         </>
     );
