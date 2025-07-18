@@ -20,9 +20,10 @@ const { areCredentialsValid, generateJWT, registerUser, getUserIdAndRole } = req
 const { parseOCRText, runOCROnImage } = require('./utils.js');
 const cookieParser = require('cookie-parser');
 const jwt = require('jsonwebtoken');
+const { StatusCodes } = require('http-status-codes');
+const reminderServiceUtils = require('./reminderServiceUtils.js')
 const { StatusCodes } = require('http-status-codes')
 const generateSuggestions  = require('./smartSchedulerUtils.js')
-
 
 const MAX_AGE = 2592000;
 const upload = multer({ storage: multer.memoryStorage() });
@@ -361,6 +362,19 @@ server.put('/patients/:patientId/treatment', async (req, res, next) => {
 
 });
 
+/* --- Treatment Endpoints --- */
+
+server.get('/medications/due', async (req, res, next) => {
+    const currentTime = new Date();
+    try {
+        const medicationsDue = await prisma.medication.findMany({
+            where: {
+                time_of_next_dose: {
+                    lte: currentTime
+                }
+            },
+            include: {
+
 /* --- Appointment Endpoints --- */
 
 server.get('/providers/:providerId/appointments', async (req, res, next) => {
@@ -387,6 +401,12 @@ server.get('/providers/:providerId/appointments', async (req, res, next) => {
             }
         });
 
+        await reminderServiceUtils.updateMedicationDueReminders(medicationsDue)
+        res.status(StatusCodes.OK).json(medicationsDue);
+    } catch (e) {
+        return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json(`Failed to retrieve medications due for reminders! Error: ${e.message}`);
+    }
+});
         if (appointments.length === 0) {
             return res.status(StatusCodes.NO_CONTENT);
         }
@@ -416,6 +436,7 @@ server.get('/providers/:providerId/appointments/suggested', async (req, res, nex
         return res.status(StatusCodes.OK).json(suggestions);
 
 });
+
 
 
 /* --- Catch All Endpoints --- */
