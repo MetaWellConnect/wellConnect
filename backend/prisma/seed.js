@@ -30,6 +30,13 @@ const Provider = [
     { id: 9 },
 ];
 
+const ProviderPreferences = [
+    { provider_id: 7 },
+    { provider_id: 8 },
+    { provider_id: 9 },
+];
+
+
 /* ----------  PATIENT  ---------- */
 const Patient = [
     { id: 1, provider_id: 7, treatment_id: 1 },
@@ -39,6 +46,56 @@ const Patient = [
     { id: 5, provider_id: 9, treatment_id: 5 },
     { id: 6, provider_id: 9, treatment_id: 6 },
 ];
+
+/* ----------  APPOINTMENT  ---------- */
+const Appointment = [
+  // Provider 7 — Patients 1 & 2
+  { patient_id: 1, provider_id: 7, date: new Date('2025-07-14T16:00:00Z'), duration_in_minutes: 30, name: 'Checkup with Provider 7' },
+  { patient_id: 2, provider_id: 7, date: new Date('2025-07-14T16:45:00Z'), duration_in_minutes: 30, name: 'Consultation with Provider 7' },
+  { patient_id: 1, provider_id: 7, date: new Date('2025-07-14T17:30:00Z'), duration_in_minutes: 30, name: 'Follow-up with Provider 7' },
+  { patient_id: 2, provider_id: 7, date: new Date('2025-07-14T18:15:00Z'), duration_in_minutes: 30, name: 'Wellness visit with Provider 7' },
+  { patient_id: 1, provider_id: 7, date: new Date('2025-07-14T20:00:00Z'), duration_in_minutes: 30, name: 'Monitoring with Provider 7' },
+  { patient_id: 2, provider_id: 7, date: new Date('2025-07-14T20:45:00Z'), duration_in_minutes: 30, name: 'Lab results with Provider 7' },
+
+  { patient_id: 1, provider_id: 7, date: new Date('2025-07-18T16:00:00Z'), duration_in_minutes: 30, name: 'Checkup with Provider 7' },
+  { patient_id: 2, provider_id: 7, date: new Date('2025-07-18T16:45:00Z'), duration_in_minutes: 30, name: 'Consultation with Provider 7' },
+  { patient_id: 1, provider_id: 7, date: new Date('2025-07-18T17:30:00Z'), duration_in_minutes: 30, name: 'Follow-up with Provider 7' },
+  { patient_id: 2, provider_id: 7, date: new Date('2025-07-18T18:15:00Z'), duration_in_minutes: 30, name: 'Wellness visit with Provider 7' },
+  { patient_id: 1, provider_id: 7, date: new Date('2025-07-18T20:00:00Z'), duration_in_minutes: 30, name: 'Monitoring with Provider 7' },
+  { patient_id: 2, provider_id: 7, date: new Date('2025-07-18T20:45:00Z'), duration_in_minutes: 30, name: 'Lab results with Provider 7' },
+
+  // Provider 8 — Patients 3 & 4
+  { patient_id: 3, provider_id: 8, date: new Date('2025-07-14T16:00:00Z'), duration_in_minutes: 30, name: 'Checkup with Provider 8' },
+  { patient_id: 4, provider_id: 8, date: new Date('2025-07-14T16:45:00Z'), duration_in_minutes: 30, name: 'Consultation with Provider 8' },
+  { patient_id: 3, provider_id: 8, date: new Date('2025-07-14T17:30:00Z'), duration_in_minutes: 30, name: 'Follow-up with Provider 8' },
+  { patient_id: 4, provider_id: 8, date: new Date('2025-07-14T18:15:00Z'), duration_in_minutes: 30, name: 'Wellness visit with Provider 8' },
+  { patient_id: 3, provider_id: 8, date: new Date('2025-07-14T20:00:00Z'), duration_in_minutes: 30, name: 'Monitoring with Provider 8' },
+  { patient_id: 4, provider_id: 8, date: new Date('2025-07-14T20:45:00Z'), duration_in_minutes: 30, name: 'Lab results with Provider 8' },
+
+  { patient_id: 3, provider_id: 8, date: new Date('2025-07-18T16:00:00Z'), duration_in_minutes: 30, name: 'Checkup with Provider 8' },
+  { patient_id: 4, provider_id: 8, date: new Date('2025-07-18T16:45:00Z'), duration_in_minutes: 30, name: 'Consultation with Provider 8' },
+  { patient_id: 3, provider_id: 8, date: new Date('2025-07-18T17:30:00Z'), duration_in_minutes: 30, name: 'Follow-up with Provider 8' },
+  { patient_id: 4, provider_id: 8, date: new Date('2025-07-18T18:15:00Z'), duration_in_minutes: 30, name: 'Wellness visit with Provider 8' },
+  { patient_id: 3, provider_id: 8, date: new Date('2025-07-18T20:00:00Z'), duration_in_minutes: 30, name: 'Monitoring with Provider 8' },
+  { patient_id: 4, provider_id: 8, date: new Date('2025-07-18T20:45:00Z'), duration_in_minutes: 30, name: 'Lab results with Provider 8' },
+
+  // Provider 9 — Patients 5 & 6
+  { patient_id: 5, provider_id: 9, date: new Date('2025-07-14T16:00:00Z'), duration_in_minutes: 30, name: 'Checkup with Provider 9' },
+  { patient_id: 6, provider_id: 9, date: new Date('2025-07-14T16:45:00Z'), duration_in_minutes: 30, name: 'Consultation with Provider 9' },
+  { patient_id: 5, provider_id: 9, date: new Date('2025-07-14T17:30:00Z'), duration_in_minutes: 30, name: 'Follow-up with Provider 9' },
+  { patient_id: 6, provider_id: 9, date: new Date('2025-07-14T18:15:00Z'), duration_in_minutes: 30, name: 'Wellness visit with Provider 9' },
+  { patient_id: 5, provider_id: 9, date: new Date('2025-07-14T20:00:00Z'), duration_in_minutes: 30, name: 'Monitoring with Provider 9' },
+  { patient_id: 6, provider_id: 9, date: new Date('2025-07-14T20:45:00Z'), duration_in_minutes: 30, name: 'Lab results with Provider 9' },
+
+  { patient_id: 5, provider_id: 9, date: new Date('2025-07-18T16:00:00Z'), duration_in_minutes: 30, name: 'Checkup with Provider 9' },
+  { patient_id: 6, provider_id: 9, date: new Date('2025-07-18T16:45:00Z'), duration_in_minutes: 30, name: 'Consultation with Provider 9' },
+  { patient_id: 5, provider_id: 9, date: new Date('2025-07-16T17:30:00Z'), duration_in_minutes: 30, name: 'Follow-up with Provider 9' },
+  { patient_id: 6, provider_id: 9, date: new Date('2025-07-16T18:15:00Z'), duration_in_minutes: 30, name: 'Wellness visit with Provider 9' },
+  { patient_id: 5, provider_id: 9, date: new Date('2025-07-16T20:00:00Z'), duration_in_minutes: 30, name: 'Monitoring with Provider 9' },
+  { patient_id: 6, provider_id: 9, date: new Date('2025-07-16T20:45:00Z'), duration_in_minutes: 30, name: 'Lab results with Provider 9' },
+];
+
+
 
 
 /* ----------  TREATMENT  ---------- */
@@ -232,6 +289,12 @@ async function main() {
     }
     for (const medication of Medication) {
         await prisma.medication.create({ data: medication });
+    }
+    for (const appointment of Appointment) {
+        await prisma.appointment.create({ data: appointment });
+    }
+    for (const preferences of ProviderPreferences) {
+        await prisma.providerPreferences.create({ data: preferences });
     }
 
     console.log("Database seeded successfully!");
