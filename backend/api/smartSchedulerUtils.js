@@ -1,5 +1,7 @@
 const { PrismaClient } = require("../generated/prisma");
 const prisma = new PrismaClient();
+
+const { fromZonedTime } = require('date-fns-tz')
 const DateFns = require('date-fns');
 
 async function generateSuggestions(providerId, appointmentDuration) {
@@ -19,7 +21,7 @@ async function generateSuggestions(providerId, appointmentDuration) {
     const providerEndHour = preferences.end_hour;
     const maxAppointmentsPerDay = preferences.max_appointments_per_day;
     const minBufferMinutes = preferences.min_buffer_minutes;
-    const timezone = preferences.timezone;
+    const providerTimezone = preferences.timezone;
 
     const today = new Date();
     const daysRangeStart = DateFns.startOfDay(DateFns.addMinutes(today, minBufferMinutes));
@@ -32,7 +34,7 @@ async function generateSuggestions(providerId, appointmentDuration) {
                 gte: daysRangeStart,
                 lte: daysRangeEnd
             },
-            orderBy: {date: 'asc'}
+            orderBy: { date: 'asc' }
         }
     });
 
@@ -42,22 +44,67 @@ async function generateSuggestions(providerId, appointmentDuration) {
         return [];
     }
 
-    const busyIntervals = getBusyIntervals(appointments, minBufferMinutes, daysRangeStart, daysRangeEnd);
+    const busyIntervals = getBusyIntervals(appointments, availableDays, providerStartHour, providerEndHour, minBufferMinutes, daysRangeStart, daysRangeEnd, maxAppointmentsPerDay, providerTimezone);
     const mergedBusyIntervals = mergeBusyIntervals(busyIntervals);
     const availableIntervals = getAvailableIntervalsFromBusyIntervals(mergedBusyIntervals, daysRangeStart, daysRangeEnd);
-    const timeSlots= createTimeSlotsFromAvailableIntervals(availableIntervals);
+    const timeSlots = createTimeSlotsFromAvailableIntervals(availableIntervals);
     const validStartTimes = findValidStartTimes(timeSlots, appointmentDuration);
 
     const timeSlotsWithScore = validStartTimes.map((timeSlot) => {
-        return({
+        return ({
             timeSlot,
             score: getTimeSlotScore(timeSlot, appointmentDuration, appointments)
         })
     });
 }
 
-function getBusyIntervals(appointments, minBufferMinutes, daysRangeStart, daysRangeEnd) {
+function getBusyIntervals(appointments, availableDays, providerStartHour, providerEndHour, minBufferMinutes, daysRangeStart, daysRangeEnd, maxAppointmentsPerDay, providerTimezone) {
+    const busy = [];
 
+    appointments.forEach(appointment => {
+        const appointmentStartTime = DateFns.addMinutes(appointment.Date, appointment.appointmentDuration - minBufferMinutes)
+        const appointmentEndTime = DateFns.addMinutes(appointment.Date, appointment.appointmentDuration + minBufferMinutes)
+
+        busy.push({
+            start: appointmentStartTime,
+            end: appointmentEndTime
+        });
+    });
+
+    for (let currDay = daysRangeStart; currDay < daysRangeEnd; DateFns.addDays(currDay, 1)) {
+        const dayInWeekIndex = DateFns.getDay(currDay);
+
+        // availableDays looks like [null, "mon", "tue", "wed", "thu", "fri", null] where null days are unavailable
+        if (!availableDays[dayInWeekIndex]) {
+            busy.push({
+                start: DateFns.startOfDay(currDay),
+                end: DateFns.endOfDay(currDay)
+            });
+
+            continue;
+        }
+
+        const dayStartTime = new Date();
+        dayStartTime.setHours(providerStartHour);
+
+        const dayEndTime = new Date();
+        dayEndTime.setHours(providerEndHour)
+
+        const dayStartHourInUTC = fromZonedTime(dayStartTime, providerTimezone);
+        const dayEndHourInUTC = fromZonedTime(dayEndTime, providerTimezone);
+
+        busy.push({
+            start: DateFns.startOfDay(currDay),
+            end: dayStartHourInUTC
+        });
+
+        busy.push({
+            start: dayEndHourInUTC,
+            end: DateFns.startOfDay(currDay)
+        });
+    }
+
+    return busy;
 }
 
 function mergeBusyIntervals(busyIntervals) {
