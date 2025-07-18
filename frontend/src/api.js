@@ -176,6 +176,7 @@ export async function getMedicationsToApprove(providerId) {
 
 export async function getAppointments(id, role) {
     let providerId = id;
+    let url;
 
     // If a patient is requesting the information, find out the patient's provider
     // Then retrieve the censored appointments without other patients information
@@ -183,11 +184,12 @@ export async function getAppointments(id, role) {
         const patient = await getPatient(id);
         providerId = patient.provider_id;
 
-        const response = await fetchWithErrorHandling(`${API_URL}/providers/${providerId}/appointments?role=${role}&patientId=${id}`, getHttpOptions("GET"));
-        return (await response.json());
+        url = `${API_URL}/providers/${providerId}/appointments?role=${role}&patientId=${id}`;
+    } else {
+        url = `${API_URL}/providers/${providerId}/appointments`;
     }
 
     // If a provider requests the information, return the appointments with all information
-    const response = await fetchWithErrorHandling(`${API_URL}/providers/${providerId}/appointments`, getHttpOptions("GET"));
+    const response = await fetchWithErrorHandling(url, getHttpOptions("GET"));
     return (await response.json());
 }

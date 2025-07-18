@@ -372,7 +372,7 @@ server.get('/providers/:providerId/appointments', async (req, res, next) => {
 
         // Censor outgoing information if requestor is a patient
         if (role === AccountTypes.PATIENT) {
-            appointments.filter((appointment) => {
+            appointments.map((appointment) => {
                 if (appointment.patient.id !== patientId) {
                     return appointment.patient = null;
                 }
