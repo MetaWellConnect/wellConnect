@@ -23,7 +23,7 @@ async function generateSuggestions(providerId, appointmentDuration) {
     const availableDays = preferences.available_days;
     const providerStartHour = preferences.start_hour;
     const providerEndHour = preferences.end_hour;
-    const maxAppointmentsPerDay = preferences.max_appointments_per_day;
+    const maxAppointmentsPerDay = 2;
     const minBufferMinutes = preferences.min_buffer_minutes;
     const providerTimezone = preferences.timezone;
 
@@ -43,10 +43,15 @@ async function generateSuggestions(providerId, appointmentDuration) {
     });
 
     const busyIntervals = getBusyIntervals(appointments, availableDays, providerStartHour, providerEndHour, minBufferMinutes, daysRangeStart, daysRangeEnd, maxAppointmentsPerDay, providerTimezone);
+    console.log(busyIntervals)
     const mergedBusyIntervals = mergeBusyIntervals(busyIntervals);
+    console.log(mergedBusyIntervals)
     const availableIntervals = getAvailableIntervalsFromBusyIntervals(mergedBusyIntervals, daysRangeStart, daysRangeEnd);
+    console.log(availableIntervals)
     const timeSlots = createTimeSlotsFromAvailableIntervals(availableIntervals);
+    console.log(timeSlots)
     const validStartTimes = findValidStartTimes(timeSlots, appointmentDuration);
+    console.log(validStartTimes)
 
     const timeSlotsWithScore = validStartTimes.map((timeSlot) => {
         return ({
@@ -62,8 +67,8 @@ function getBusyIntervals(appointments, availableDays, providerStartHour, provid
     const busy = [];
 
     appointments.forEach(appointment => {
-        const appointmentStartTime = DateFns.addMinutes(appointment.date, -minBufferMinutes)
-        const appointmentEndTime = DateFns.addMinutes(appointment.date, appointment.appointmentDuration + minBufferMinutes)
+        const appointmentStartTime = DateFns.subMinutes(appointment.date, minBufferMinutes);
+        const appointmentEndTime = DateFns.addMinutes(appointment.date, appointment.duration_in_minutes + minBufferMinutes);
 
         busy.push({
             start: appointmentStartTime,

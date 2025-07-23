@@ -140,18 +140,21 @@ function AppointmentManagerPage() {
                     <input type="radio" className="btn-check" name="appointment-suggestion" id="appointment-suggestion-1" />
                     <label className="btn btn-outline-primary m-2" htmlFor="appointment-suggestion-1">
                         <strong>Suggestion 1<br /></strong>
+                        <span>{suggestedAppointments[0].start.toLocaleDateString()}<br /></span>
                         <span>{suggestedAppointments[0].start.toLocaleTimeString()} - {suggestedAppointments[0].end.toLocaleTimeString()}</span>
                     </label>
 
                     <input type="radio" className="btn-check" name="appointment-suggestion" id="appointment-suggestion-2" />
                     <label className="btn btn-outline-primary m-2" htmlFor="appointment-suggestion-2">
                         <strong>Suggestion 2<br /></strong>
+                        <span>{suggestedAppointments[1].start.toLocaleDateString()}<br /></span>
                         <span>{suggestedAppointments[1].start.toLocaleTimeString()} - {suggestedAppointments[1].end.toLocaleTimeString()}</span>
                     </label>
 
                     <input type="radio" className="btn-check" name="appointment-suggestion" id="appointment-suggestion-3" />
                     <label className="btn btn-outline-primary m-2" htmlFor="appointment-suggestion-3">
                         <strong>Suggestion 3<br /></strong>
+                        <span>{suggestedAppointments[2].start.toLocaleDateString()}<br /></span>
                         <span>{suggestedAppointments[2].start.toLocaleTimeString()} - {suggestedAppointments[2].end.toLocaleTimeString()}</span>
                     </label>
                 </div>
