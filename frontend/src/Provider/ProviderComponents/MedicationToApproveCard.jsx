@@ -4,7 +4,7 @@ import DenyMedicationButton from "./DenyMedicationButton";
 import ViewTreatmentPlanButton from "./ViewTreatmentPlanButton";
 import * as API from "../../api";
 
-function MedicationToApproveCard({ pendingMedication }) {
+function MedicationToApproveCard({ pendingMedication, setMedicationList }) {
     const [patient, setPatient] = useState("");
     const [isLoading, setIsLoading] = useState(true);
 
@@ -30,8 +30,8 @@ function MedicationToApproveCard({ pendingMedication }) {
 
                 <section className="medication-card-buttons">
                     <ViewTreatmentPlanButton patient={patient} />
-                    <ApproveMedicationButton patient={patient} pendingMedication={pendingMedication} />
-                    <DenyMedicationButton />
+                    <ApproveMedicationButton patient={patient} pendingMedication={pendingMedication} setMedicationList={setMedicationList} />
+                    <DenyMedicationButton patient={patient} pendingMedication={pendingMedication} setMedicationList={setMedicationList} />
                 </section>
             </div>
         </>

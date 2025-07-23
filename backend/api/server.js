@@ -307,7 +307,7 @@ server.put('/patients/:patientId/medications/:medicationId', async (req, res, ne
 
         return res.status(200).json(medication);
     } catch (e) {
-        return res.status(204).json(`Failed to update medication! Error: ${e.message}`);
+        return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json(`Failed to update medication! Error: ${e.message}`);
     }
 });
 
