@@ -382,52 +382,52 @@ server.get('/medications/due', async (req, res, next) => {
             }
         });
 
-        /* --- Appointment Endpoints --- */
+        await reminderServiceUtils.updateMedicationDueReminders(medicationsDue)
+        res.status(StatusCodes.OK).json(medicationsDue);
+    } catch (e) {
+        return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json(`Failed to retrieve medications due for reminders! Error: ${e.message}`);
+    }
+});
 
-        server.get('/providers/:providerId/appointments', async (req, res, next) => {
-            const providerId = Number(req.params.providerId);
-            const patientId = Number(req.query.patientId);
-            const role = req.query.role;
+/* --- Appointment Endpoints --- */
 
-            try {
-                const appointments = await prisma.appointment.findMany({
-                    where: {
-                        provider_id: providerId
-                    },
+server.get('/providers/:providerId/appointments', async (req, res, next) => {
+    const providerId = Number(req.params.providerId);
+    const patientId = Number(req.query.patientId);
+    const role = req.query.role;
+
+    try {
+        const appointments = await prisma.appointment.findMany({
+            where: {
+                provider_id: providerId
+            },
+            include: {
+                provider: {
                     include: {
-                        provider: {
-                            include: {
-                                user: true
-                            }
-                        },
-                        patient: {
-                            include: {
-                                user: true
-                            }
-                        }
+                        user: true
                     }
-                });
-
-                await reminderServiceUtils.updateMedicationDueReminders(medicationsDue)
-                res.status(StatusCodes.OK).json(medicationsDue);
-            } catch (e) {
-                return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json(`Failed to retrieve medications due for reminders! Error: ${e.message}`);
+                },
+                patient: {
+                    include: {
+                        user: true
+                    }
+                }
             }
         });
+
         if (appointments.length === 0) {
             return res.status(StatusCodes.NO_CONTENT);
         }
 
         // Censor outgoing information if requestor is a patient
         if (role === AccountTypes.PATIENT) {
-            appointments.map((appointment) => {
+            appointments.filter((appointment) => {
                 if (appointment.patient.id !== patientId) {
                     return appointment.patient = null;
                 }
                 return appointment;
             });
         }
-
         return res.status(StatusCodes.OK).json(appointments);
     } catch (e) {
         return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json(`Failed to retrieve appointments! Error: ${e.message}`)
@@ -437,7 +437,6 @@ server.get('/medications/due', async (req, res, next) => {
 server.get('/providers/:providerId/appointments/suggested', async (req, res, next) => {
     const providerId = Number(req.params.providerId);
     const duration = Number(req.query.duration);
-
 
     const suggestions = await generateSuggestions(providerId, duration);
     return res.status(StatusCodes.OK).json(suggestions);
