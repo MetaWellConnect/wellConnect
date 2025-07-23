@@ -217,3 +217,18 @@ export async function getAppointments(id, role) {
     const response = await fetchWithErrorHandling(url, getHttpOptions("GET"));
     return (await response.json());
 }
+
+export async function getSuggestedAppointments(id, role, duration) {
+    const provider_id = await getProviderIdIfPatientRequest(id, role);
+    const response = await fetchWithErrorHandling(`${API_URL}/providers/${provider_id}/appointments/suggested?duration=${duration}`, getHttpOptions("GET"));
+    return (await response.json());
+}
+
+async function getProviderIdIfPatientRequest(id, role) {
+    if (role === AccountTypes.PATIENT) {
+        const patient = await getPatient(id);
+        return patient.provider_id;
+    }
+
+    return id;
+}

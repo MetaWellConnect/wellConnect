@@ -23,32 +23,24 @@ function AppointmentManagerPage() {
         }
     ]
     */
-    const [appointments, setAppointments] = useState([]);
+    const [selectedSuggestedAppointment, setSelectedSuggestedAppointment] = useState(null);
     const [formattedAppointments, setFormattedAppointments] = useState([]);
+    const [suggestedAppointments, setSuggestedAppointments] = useState([]);
+    const [appointments, setAppointments] = useState([]);
+    const [isLoading, setIsLoading] = useState(true);
     const { user } = useAuth();
 
     async function fetchAppointments(id, role) {
-        // Retrieve the appointments
-        // If a patient asks for the appointments
-        // Return a censored list where other patient info is hidden
-        // If a provider asks for the appointments
-        // Return all the appointments
         const appointments = await API.getAppointments(id, role);
         setAppointments(appointments);
 
-        let formattedAppointmentsArray = [];                    // Stores the appointments formatted for the calendar
-        const timeZoneOffset = new Date().getTimezoneOffset();  // Stores the timezone offset as times in the database are stored in UTC
-
+        let formattedAppointmentsArray = [];    // Stores the appointments formatted for the calendar
         for (let index = 0; index < appointments.length; index++) {
             const appointmentName = appointments[index].patient ? appointments[index].name : "Busy"
 
-            // Initialize the startTime of the appointment. Adjust according to timezone
             const startTime = new Date(appointments[index].date);
-            startTime.setMinutes(startTime.getMinutes() + timeZoneOffset)
-
-            // Initialize the endTime of the appointment. Adjust according to timezone
             const endTime = new Date(appointments[index].date);
-            endTime.setMinutes(endTime.getMinutes() + appointments[index].duration_in_minutes + timeZoneOffset);
+            endTime.setMinutes(endTime.getMinutes() + appointments[index].duration_in_minutes);
 
             const formattedAppointment = {
                 title: appointmentName,
@@ -62,20 +54,69 @@ function AppointmentManagerPage() {
         setFormattedAppointments(formattedAppointmentsArray);
     }
 
-    async function fetchAppointmentSuggestions() {
+    async function fetchAppointmentSuggestions(id, role) {
+        const suggestedAppointmentsResponse = await API.getSuggestedAppointments(id, role, 30);
 
+        let formattedAppointmentsArray = [];    // Stores the appointments formatted for the calendar
+        suggestedAppointmentsResponse.forEach((appointment) => {
+
+            const startTime = new Date(appointment.timeSlot);
+            const endTime = new Date(appointment.timeSlot);
+            endTime.setMinutes(endTime.getMinutes() + 30);
+
+            const formattedAppointment = {
+                title: "",
+                start: startTime,
+                end: endTime,
+            }
+
+            formattedAppointmentsArray.push(formattedAppointment);
+        });
+
+        setSuggestedAppointments(formattedAppointmentsArray);
     }
 
     useEffect(() => {
         (async () => {
             await fetchAppointments(user.id, user.role);
-            await fetchAppointmentSuggestions();
+            await fetchAppointmentSuggestions(user.id, user.role);
+            setIsLoading(false);
         })();
     }, []);
 
 
-    async function BookAppointment() {
+    function BookAppointment() {
+        if (selectedSuggestedAppointment === null) {
+            console.error("Cannot book a null appointment!");
+        }
 
+        setFormattedAppointments((prevAppointments) => [...prevAppointments, selectedSuggestedAppointment]);
+    }
+
+    function selectSuggestion(e) {
+        const appointmentOptions = {
+            SLOT_ONE: "appointment-suggestion-1",
+            SLOT_TWO: "appointment-suggestion-2",
+            SLOT_THREE: "appointment-suggestion-3"
+        };
+
+        switch (e.target.id) {
+            case appointmentOptions.SLOT_ONE:
+                setSelectedSuggestedAppointment(suggestedAppointments[0]);
+                break;
+            case appointmentOptions.SLOT_TWO:
+                setSelectedSuggestedAppointment(suggestedAppointments[1]);
+                break;
+            case appointmentOptions.SLOT_THREE:
+                setSelectedSuggestedAppointment(suggestedAppointments[2]);
+                break;
+        }
+    }
+
+    if (isLoading) {
+        return (
+            <h1>Loading...</h1>
+        );
     }
 
     // Store today for calendar setup
@@ -85,8 +126,8 @@ function AppointmentManagerPage() {
         <div className="container">
             <h1>Appointment Manager</h1>
 
-            <section className="appointment-suggestion-selector d-flex">
-                <div>
+            <section className="appointment-suggestion-selector border-secondary border-1 rounded-3 d-flex align-items-center">
+                <div className="p-3">
                     <h2>
                         Suggested Meeting Times
                     </h2>
@@ -95,33 +136,27 @@ function AppointmentManagerPage() {
                     </p>
                 </div>
 
-                <div className="form-check" name="appointment-suggestion" onChange={(e) => console.log(e)}>
-                    <div className="form-check form-check-inline">
-                        <input type="radio" className="form-check-input" name="appointment-suggestion" id="appointment-suggestion-1" />
-                        <label className="form-check-label" htmlFor="appointment-suggestion-radio">
-                            <strong>Appointment 1<br /></strong>
-                            <span>01:00 - 03:30</span>
-                        </label>
-                    </div>
+                <div className="form-check" onChange={e => selectSuggestion(e)}>
+                    <input type="radio" className="btn-check" name="appointment-suggestion" id="appointment-suggestion-1" />
+                    <label className="btn btn-outline-primary m-2" htmlFor="appointment-suggestion-1">
+                        <strong>Suggestion 1<br /></strong>
+                        <span>{suggestedAppointments[0].start.toLocaleTimeString()} - {suggestedAppointments[0].end.toLocaleTimeString()}</span>
+                    </label>
 
-                    <div className="form-check form-check-inline">
-                        <input type="radio" className="form-check-input" name="appointment-suggestion" id="appointment-suggestion-2" />
-                        <label className="form-check-label" htmlFor="appointment-suggestion-radio">
-                            <strong>Appointment 2<br /></strong>
-                            <span>12:00 - 12:30</span>
-                        </label>
-                    </div>
+                    <input type="radio" className="btn-check" name="appointment-suggestion" id="appointment-suggestion-2" />
+                    <label className="btn btn-outline-primary m-2" htmlFor="appointment-suggestion-2">
+                        <strong>Suggestion 2<br /></strong>
+                        <span>{suggestedAppointments[1].start.toLocaleTimeString()} - {suggestedAppointments[1].end.toLocaleTimeString()}</span>
+                    </label>
 
-                    <div className="form-check form-check-inline">
-                        <input type="radio" className="form-check-input" name="appointment-suggestion" id="appointment-suggestion-3" />
-                        <label className="form-check-label" htmlFor="appointment-suggestion-radio">
-                            <strong>Appointment 3<br /></strong>
-                            <span>10:00 - 10:30</span>
-                        </label>
-                    </div>
+                    <input type="radio" className="btn-check" name="appointment-suggestion" id="appointment-suggestion-3" />
+                    <label className="btn btn-outline-primary m-2" htmlFor="appointment-suggestion-3">
+                        <strong>Suggestion 3<br /></strong>
+                        <span>{suggestedAppointments[2].start.toLocaleTimeString()} - {suggestedAppointments[2].end.toLocaleTimeString()}</span>
+                    </label>
                 </div>
 
-                <button className="btn btn-primary">
+                <button className="btn btn-primary" onClick={BookAppointment}>
                     Create Appointment
                 </button>
             </section>
@@ -145,7 +180,7 @@ function AppointmentManagerPage() {
                     today.getFullYear(),
                     today.getMonth(),
                     today.getDate(),
-                    6
+                    7
                 )}
             />
         </div>

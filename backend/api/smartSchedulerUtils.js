@@ -17,7 +17,7 @@ async function generateSuggestions(providerId, appointmentDuration) {
         throw new Error(`No preferences found for provider with id ${providerId}`);
     }
 
-    const horizonLimit = 2;
+    const horizonLimit = preferences.future_appointment_limit;
     const leadTimeMin = preferences.appointment_lead_time_min;
     const availableDays = preferences.available_days;
     const providerStartHour = preferences.start_hour;
