@@ -219,3 +219,13 @@ export async function getAppointments(id, role) {
     const response = await fetchWithErrorHandling(url, getHttpOptions("GET"));
     return (await response.json());
 }
+
+export async function postMedication(patientId, name, strength) {
+    const medicationInfo = {
+        name,
+        strength
+    }
+
+    const response = await fetchWithErrorHandling(`${API_URL}/patients/${patientId}/medications`, getHttpOptions("POST", medicationInfo));
+    return (await response.json());
+}

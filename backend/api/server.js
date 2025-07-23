@@ -242,26 +242,32 @@ server.get('/providers/:providerId/medicationsToApprove', async (req, res, next)
 });
 
 server.post('/patients/:patientId/medications', async (req, res, next) => {
-    const patientId = Number(req.params.patientId);
-    const { name, description, strength, treatment_id } = req.body;
+    const patient_id = Number(req.params.patientId);
+    const { name, strength } = req.body;
+
+    const patient = await prisma.patient.findUnique({
+        where: {
+            id: patient_id
+        }
+    });
+    const treatment_id = patient.treatment_id;
+
     const medicationData = {
         name,
-        description,
         strength,
-        patientId,
-        treatment_id
+        patient_id,
+        treatment_id,
+        photo_url: "https://picsum.photos/seed/lisinopril/200/200"
     }
 
     try {
         const medication = await prisma.medication.create({
-            data: {
-                medicationData
-            }
+            data: medicationData
         });
 
         return res.status(200).json(medication);
     } catch (e) {
-        return res.status(204).json(`Failed to create medication! Error: ${e.message}`);
+        return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json(`Failed to create medication! Error: ${e.message}`);
     }
 });
 
