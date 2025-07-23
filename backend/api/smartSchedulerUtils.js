@@ -5,6 +5,7 @@ const DateFnsTz = require('date-fns-tz');
 const DateFns = require('date-fns');
 
 const SLOT_DURATION = 15;
+const AMOUNT_OF_SUGGESTIONS_TO_RETURN = 3;
 
 async function generateSuggestions(providerId, appointmentDuration) {
     const preferences = await prisma.providerPreferences.findUnique({
@@ -54,7 +55,7 @@ async function generateSuggestions(providerId, appointmentDuration) {
         });
     });
 
-    return timeSlotsWithScore.sort((a, b) => b.score - a.score || a.timeSlot.getTime() - b.timeSlot.getTime());
+    return timeSlotsWithScore.sort((a, b) => b.score - a.score || a.timeSlot.getTime() - b.timeSlot.getTime()).slice(0, AMOUNT_OF_SUGGESTIONS_TO_RETURN);
 }
 
 function getBusyIntervals(appointments, availableDays, providerStartHour, providerEndHour, minBufferMinutes, daysRangeStart, daysRangeEnd, maxAppointmentsPerDay, providerTimezone) {
