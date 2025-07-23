@@ -22,7 +22,6 @@ const cookieParser = require('cookie-parser');
 const jwt = require('jsonwebtoken');
 const { StatusCodes } = require('http-status-codes');
 const reminderServiceUtils = require('./reminderServiceUtils.js')
-const { StatusCodes } = require('http-status-codes')
 const generateSuggestions = require('./smartSchedulerUtils.js')
 
 const MAX_AGE = 2592000;

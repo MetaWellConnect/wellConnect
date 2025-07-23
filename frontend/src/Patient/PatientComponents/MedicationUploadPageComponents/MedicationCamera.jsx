@@ -11,6 +11,7 @@ function MedicationWebcam({ imgSrc, setImgSrc, setMedicationInformation }) {
             setImgSrc(image);
 
             const medicationInformation = await API.runOCR(image);
+            console.log(medicationInformation)
             setMedicationInformation(medicationInformation);
         })();
     }, [webcamRef]);

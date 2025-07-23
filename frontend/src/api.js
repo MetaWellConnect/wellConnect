@@ -196,6 +196,8 @@ export async function runOCR(imgSrc) {
 
         return errorResponse;
     }
+
+    return (await response.json());
 }
 
 export async function getAppointments(id, role) {
