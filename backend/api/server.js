@@ -23,7 +23,7 @@ const jwt = require('jsonwebtoken');
 const { StatusCodes } = require('http-status-codes');
 const reminderServiceUtils = require('./reminderServiceUtils.js')
 const { StatusCodes } = require('http-status-codes')
-const generateSuggestions  = require('./smartSchedulerUtils.js')
+const generateSuggestions = require('./smartSchedulerUtils.js')
 
 const MAX_AGE = 2592000;
 const upload = multer({ storage: multer.memoryStorage() });
@@ -374,6 +374,20 @@ server.get('/medications/due', async (req, res, next) => {
                 }
             },
             include: {
+                patient: {
+                    include: {
+                        user: true
+                    }
+                }
+            }
+        });
+
+        await reminderServiceUtils.updateMedicationDueReminders(medicationsDue)
+        res.status(StatusCodes.OK).json(medicationsDue);
+    } catch (e) {
+        return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json(`Failed to retrieve medications due for reminders! Error: ${e.message}`);
+    }
+});
 
 /* --- Appointment Endpoints --- */
 
@@ -401,26 +415,19 @@ server.get('/providers/:providerId/appointments', async (req, res, next) => {
             }
         });
 
-        await reminderServiceUtils.updateMedicationDueReminders(medicationsDue)
-        res.status(StatusCodes.OK).json(medicationsDue);
-    } catch (e) {
-        return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json(`Failed to retrieve medications due for reminders! Error: ${e.message}`);
-    }
-});
         if (appointments.length === 0) {
             return res.status(StatusCodes.NO_CONTENT);
         }
 
         // Censor outgoing information if requestor is a patient
         if (role === AccountTypes.PATIENT) {
-            appointments.map((appointment) => {
+            appointments.filter((appointment) => {
                 if (appointment.patient.id !== patientId) {
                     return appointment.patient = null;
                 }
                 return appointment;
             });
         }
-
         return res.status(StatusCodes.OK).json(appointments);
     } catch (e) {
         return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json(`Failed to retrieve appointments! Error: ${e.message}`)
@@ -431,9 +438,8 @@ server.get('/providers/:providerId/appointments/suggested', async (req, res, nex
     const providerId = Number(req.params.providerId);
     const duration = Number(req.query.duration);
 
-
-        const suggestions = await generateSuggestions(providerId, duration);
-        return res.status(StatusCodes.OK).json(suggestions);
+    const suggestions = await generateSuggestions(providerId, duration);
+    return res.status(StatusCodes.OK).json(suggestions);
 
 });
 
