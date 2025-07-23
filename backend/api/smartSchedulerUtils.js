@@ -43,15 +43,15 @@ async function generateSuggestions(providerId, appointmentDuration) {
     });
 
     const busyIntervals = getBusyIntervals(appointments, availableDays, providerStartHour, providerEndHour, minBufferMinutes, daysRangeStart, daysRangeEnd, maxAppointmentsPerDay, providerTimezone);
-    console.log(busyIntervals)
+    console.log("Busy:\n" + busyIntervals)
     const mergedBusyIntervals = mergeBusyIntervals(busyIntervals);
-    console.log(mergedBusyIntervals)
+    console.log("Merged Busy:\n" + mergedBusyIntervals)
     const availableIntervals = getAvailableIntervalsFromBusyIntervals(mergedBusyIntervals, daysRangeStart, daysRangeEnd);
-    console.log(availableIntervals)
+    console.log("Available:\n" + availableIntervals)
     const timeSlots = createTimeSlotsFromAvailableIntervals(availableIntervals);
-    console.log(timeSlots)
+    console.log("TimeSlots:\n" + timeSlots)
     const validStartTimes = findValidStartTimes(timeSlots, appointmentDuration);
-    console.log(validStartTimes)
+    console.log("ValidStartTimes:\n" + validStartTimes)
 
     const timeSlotsWithScore = validStartTimes.map((timeSlot) => {
         return ({
