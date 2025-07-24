@@ -74,26 +74,33 @@ function getBusyIntervals(appointments, availableDays, providerStartHour, provid
         });
     });
 
-    for (let currDay = daysRangeStart; currDay <= daysRangeEnd; currDay = DateFns.addDays(currDay, 1)) {
-        const dayInWeekIndex = DateFns.getDay(currDay);
+    const numberOfDaysToCheck = DateFns.differenceInDays(daysRangeEnd, daysRangeStart);
+    for (let dayPosition = 0; currDay <= numberOfDaysToCheck; dayPosition++) {
+        const currDayUTC = DateFns.addDays(DateFns.startOfDay(daysRangeStart), dayPosition);
+        const currDayProviderTimezone = DateFnsTz.toZonedTime(currDayUTC, providerTimezone);
+
+        const dayInWeekIndex = DateFns.getDay(currDayProviderTimezone);
 
         // availableDays looks like [null, "mon", "tue", "wed", "thu", "fri", null] where null days are unavailable
         // Skip today if today is unavailable
         if (!availableDays[dayInWeekIndex]) {
             busy.push({
-                start: DateFns.startOfDay(currDay),
-                end: DateFns.endOfDay(currDay)
+                start: DateFnsTz.fromZonedTime(DateFns.startOfDay(currDayProviderTimezone), providerTimezone),
+                end: DateFnsTz.fromZonedTime(DateFns.endOfDay(currDayProviderTimezone), providerTimezone)
             });
 
             continue;
         }
 
         // Skip today if we have more appointments than allowed
-        const appointmentsToday = appointments.filter(appointment => DateFns.isSameDay(appointment.date, currDay));
+        const appointmentsToday = appointments.filter(appointment => {
+            const appointmentProviderTimezone = DateFnsTz.toZonedTime(appointment.date, providerTimezone);
+            return DateFns.isSameDay(appointmentProviderTimezone, currDayProviderTimezone);
+        });
         if (appointmentsToday.length >= maxAppointmentsPerDay) {
             busy.push({
-                start: DateFns.startOfDay(currDay),
-                end: DateFns.endOfDay(currDay)
+                start: DateFnsTz.fromZonedTime(DateFns.startOfDay(currDayProviderTimezone), providerTimezone),
+                end: DateFnsTz.fromZonedTime(DateFns.endOfDay(currDayProviderTimezone), providerTimezone)
             });
 
             continue;
