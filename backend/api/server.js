@@ -442,6 +442,27 @@ server.get('/providers/:providerId/appointments/suggested', async (req, res, nex
 
 });
 
+server.post('/providers/:providerId/appointments/', async (req, res, next) => {
+    const providerId = Number(req.params.providerId);
+    const { patient_id, date, duration_in_minutes, name } = req.body;
+    const appointmentInformation = {
+        providerId,
+        patient_id,
+        date,
+        duration_in_minutes,
+        name
+    }
+
+    try {
+        const appointment = await prisma.appointment.create({
+            data: appointmentInformation
+        });
+        return res.status(StatusCodes.OK).json(appointment);
+    } catch (e) {
+        return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json(`Failed to create appointment! Error: ${e.message}`)
+
+    }
+})
 
 
 /* --- Catch All Endpoints --- */
