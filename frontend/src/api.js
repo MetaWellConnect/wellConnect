@@ -232,3 +232,24 @@ async function getProviderIdIfPatientRequest(id, role) {
 
     return id;
 }
+
+async function postAppointment(id, role, date, duration_in_minutes, name) {
+    let provider_id;
+    let patient_id;
+
+    if (role === AccountTypes.PATIENT) {
+        patient_id = id;
+        provider_id = await getPatient(id).provider_id;
+    }
+
+    const appointmentInformation = {
+        providerId,
+        patient_id,
+        date,
+        duration_in_minutes,
+        name
+    }
+
+    const response = await fetchWithErrorHandling(`${API_URL}/providers/${provider_id}/appointments/`, getHttpOptions("POST", appointmentInformation));
+    return (await response.json());
+}

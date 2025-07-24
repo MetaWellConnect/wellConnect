@@ -26,8 +26,11 @@ function AppointmentManagerPage() {
     const [selectedSuggestedAppointment, setSelectedSuggestedAppointment] = useState(null);
     const [formattedAppointments, setFormattedAppointments] = useState([]);
     const [suggestedAppointments, setSuggestedAppointments] = useState([]);
+    const [selectedPatient, setSelectedPatient] = useState(null);
     const [appointments, setAppointments] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
+    const [duration, setDuration] = useState(15);
+    const [patients, setPatients] = useState([]);
     const { user } = useAuth();
 
     async function fetchAppointments(id, role) {
@@ -54,15 +57,15 @@ function AppointmentManagerPage() {
         setFormattedAppointments(formattedAppointmentsArray);
     }
 
-    async function fetchAppointmentSuggestions(id, role) {
-        const suggestedAppointmentsResponse = await API.getSuggestedAppointments(id, role, 30);
+    async function fetchAppointmentSuggestions(id, role, duration) {
+        const suggestedAppointmentsResponse = await API.getSuggestedAppointments(id, role, duration);
 
         let formattedAppointmentsArray = [];    // Stores the appointments formatted for the calendar
         suggestedAppointmentsResponse.forEach((appointment) => {
 
             const startTime = new Date(appointment.timeSlot);
             const endTime = new Date(appointment.timeSlot);
-            endTime.setMinutes(endTime.getMinutes() + 30);
+            endTime.setMinutes(endTime.getMinutes() + duration);
 
             const formattedAppointment = {
                 title: "",
@@ -79,10 +82,16 @@ function AppointmentManagerPage() {
     useEffect(() => {
         (async () => {
             await fetchAppointments(user.id, user.role);
-            await fetchAppointmentSuggestions(user.id, user.role);
+            await fetchAppointmentSuggestions(user.id, user.role, duration);
+
+            if (user.role === "PROVIDER") {
+                const patients = await API.getProviderPatients(user.id);
+                setPatients(patients);
+            }
+
             setIsLoading(false);
         })();
-    }, []);
+    }, [duration]);
 
 
     function BookAppointment() {
@@ -127,6 +136,27 @@ function AppointmentManagerPage() {
             <h1>Appointment Manager</h1>
 
             <section className="appointment-suggestion-selector border-secondary border-1 rounded-3 d-flex align-items-center">
+                <div className="p-3">
+                    <label> Appointment Duration</label>
+                    <select value={duration} onChange={e => setDuration(Number(e.target.value))}>
+                        <option value={15}>15</option>
+                        <option value={30}>30</option>
+                    </select>
+                    {
+                        user.role === "PROVIDER" &&
+                        <div className="p-3">
+                            <label>Patient to Schedule Appointment With</label>
+                            <select value={selectedPatient} onChange={e => setSelectedPatient(Number(e.target.value))}>
+                                {patients.map((patient) => {
+                                    return (
+                                        <option value={patient.id}>{patient.user.first_name} {patient.user.last_name}</option>
+                                    );
+                                })}
+                            </select>
+                        </div>
+                    }
+                </div>
+
                 <div className="p-3">
                     <h2>
                         Suggested Meeting Times

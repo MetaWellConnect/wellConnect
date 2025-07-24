@@ -23,7 +23,7 @@ async function generateSuggestions(providerId, appointmentDuration) {
     const availableDays = preferences.available_days;
     const providerStartHour = preferences.start_hour;
     const providerEndHour = preferences.end_hour;
-    const maxAppointmentsPerDay = 8;
+    const maxAppointmentsPerDay = 2;
     const minBufferMinutes = preferences.min_buffer_minutes;
     const providerTimezone = preferences.timezone;
 
@@ -38,8 +38,8 @@ async function generateSuggestions(providerId, appointmentDuration) {
         where: {
             provider_id: providerId,
             date: {
-                gte: daysRangeStart,
-                lte: daysRangeEnd
+                gte: DateFns.subMinutes(daysRangeStart, minBufferMinutes + appointmentDuration),
+                lte: DateFns.addMinutes(daysRangeEnd, minBufferMinutes + appointmentDuration)
             }
         },
         orderBy: { date: 'asc' }
@@ -58,7 +58,16 @@ async function generateSuggestions(providerId, appointmentDuration) {
         });
     });
 
-    return timeSlotsWithScore.sort((a, b) => b.score - a.score || a.timeSlot.getTime() - b.timeSlot.getTime()).slice(0, AMOUNT_OF_SUGGESTIONS_TO_RETURN);
+    const timeSlotsWithoutDatesInPast = timeSlotsWithScore.filter(({timeSlot}) => {
+        return timeSlot.getTime() >= daysRangeStart.getTime();
+    })
+
+    const timeSlotsWithoutWeekendAndDatesInPast = timeSlotsWithoutDatesInPast.filter(({timeSlot}) => {
+
+        return !DateFns.isWeekend(timeSlot)
+    })
+
+    return timeSlotsWithoutWeekendAndDatesInPast.sort((a, b) => b.score - a.score || a.timeSlot.getTime() - b.timeSlot.getTime()).slice(0, AMOUNT_OF_SUGGESTIONS_TO_RETURN);
 }
 
 function getBusyIntervals(appointments, availableDays, providerStartHour, providerEndHour, minBufferMinutes, daysRangeStart, daysRangeEnd, maxAppointmentsPerDay, providerTimezone) {
@@ -166,6 +175,13 @@ function getAvailableIntervalsFromBusyIntervals(mergedBusyIntervals, daysRangeSt
 
     const availableIntervals = [];
 
+    if (mergedBusyIntervals[0].start > daysRangeStart) {
+        availableIntervals.push({
+            start: daysRangeStart,
+            end: mergedBusyIntervals[0].end
+        })
+    }
+
     for (let index = 1; index < mergedBusyIntervals.length; index++) {
         const availableIntervalStartTime = mergedBusyIntervals[index - 1].end;
         const availableIntervalEndTime = mergedBusyIntervals[index].start;
@@ -174,6 +190,13 @@ function getAvailableIntervalsFromBusyIntervals(mergedBusyIntervals, daysRangeSt
             start: availableIntervalStartTime,
             end: availableIntervalEndTime
         });
+    }
+
+    if (mergedBusyIntervals[mergedBusyIntervals.length - 1].end < daysRangeEnd) {
+        availableIntervals.push({
+            start: mergedBusyIntervals[mergedBusyIntervals.length - 1].end,
+            end: daysRangeEnd
+        })
     }
 
     return availableIntervals;
