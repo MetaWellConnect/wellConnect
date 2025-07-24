@@ -106,26 +106,26 @@ function getBusyIntervals(appointments, availableDays, providerStartHour, provid
             continue;
         }
 
-        const providerTimeZone = DateFns.startOfDay(DateFnsTz.toZonedTime(currDay, providerTimezone));
-
-        const localProviderStartHour = DateFns.set(providerTimeZone, {
+        const currDayProviderTimezoneStartOfDay = DateFns.startOfDay(currDayProviderTimezone);
+        const currDayProviderTimezoneStartHour = DateFns.set(currDayProviderTimezoneStartOfDay, {
             hours: providerStartHour, minutes: 0, seconds: 0, milliseconds: 0
         });
-        const localProviderEndHour = DateFns.set(providerTimeZone, {
+
+        const currDayProviderTimezoneEndtHour = DateFns.set(currDayProviderTimezoneStartOfDay, {
             hours: providerEndHour, minutes: 0, seconds: 0, milliseconds: 0
         });
 
-        const dayStartHourInUTC = DateFnsTz.fromZonedTime(localProviderStartHour, providerTimezone);
-        const dayEndHourInUTC = DateFnsTz.fromZonedTime(localProviderEndHour, providerTimezone);
+        const currDayUTCStartHour = DateFnsTz.fromZonedTime(currDayProviderTimezoneStartHour, providerTimezone);
+        const currDayUTCEndHour = DateFnsTz.fromZonedTime(currDayProviderTimezoneEndtHour, providerTimezone);
 
         busy.push({
-            start: DateFns.startOfDay(currDay),
-            end: dayStartHourInUTC
+            start: DateFnsTz.fromZonedTime(currDayProviderTimezoneStartOfDay, providerTimezone),
+            end: currDayUTCStartHour
         });
 
         busy.push({
-            start: dayEndHourInUTC,
-            end: DateFns.endOfDay(currDay)
+            start: currDayUTCEndHour,
+            end: DateFnsTz.fromZonedTime(DateFns.endOfDay(currDayProviderTimezone), providerTimezone)
         });
     }
 
