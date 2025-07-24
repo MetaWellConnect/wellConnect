@@ -258,8 +258,8 @@ export async function postAppointment(id, role, date, duration_in_minutes, name,
     return (await response.json());
 }
 
-export async function postProviderPreferences(id, preferences) {
-    const response = await fetchWithErrorHandling(`${API_URL}/providers/${id}/preferences`, getHttpOptions("POST", preferences));
+export async function postProviderPreferences(id, providerPreferencesInfo) {
+    const response = await fetchWithErrorHandling(`${API_URL}/providers/${id}/preferences`, getHttpOptions("PUT", providerPreferencesInfo));
     return (await response.json());
 }
 

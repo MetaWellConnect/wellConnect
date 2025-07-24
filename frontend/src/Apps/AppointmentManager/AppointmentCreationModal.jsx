@@ -3,8 +3,13 @@ import Modal from "react-bootstrap/Modal";
 import * as API from "../../api";
 
 export default function AppointmentCreationModal({ user, appointment_duration, selectedSuggestedAppointment, setFormattedAppointments, onHide, show }) {
+    const AccountTypes = {
+        PATIENT: "PATIENT",
+        PROVIDER: "PROVIDER"
+    }
+
     const formCss = "rounded-pill form-control w-75 p-3 m-2";
-    const [selectedPatient, setSelectedPatient] = useState("");
+    const [selectedPatient, setSelectedPatient] = useState(null);
     const [duration, setDuration] = useState(15);
     const [patients, setPatients] = useState([]);
     const [date, setDate] = useState("");
@@ -12,7 +17,7 @@ export default function AppointmentCreationModal({ user, appointment_duration, s
 
     useEffect(() => {
         (async () => {
-            if (user.role === "PROVIDER") {
+            if (user.role === AccountTypes.PROVIDER) {
                 const patients = await API.getProviderPatients(user.id);
                 setPatients(patients);
             }
@@ -26,6 +31,9 @@ export default function AppointmentCreationModal({ user, appointment_duration, s
         e.preventDefault();
 
         try {
+            if (!selectedPatient && user.role === AccountTypes.PROVIDER) {
+                throw new Error("Patient must be selected!")
+            }
             await API.postAppointment(user.id, user.role, date.getTime(), duration, name, selectedPatient);
 
             selectedSuggestedAppointment.title = name;
@@ -50,16 +58,17 @@ export default function AppointmentCreationModal({ user, appointment_duration, s
                     </form>
 
                     {
-                        user.role === "PROVIDER" &&
+                        user.role === AccountTypes.PROVIDER &&
                         <div className="p-3">
-                            <label>Patient to Schedule Appointment With: <br /></label>
-                            <select value={selectedPatient} onChange={e => setSelectedPatient(Number(e.target.value))}>
+                            <label>Patient to Schedule Appointment With:&nbsp;</label>
+                            <select value={selectedPatient} onChange={e => setSelectedPatient(Number(e.target.value))} id="appointment-approval-form" required>
                                 <optgroup label="Patients">
-                                {patients.map((patient, index) => {
-                                    return (
-                                        <option key={index} value={patient.id}>{patient.user.first_name} {patient.user.last_name}</option>
-                                    );
-                                })}
+                                    <option disabled selected value> Select a Patient </option>
+                                    {patients.map((patient, index) => {
+                                        return (
+                                            <option key={index} value={patient.id}>{patient.user.first_name} {patient.user.last_name}</option>
+                                        );
+                                    })}
                                 </optgroup>
                             </select>
                         </div>

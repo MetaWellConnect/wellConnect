@@ -483,10 +483,10 @@ server.get('/providers/:providerId/preferences/', async (req, res, next) => {
 
 server.put('/providers/:providerId/preferences/', async (req, res, next) => {
     const providerId = Number(req.params.providerId);
-
+    const providerPreferencesInfo = req.body;
     const preferences = await prisma.providerPreferences.update({
-        where: { provider_id: patientId },
-        data: { provider_id: providerId }
+        where: { provider_id: providerId },
+        data:  providerPreferencesInfo
     });
 
     if (!preferences) {

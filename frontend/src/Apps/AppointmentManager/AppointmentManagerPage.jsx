@@ -91,7 +91,7 @@ function AppointmentManagerPage() {
 
 
     function BookAppointment() {
-        setToggleModal(true);
+        setToggleAppointmentModal(true);
     }
 
     function selectSuggestion(e) {
@@ -126,23 +126,19 @@ function AppointmentManagerPage() {
     return (
         <div className="container">
             <h1>Appointment Manager</h1>
-
             <section className="appointment-suggestion-selector border-secondary border-1 rounded-3 d-flex align-items-center">
-                <div className="p-3">
-                    <label> Appointment Duration</label>
-                    <select value={duration} onChange={e => setDuration(Number(e.target.value))}>
-                        <option value={15}>15</option>
-                        <option value={30}>30</option>
-                    </select>
-                </div>
-
-                <div className="p-3">
+                <div className="p-2">
                     <h2>
                         Suggested Meeting Times
                     </h2>
                     <p>
                         Select a suggested time for your appointment.
                     </p>
+                    <label> Appointment Duration:&nbsp;</label>
+                    <select value={duration} onChange={e => setDuration(Number(e.target.value))}>
+                        <option value={15}>15</option>
+                        <option value={30}>30</option>
+                    </select>
                 </div>
 
                 <div className="form-check" onChange={e => selectSuggestion(e)}>
@@ -195,9 +191,10 @@ function AppointmentManagerPage() {
                     7
                 )}
             />
+            <button className="btn btn-primary m-2" onClick={setTogglePreferencesModal}>Edit Scheduling Preferences</button>
 
-            <AppointmentCreationModal user={user} appointment_duration={duration} selectedSuggestedAppointment={selectedSuggestedAppointment} setFormattedAppointments={setFormattedAppointments} show={toggleAppointmentModal} onHide={() => setToggleAppointmentModal(false)}/>
-            {user.role === "PROVIDER" && <ProviderPreferencesModal show={togglePreferencesModal} onHide={() => setTogglePreferencesModal(false)} />}
+            <AppointmentCreationModal user={user} appointment_duration={duration} selectedSuggestedAppointment={selectedSuggestedAppointment} setFormattedAppointments={setFormattedAppointments} show={toggleAppointmentModal} onHide={() => setToggleAppointmentModal(false)} />
+            {user.role === "PROVIDER" && <ProviderPreferencesModal user={user} show={togglePreferencesModal} onHide={() => setTogglePreferencesModal(false)} />}
         </div>
     );
 }
