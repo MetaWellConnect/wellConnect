@@ -257,3 +257,13 @@ export async function postAppointment(id, role, date, duration_in_minutes, name,
     const response = await fetchWithErrorHandling(`${API_URL}/providers/${provider_id}/appointments/`, getHttpOptions("POST", appointmentInformation));
     return (await response.json());
 }
+
+export async function postProviderPreferences(id, preferences) {
+    const response = await fetchWithErrorHandling(`${API_URL}/providers/${id}/preferences`, getHttpOptions("POST", preferences));
+    return (await response.json());
+}
+
+export async function getProviderPreferences(providerId) {
+    const response = await fetchWithErrorHandling(`${API_URL}/providers/${providerId}/preferences`, getHttpOptions("GET"));
+    return (await response.json());
+}

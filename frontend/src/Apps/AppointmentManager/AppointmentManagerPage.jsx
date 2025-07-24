@@ -1,4 +1,5 @@
 import AppointmentCreationModal from "./AppointmentCreationModal";
+import ProviderPreferencesModal from "./ProviderPreferencesModal";
 import { Calendar, momentLocalizer } from "react-big-calendar";
 import "react-big-calendar/lib/css/react-big-calendar.css";
 import { useAuth } from "../../hooks/AuthProvider";
@@ -27,7 +28,8 @@ function AppointmentManagerPage() {
     const [selectedSuggestedAppointment, setSelectedSuggestedAppointment] = useState("");
     const [formattedAppointments, setFormattedAppointments] = useState([]);
     const [suggestedAppointments, setSuggestedAppointments] = useState([]);
-    const [toggleModal, setToggleModal] = useState(false);
+    const [togglePreferencesModal, setTogglePreferencesModal] = useState(false);
+    const [toggleAppointmentModal, setToggleAppointmentModal] = useState(false);
     const [appointments, setAppointments] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
     const [duration, setDuration] = useState(15);
@@ -194,7 +196,8 @@ function AppointmentManagerPage() {
                 )}
             />
 
-            <AppointmentCreationModal user={user} appointment_duration={duration} selectedSuggestedAppointment={selectedSuggestedAppointment} setFormattedAppointments={setFormattedAppointments} show={toggleModal} onHide={() => setToggleModal(false)}/>
+            <AppointmentCreationModal user={user} appointment_duration={duration} selectedSuggestedAppointment={selectedSuggestedAppointment} setFormattedAppointments={setFormattedAppointments} show={toggleAppointmentModal} onHide={() => setToggleAppointmentModal(false)}/>
+            {user.role === "PROVIDER" && <ProviderPreferencesModal show={togglePreferencesModal} onHide={() => setTogglePreferencesModal(false)} />}
         </div>
     );
 }

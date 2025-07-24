@@ -462,8 +462,39 @@ server.post('/providers/:providerId/appointments/', async (req, res, next) => {
         return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json(`Failed to create appointment! Error: ${e.message}`)
 
     }
-})
+});
 
+/* --- Provider Preferences Endpoints --- */
+
+server.get('/providers/:providerId/preferences/', async (req, res, next) => {
+    const providerId = Number(req.params.providerId);
+    const preferences = await prisma.providerPreferences.findUnique({
+        where: {
+            provider_id: providerId
+        }
+    });
+
+    if (!preferences) {
+        return res.status(StatusCodes.NOT_FOUND).json(`Failed to find provider preferences with providerId: ${providerId}`);
+    }
+
+    return res.status(StatusCodes.OK).json(preferences);
+});
+
+server.put('/providers/:providerId/preferences/', async (req, res, next) => {
+    const providerId = Number(req.params.providerId);
+
+    const preferences = await prisma.providerPreferences.update({
+        where: { provider_id: patientId },
+        data: { provider_id: providerId }
+    });
+
+    if (!preferences) {
+        return res.status(StatusCodes.NOT_FOUND).json(`No provider preferences with provider_id: ${patientId}`);
+    }
+
+    return res.status(StatusCodes.OK).json(preferences);
+});
 
 /* --- Catch All Endpoints --- */
 
