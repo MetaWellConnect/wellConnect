@@ -1,3 +1,4 @@
+import AppointmentCreationModal from "./AppointmentCreationModal";
 import { Calendar, momentLocalizer } from "react-big-calendar";
 import "react-big-calendar/lib/css/react-big-calendar.css";
 import { useAuth } from "../../hooks/AuthProvider";
@@ -23,14 +24,13 @@ function AppointmentManagerPage() {
         }
     ]
     */
-    const [selectedSuggestedAppointment, setSelectedSuggestedAppointment] = useState(null);
+    const [selectedSuggestedAppointment, setSelectedSuggestedAppointment] = useState("");
     const [formattedAppointments, setFormattedAppointments] = useState([]);
     const [suggestedAppointments, setSuggestedAppointments] = useState([]);
-    const [selectedPatient, setSelectedPatient] = useState(null);
+    const [toggleModal, setToggleModal] = useState(false);
     const [appointments, setAppointments] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
     const [duration, setDuration] = useState(15);
-    const [patients, setPatients] = useState([]);
     const { user } = useAuth();
 
     async function fetchAppointments(id, role) {
@@ -83,23 +83,13 @@ function AppointmentManagerPage() {
         (async () => {
             await fetchAppointments(user.id, user.role);
             await fetchAppointmentSuggestions(user.id, user.role, duration);
-
-            if (user.role === "PROVIDER") {
-                const patients = await API.getProviderPatients(user.id);
-                setPatients(patients);
-            }
-
             setIsLoading(false);
         })();
     }, [duration]);
 
 
     function BookAppointment() {
-        if (selectedSuggestedAppointment === null) {
-            console.error("Cannot book a null appointment!");
-        }
-
-        setFormattedAppointments((prevAppointments) => [...prevAppointments, selectedSuggestedAppointment]);
+        setToggleModal(true);
     }
 
     function selectSuggestion(e) {
@@ -142,19 +132,6 @@ function AppointmentManagerPage() {
                         <option value={15}>15</option>
                         <option value={30}>30</option>
                     </select>
-                    {
-                        user.role === "PROVIDER" &&
-                        <div className="p-3">
-                            <label>Patient to Schedule Appointment With</label>
-                            <select value={selectedPatient} onChange={e => setSelectedPatient(Number(e.target.value))}>
-                                {patients.map((patient) => {
-                                    return (
-                                        <option value={patient.id}>{patient.user.first_name} {patient.user.last_name}</option>
-                                    );
-                                })}
-                            </select>
-                        </div>
-                    }
                 </div>
 
                 <div className="p-3">
@@ -216,6 +193,8 @@ function AppointmentManagerPage() {
                     7
                 )}
             />
+
+            <AppointmentCreationModal user={user} appointment_duration={duration} selectedSuggestedAppointment={selectedSuggestedAppointment} setFormattedAppointments={setFormattedAppointments} show={toggleModal} onHide={() => setToggleModal(false)}/>
         </div>
     );
 }

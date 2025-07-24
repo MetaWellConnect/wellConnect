@@ -23,7 +23,7 @@ async function generateSuggestions(providerId, appointmentDuration) {
     const availableDays = preferences.available_days;
     const providerStartHour = preferences.start_hour;
     const providerEndHour = preferences.end_hour;
-    const maxAppointmentsPerDay = 2;
+    const maxAppointmentsPerDay = preferences.max_appointments_per_day;
     const minBufferMinutes = preferences.min_buffer_minutes;
     const providerTimezone = preferences.timezone;
 

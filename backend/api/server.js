@@ -446,8 +446,8 @@ server.post('/providers/:providerId/appointments/', async (req, res, next) => {
     const providerId = Number(req.params.providerId);
     const { patient_id, date, duration_in_minutes, name } = req.body;
     const appointmentInformation = {
-        providerId,
         patient_id,
+        provider_id: providerId,
         date,
         duration_in_minutes,
         name

@@ -233,19 +233,23 @@ async function getProviderIdIfPatientRequest(id, role) {
     return id;
 }
 
-async function postAppointment(id, role, date, duration_in_minutes, name) {
+export async function postAppointment(id, role, date, duration_in_minutes, name, patientId) {
+    let patient_id = patientId;
     let provider_id;
-    let patient_id;
 
     if (role === AccountTypes.PATIENT) {
         patient_id = id;
         provider_id = await getPatient(id).provider_id;
     }
 
+    if (role === AccountTypes.PROVIDER) {
+        provider_id = id;
+    }
+
     const appointmentInformation = {
-        providerId,
+        provider_id,
         patient_id,
-        date,
+        date: new Date(date),
         duration_in_minutes,
         name
     }
