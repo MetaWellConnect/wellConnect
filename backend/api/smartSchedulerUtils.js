@@ -27,9 +27,12 @@ async function generateSuggestions(providerId, appointmentDuration) {
     const minBufferMinutes = preferences.min_buffer_minutes;
     const providerTimezone = preferences.timezone;
 
-    const today = new Date();
-    const daysRangeStart = DateFns.addMinutes(today, leadTimeMin);
-    const daysRangeEnd = DateFns.endOfDay(DateFns.addDays(today, horizonLimit));
+    const nowProviderTimezone = DateFns.addMinutes(new Date(), providerTimezone);
+    const rangeStartProviderTimezone = DateFns.addMinutes(nowProviderTimezone, leadTimeMin);
+    const rangeEndProviderTimezone = DateFns.endOfDay(DateFns.addDays(nowProviderTimezone, horizonLimit));
+
+    const daysRangeStart = DateFnsTz.fromZonedTime(rangeStartProviderTimezone, providerTimezone);
+    const daysRangeEnd = DateFnsTz.fromZonedTime(rangeEndProviderTimezone, providerTimezone);
 
     const appointments = await prisma.appointment.findMany({
         where: {
@@ -43,15 +46,10 @@ async function generateSuggestions(providerId, appointmentDuration) {
     });
 
     const busyIntervals = getBusyIntervals(appointments, availableDays, providerStartHour, providerEndHour, minBufferMinutes, daysRangeStart, daysRangeEnd, maxAppointmentsPerDay, providerTimezone);
-    console.log("Busy:\n" + busyIntervals)
     const mergedBusyIntervals = mergeBusyIntervals(busyIntervals);
-    console.log("Merged Busy:\n" + mergedBusyIntervals)
     const availableIntervals = getAvailableIntervalsFromBusyIntervals(mergedBusyIntervals, daysRangeStart, daysRangeEnd);
-    console.log("Available:\n" + availableIntervals)
     const timeSlots = createTimeSlotsFromAvailableIntervals(availableIntervals);
-    console.log("TimeSlots:\n" + timeSlots)
     const validStartTimes = findValidStartTimes(timeSlots, appointmentDuration);
-    console.log("ValidStartTimes:\n" + validStartTimes)
 
     const timeSlotsWithScore = validStartTimes.map((timeSlot) => {
         return ({
@@ -227,7 +225,7 @@ function getTimeSlotScore(timeSlot, appointmentDuration, appointments) {
     let isAfterPrevious = false;
     let isBeforePrevious = false;
 
-    if (previousAppointment && DateFns.differenceInMinutes(start, DateFns.addMinutes(previousAppointment.date, previousAppointment.appointmentDuration)) <= APPOINTMENT_DISTANCE_THRESHHOLD) {
+    if (previousAppointment && DateFns.differenceInMinutes(start, DateFns.addMinutes(previousAppointment.date, previousAppointment.duration_in_minutes)) <= APPOINTMENT_DISTANCE_THRESHHOLD) {
         isAfterPrevious = true;
     }
 
