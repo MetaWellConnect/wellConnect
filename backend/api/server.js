@@ -44,13 +44,13 @@ server.post('/medications/run-ocr', upload.single('medicationImage'), async (req
     const medicationImage = req.file;
 
     if (!medicationImage) {
-        return res.status(422).json("No medication image uploaded!");
+        return res.status(StatusCodes.UNPROCESSABLE_ENTITY).json("No medication image uploaded!");
     }
 
     try {
         const ocrText = await runOCROnImage(medicationImage); // Extract text on image
         const processedOCRText = await parseOCRText(ocrText); // Extract the name and strength of the medication
-        return res.status(200).json(processedOCRText);
+        return res.status(StatusCodes.OK).json(processedOCRText);
     } catch (e) {
         return res.status(e.status).json(e.message)
     }
@@ -63,9 +63,9 @@ server.post('/register', async (req, res, next) => {
     const registeredSuccessfully = await registerUser(user);
 
     if (registeredSuccessfully) {
-        return res.status(200).json("User registered successfully!");
+        return res.status(StatusCodes.OK).json("User registered successfully!");
     }
-    return res.status(409).json("User could not be registered due to user already existing!");
+    return res.status(StatusCodes.CONFLICT).json("User could not be registered due to user already existing!");
 });
 
 server.post('/login', async (req, res, next) => {
@@ -76,14 +76,14 @@ server.post('/login', async (req, res, next) => {
         const token = await generateJWT(email, id, role);
 
         res.cookie('token', token, { maxAge: MAX_AGE });
-        return res.status(200).json("Successfully authenticated!");
+        return res.status(StatusCodes.OK).json("Successfully authenticated!");
     }
-    return res.status(401).json("Invalid credentials!");
+    return res.status(StatusCodes.UNAUTHORIZED).json("Invalid credentials!");
 });
 
 server.post('/logout', async (req, res, next) => {
     res.clearCookie('token');
-    return res.status(200).json('User logged out!');
+    return res.status(StatusCodes.OK).json('User logged out!');
 });
 
 
@@ -97,10 +97,10 @@ server.get('/patients/:patientId', async (req, res, next) => {
     });
 
     if (!patient) {
-        return res.status(204).json(`No patient with id: ${patientId}`);
+        return res.status(StatusCodes.NOT_FOUND).json(`No patient with id: ${patientId}`);
     }
 
-    return res.status(200).json(patient);
+    return res.status(StatusCodes.OK).json(patient);
 });
 
 server.get('/patients/:patientId/provider', async (req, res, next) => {
@@ -138,10 +138,10 @@ server.put('/patients/:patientId/provider', async (req, res, next) => {
     });
 
     if (!patient) {
-        return res.status(204).json(`No patient with id: ${patientId}`);
+        return res.status(StatusCodes.NOT_FOUND).json(`No patient with id: ${patientId}`);
     }
 
-    return res.status(200).json(patient);
+    return res.status(StatusCodes.OK).json(patient);
 });
 
 
@@ -155,10 +155,10 @@ server.get('/providers/:providerId', async (req, res, next) => {
     });
 
     if (!provider) {
-        return res.status(204).json(`No provider with id: ${providerId}`);
+        return res.status(StatusCodes.NOT_FOUND).json(`No provider with id: ${providerId}`);
     }
 
-    return res.status(200).json(provider);
+    return res.status(StatusCodes.OK).json(provider);
 });
 
 server.get('/providers/:providerId/patients', async (req, res, next) => {
@@ -176,10 +176,10 @@ server.get('/providers/:providerId/patients', async (req, res, next) => {
     });
 
     if (!provider) {
-        return res.status(204).json(`No provider with id: ${providerId}`);
+        return res.status(StatusCodes.NOT_FOUND).json(`No provider with id: ${providerId}`);
     }
 
-    return res.status(200).json(provider.patients);
+    return res.status(StatusCodes.OK).json(provider.patients);
 });
 
 
@@ -193,10 +193,10 @@ server.get('/patients/:patientId/medications', async (req, res, next) => {
     });
 
     if (!patient) {
-        return res.status(204).json(`No patient with id: ${patientId}`);
+        return res.status(StatusCodes.NOT_FOUND).json(`No patient with id: ${patientId}`);
     }
 
-    return res.status(200).json(patient.medications);
+    return res.status(StatusCodes.OK).json(patient.medications);
 });
 
 server.get('/patients/:patientId/medications/approved', async (req, res, next) => {
@@ -215,10 +215,10 @@ server.get('/patients/:patientId/medications/approved', async (req, res, next) =
     });
 
     if (!patient) {
-        return res.status(204).json(`No patient with id: ${patientId}`);
+        return res.status(StatusCodes.NOT_FOUND).json(`No patient with id: ${patientId}`);
     }
 
-    return res.status(200).json(patient.medications);
+    return res.status(StatusCodes.OK).json(patient.medications);
 });
 
 
@@ -230,14 +230,14 @@ server.get('/patients/:patientId/medications/:medicationId', async (req, res, ne
     });
 
     if (!medication) {
-        return res.status(204).json(`No medication with id: ${medicationId}`);
+        return res.status(StatusCodes.NOT_FOUND).json(`No medication with id: ${medicationId}`);
     }
 
     if (medication.patient_id != patientId) {
-        return res.status(204).json(`This medication (${medicationId}) does not belong to patient with id: ${patientId}`)
+        return res.status(StatusCodes.NOT_FOUND).json(`No medication belonging to patient with id: ${patientId}`)
     }
 
-    return res.status(200).json(medication);
+    return res.status(StatusCodes.OK).json(medication);
 });
 
 server.get('/providers/:providerId/medicationsToApprove', async (req, res, next) => {
@@ -261,7 +261,7 @@ server.get('/providers/:providerId/medicationsToApprove', async (req, res, next)
     // Medications that have a null approved field have yet to be examined by the provider
     medications = medications.filter((medication) => medication.approved === null);
 
-    return res.status(200).json(medications);
+    return res.status(StatusCodes.OK).json(medications);
 });
 
 server.post('/patients/:patientId/medications', async (req, res, next) => {
@@ -288,7 +288,7 @@ server.post('/patients/:patientId/medications', async (req, res, next) => {
             data: medicationData
         });
 
-        return res.status(200).json(medication);
+        return res.status(StatusCodes.OK).json(medication);
     } catch (e) {
         return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json(`Failed to create medication! Error: ${e.message}`);
     }
@@ -302,18 +302,18 @@ server.delete('/patients/:patientId/medications/:medicationId', async (req, res,
     });
 
     if (!medication) {
-        return res.status(204).json(`No medication with id: ${medicationId}`);
+        return res.status(StatusCodes.NOT_FOUND).json(`No medication with id: ${medicationId}`);
     }
 
     if (medication.patient_id != patientId) {
-        return res.status(204).json(`This medication (${medicationId}) does not belong to patient with id: ${patientId}`)
+        return res.status(StatusCodes.NOT_FOUND).json(`No medication belonging to patient with id: ${patientId}`)
     }
 
     await prisma.medication.delete({
         where: { id: medicationId }
     });
 
-    return res.status(200).json(medication);
+    return res.status(StatusCodes.OK).json(medication);
 });
 
 server.put('/patients/:patientId/medications/:medicationId', async (req, res, next) => {
@@ -328,7 +328,7 @@ server.put('/patients/:patientId/medications/:medicationId', async (req, res, ne
             data: medicationInformation
         });
 
-        return res.status(200).json(medication);
+        return res.status(StatusCodes.OK).json(medication);
     } catch (e) {
         return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json(`Failed to update medication! Error: ${e.message}`);
     }
@@ -351,10 +351,10 @@ server.get('/patients/:patientId/treatment', async (req, res, next) => {
     });
 
     if (!patient) {
-        return res.status(204).json(`No patient with id: ${patientId}`);
+        return res.status(StatusCodes.NOT_FOUND).json(`No patient with id: ${patientId}`);
     }
 
-    return res.status(200).json(patient.treatment);
+    return res.status(StatusCodes.OK).json(patient.treatment);
 });
 
 server.put('/patients/:patientId/treatment', async (req, res, next) => {
@@ -371,7 +371,7 @@ server.put('/patients/:patientId/treatment', async (req, res, next) => {
     });
 
     if (!patient) {
-        return res.status(204).json(`No patient with id: ${patientId}`);
+        return res.status(StatusCodes.NOT_FOUND).json(`No patient with id: ${patientId}`);
     }
 
     const treatment_id = patient.treatment_id;
@@ -383,9 +383,9 @@ server.put('/patients/:patientId/treatment', async (req, res, next) => {
             data: treatmentInformation
         });
 
-        res.status(200).json(treatment);
+        res.status(StatusCodes.OK).json(treatment);
     } catch (e) {
-        res.status(204).json(`Failed to update treatment! Error: ${e.message}`)
+        res.status(StatusCodes.NOT_FOUND).json(`Failed to update treatment! Error: ${e.message}`)
     }
 
 });
@@ -613,7 +613,7 @@ server.put('/providers/:providerId/preferences/', async (req, res, next) => {
 /* --- Catch All Endpoints --- */
 
 server.get('/', async (req, res, next) => {
-    res.status(200).json(`Hello World!`);
+    res.status(StatusCodes.OK).json(`Hello World!`);
 });
 
 module.exports = server;

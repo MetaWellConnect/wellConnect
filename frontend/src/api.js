@@ -272,6 +272,8 @@ export async function postProviderPreferences(id, providerPreferencesInfo) {
 
 export async function getProviderPreferences(providerId) {
     const response = await fetchWithErrorHandling(`${API_URL}/providers/${providerId}/preferences`, getHttpOptions("GET"));
+    return (await response.json());
+}
 
 export async function postMedication(patientId, name, strength) {
     const medicationInfo = {
