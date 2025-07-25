@@ -117,14 +117,14 @@ server.get('/patients/:patientId/provider', async (req, res, next) => {
     });
 
     if (!patient) {
-        return res.status(204).json(`No patient with id: ${patientId}`);
+        return res.status(StatusCodes.NOT_FOUND).json(`No patient with id: ${patientId}`);
     }
 
     if (!patient.provider) {
-        return res.status(204).json(`No patient has no provider!`);
+        return res.status(StatusCodes.NOT_FOUND).json(`This patient has no provider!`);
     }
 
-    return res.status(200).json(patient.provider);
+    return res.status(StatusCodes.OK).json(patient.provider);
 });
 
 server.put('/patients/:patientId/provider', async (req, res, next) => {
@@ -234,7 +234,7 @@ server.get('/patients/:patientId/medications/:medicationId', async (req, res, ne
     }
 
     if (medication.patient_id != patientId) {
-        return res.status(204).json(`No medication belonging to patient with id: ${patientId}`)
+        return res.status(204).json(`This medication (${medicationId}) does not belong to patient with id: ${patientId}`)
     }
 
     return res.status(200).json(medication);
@@ -306,7 +306,7 @@ server.delete('/patients/:patientId/medications/:medicationId', async (req, res,
     }
 
     if (medication.patient_id != patientId) {
-        return res.status(204).json(`No medication belonging to patient with id: ${patientId}`)
+        return res.status(204).json(`This medication (${medicationId}) does not belong to patient with id: ${patientId}`)
     }
 
     await prisma.medication.delete({
