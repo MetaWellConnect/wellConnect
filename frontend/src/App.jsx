@@ -8,7 +8,6 @@ import LandingPage from './Apps/Landing/LandingPage.jsx'
 import LoginPage from './Auth/pages/LoginPage.jsx'
 import LogoutPage from './Auth/pages/LogoutPage.jsx'
 import MedicationUploadPage from './Patient/pages/MedicationUploadPage.jsx'
-import MedicationValidationPage from './Provider/pages/MedicationValidationPage.jsx'
 import MessengerPage from './Apps/Messenger/MessengerPage.jsx'
 import RegisterPage from './Auth/pages/RegisterPage.jsx'
 import PrivateRoutes from './components/PrivateRoutes.jsx'
@@ -43,7 +42,6 @@ function App() {
                 {user && <Route element={<PrivateRoutes />}>
                     <Route path="/dashboard" element={<DashboardRouteHandler />} />
                     <Route path="/medication-upload" element={<MedicationUploadPage />} />
-                    <Route path="/medication-validation" element={<MedicationValidationPage />} />
                     <Route path="/appointment-manager" element={<AppointmentManager />} />
                     <Route path="/messenger" element={<MessengerPage />} />
                 </Route>}

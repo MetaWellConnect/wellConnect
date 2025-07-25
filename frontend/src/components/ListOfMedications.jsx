@@ -14,7 +14,7 @@ function ListOfMedications({ renderApprovalMedicationCard, id }) {
             }
 
             else {
-                setMedicationList(await API.getPatientMedications(id));
+                setMedicationList(await API.getApprovedPatientMedications(id));
             }
             setIsLoading(false);
         })();
@@ -31,7 +31,7 @@ function ListOfMedications({ renderApprovalMedicationCard, id }) {
             {medicationList.map((medication, index) => {
                 return (
                     <Fragment key={index}>
-                        {renderApprovalMedicationCard ? <MedicationToApproveCard key={index} pendingMedication={medication} /> : <MedicationCard key={index} medication={medication} />}
+                        {renderApprovalMedicationCard ? <MedicationToApproveCard key={index} pendingMedication={medication} setMedicationList={setMedicationList} /> : <MedicationCard key={index} medication={medication} />}
                     </ Fragment>
                 );
             })}

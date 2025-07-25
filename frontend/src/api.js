@@ -145,7 +145,11 @@ export async function getPatient(patientId) {
 
 export async function getPatientMedications(patientId) {
     const response = await fetchWithErrorHandling(`${API_URL}/patients/${patientId}/medications`, getHttpOptions("GET"));
+    return (await response.json());
+}
 
+export async function getApprovedPatientMedications(patientId) {
+    const response = await fetchWithErrorHandling(`${API_URL}/patients/${patientId}/medications/approved`, getHttpOptions("GET"));
     return (await response.json());
 }
 
@@ -227,5 +231,10 @@ export async function postMedication(patientId, name, strength) {
     }
 
     const response = await fetchWithErrorHandling(`${API_URL}/patients/${patientId}/medications`, getHttpOptions("POST", medicationInfo));
+    return (await response.json());
+}
+
+export async function putMedication(patientId, medicationId, medicationInfo) {
+    const response = await fetchWithErrorHandling(`${API_URL}/patients/${patientId}/medications/${medicationId}`, getHttpOptions("PUT", medicationInfo));
     return (await response.json());
 }
