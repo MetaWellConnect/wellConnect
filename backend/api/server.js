@@ -457,8 +457,38 @@ server.put('/medications/:medicationId/due', async (req, res, next) => {
     } catch (e) {
         return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json(`Failed to retrieve create reminder log! Error: ${e.message}`);
     }
+});
 
+server.get('/reminders/sent', async (req, res, next) => {
+    const reminder = await prisma.sentReminders.findMany({where: {
+        sent_at: {
+            gte: (new Date().now() - 24 * 60 * 60 * 1000)
+        }
+    }});
 
+    if (!reminder) {
+        return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json(`Failed to retrieve sent reminders!`);
+    }
+
+    const summaryByProvider = {};
+    reminder.forEach((reminder) => {
+        if (!summaryByProvider[reminder.provider_id]) {
+            summaryByProvider[reminder.provider_id] = {
+                providerEmail: reminder.provider_email,
+                reminders: []
+            };
+        }
+
+        summaryByProvider[reminder.provider_id].reminders.push({
+            sentAt: reminder.sent_at,
+            patientFirstName: reminder.patient_first_name,
+            patientLastName: reminder.patient_last_name,
+            medicationName: reminder.medication_name,
+            medicationDose: reminder.medication_dose
+        });
+    });
+
+    res.status(StatusCodes.OK).json(summaryByProvider);
 });
 
 /* --- Appointment Endpoints --- */
