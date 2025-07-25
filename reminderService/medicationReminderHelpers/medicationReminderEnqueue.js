@@ -1,4 +1,4 @@
-const { medicationReminderQueue } = require('./medicationReminderWorker');
+const { medicationReminderQueue } = require('../queue');
 const { fetchWithErrorHandling } = require('../utils');
 const DateFnsTz = require('date-fns-tz');
 require('dotenv').config();
@@ -15,14 +15,14 @@ async function enqueueMedicationReminders() {
 
     medications.forEach(async (medication) => {
         const reminderTime = getMedicationSendTime(new Date(medication.time_of_next_dose), medication.patient.timezone);
-
+        const delay = Math.max(reminderTime - Date.now(), 0);
         await medicationReminderQueue.add(
             'REMINDER',
             { medication },
-            { delay: Math.max(reminderTime - Date.now(), 0) }
+            { delay: delay }
         );
 
-        console.log(`Medication Reminder Queued for ${reminderTime}!`);
+        console.log(`Medication Reminder Queued for ${delay}!`);
     });
 
 }
@@ -32,7 +32,7 @@ function getMedicationSendTime(reminderTimeUTC, timezone) {
     const hour = reminderTimeLocal.getHours();
 
     if (hour < REMINDER_BLACKOUT_END && hour >= REMINDER_BLACKOUT_START) {
-        const correctedReminderTimeLocal = new Date(local);
+        const correctedReminderTimeLocal = new Date(reminderTimeLocal);
         correctedReminderTimeLocal.setHours(REMINDER_BLACKOUT_END, 0, 0, 0);
 
         const correctedReminderTimeUTC = DateFnsTz.fromZonedTime(correctedReminderTimeLocal, timezone);

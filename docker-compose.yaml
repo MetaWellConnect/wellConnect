@@ -67,6 +67,9 @@ services:
   reminder_service:
     build: ./reminderService
     container_name: reminder-service
+    depends_on:
+      - redis
+      - backend
     ports:
       - '9000:9000'
     networks:
@@ -74,10 +77,10 @@ services:
 
   redis:
     image: redis:7-alpine
-    container_name: redis-server
+    container_name: redis
     restart: always
     ports: ["6379:6379"]
-    command: ["redis-server", "--appendonly", "yes"]
+    command: ["redis-server", "--appendonly", "yes", "--bind", "0.0.0.0"]
     networks:
       - mediscan-network
 

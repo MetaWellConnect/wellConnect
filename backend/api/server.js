@@ -410,7 +410,6 @@ server.get('/medications/due', async (req, res, next) => {
             }
         });
 
-        await reminderServiceUtils.updateMedicationDueReminders(medicationsDue)
         res.status(StatusCodes.OK).json(medicationsDue);
     } catch (e) {
         return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json(`Failed to retrieve medications due for reminders! Error: ${e.message}`);
@@ -460,9 +459,10 @@ server.put('/medications/:medicationId/due', async (req, res, next) => {
 });
 
 server.get('/reminders/sent', async (req, res, next) => {
+    const sinceTime =  Date.now() - 24 * 60 * 60 * 1000;
     const reminder = await prisma.sentReminders.findMany({where: {
         sent_at: {
-            gte: (new Date().now() - 24 * 60 * 60 * 1000)
+            gte: new Date(sinceTime)
         }
     }});
 

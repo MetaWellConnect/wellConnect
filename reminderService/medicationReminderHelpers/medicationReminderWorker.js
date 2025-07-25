@@ -1,5 +1,5 @@
 const { medicationReminderQueue } = require('../queue');
-const {fetchWithErrorHandling} = require('../utils')
+const { fetchWithErrorHandling } = require('../utils')
 const nodemailer = require('nodemailer');
 const { Worker } = require('bullmq');
 require('dotenv').config()
@@ -14,17 +14,18 @@ const transporter = nodemailer.createTransport({
     }
 })
 
-new Worker('reminder', async job => {
-    const { medication } = job.data;
-    sendReminder(medication);
+function startReminderWorker() {
+    new Worker('reminder', async job => {
+        const { medication } = job.data;
+        sendReminder(medication);
 
-    try {
-        await fetchWithErrorHandling(`${MEDISCAN_DB_API_URL}/medications/${medication.id}/due`, { method: 'PUT' });
-    } catch (e) {
-        console.error(`Error fetching medications! Status:${e.status} Message: ${e.message}`);
-    }
-}, { connection: medicationReminderQueue.client, concurrency: 5 });
-
+        try {
+            await fetchWithErrorHandling(`${MEDISCAN_DB_API_URL}/medications/${medication.id}/due`, { method: 'PUT' });
+        } catch (e) {
+            console.error(`Error fetching medications! Status:${e.status} Message: ${e.message}`);
+        }
+    }, { connection: medicationReminderQueue.connection, concurrency: 5 });
+}
 async function sendReminder(medication) {
     const template = `
         <html lang="en">
@@ -91,3 +92,5 @@ async function sendReminder(medication) {
         console.log(info);
     })();
 }
+
+module.exports = startReminderWorker;

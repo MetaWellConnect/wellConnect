@@ -39,6 +39,7 @@ model Patient {
   provider_id  Int?
   treatment    Treatment?
   treatment_id Int?
+  timezone     String        @default("America/Los_Angeles")
 }
 
 model Provider {

@@ -5,6 +5,8 @@ async function updateMedicationTimes(medication) {
     const timeOfLastDose = new Date();
 
     const timeOfNextDose = new Date();
+    console.log(medication)
+    console.log(timeOfNextDose)
     timeOfNextDose.setHours(timeOfNextDose.getHours() + medication.frequency_in_hours);
 
     try {
