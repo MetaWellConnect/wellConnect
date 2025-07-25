@@ -1,5 +1,7 @@
+const { medicationReminderQueue } = require('../queue');
+const {fetchWithErrorHandling} = require('../utils')
 const nodemailer = require('nodemailer');
-const cron = require('node-cron');
+const { Worker } = require('bullmq');
 require('dotenv').config()
 
 const MEDISCAN_DB_API_URL = process.env.MEDISCAN_DB_API_URL;
@@ -7,24 +9,21 @@ const MEDISCAN_EMAIL_PASS = process.env.MEDISCAN_EMAIL_PASS
 const transporter = nodemailer.createTransport({
     service: "gmail",
     auth: {
-        user:"mediscanreminders@gmail.com",
+        user: "mediscanreminders@gmail.com",
         pass: MEDISCAN_EMAIL_PASS
     }
 })
 
-async function fetchWithErrorHandling(url, options) {
-    const response = await fetch(url, options);
-    if (!response.ok) {
-        const errorMessage = await response.json();
-        const errorStatus = response.status;
+new Worker('reminder', async job => {
+    const { medication } = job.data;
+    sendReminder(medication);
 
-        const error = new Error(errorMessage);
-        error.status = errorStatus;
-        throw error;
+    try {
+        await fetchWithErrorHandling(`${MEDISCAN_DB_API_URL}/medications/${medication.id}/due`, { method: 'PUT' });
+    } catch (e) {
+        console.error(`Error fetching medications! Status:${e.status} Message: ${e.message}`);
     }
-
-    return response;
-}
+}, { connection: medicationReminderQueue.client, concurrency: 5 });
 
 async function sendReminder(medication) {
     const template = `
@@ -92,18 +91,3 @@ async function sendReminder(medication) {
         console.log(info);
     })();
 }
-
-cron.schedule('* * * * *', async () => {
-    try {
-        const response = await fetchWithErrorHandling(`${MEDISCAN_DB_API_URL}/medications/due`, {
-            method: 'GET'
-        });
-
-        const medicationsDue = await response.json();
-        medicationsDue.forEach((medication) => {
-            sendReminder(medication);
-        });
-    } catch (e) {
-        console.error(`Error fetching medications! Status:${e.status} Message: ${e.message}`);
-    }
-})
