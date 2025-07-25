@@ -1,7 +1,6 @@
 const { medicationReminderQueue } = require('./medicationReminderWorker');
 const { fetchWithErrorHandling } = require('../utils');
 const DateFnsTz = require('date-fns-tz');
-const DateFns = require('date-fns');
 require('dotenv').config();
 
 const MEDISCAN_DB_API_URL = process.env.MEDISCAN_DB_API_URL;

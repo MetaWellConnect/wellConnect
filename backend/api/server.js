@@ -422,6 +422,16 @@ server.put('/medications/:medicationId/due', async (req, res, next) => {
     const medication = await prisma.medication.findUnique({
         where: {
             id: medicationId
+        },
+        include: {
+            patient: {
+                include: {
+                    user: true,
+                    provider: {
+                        user: true
+                    }
+                }
+            }
         }
     });
 
@@ -429,8 +439,26 @@ server.put('/medications/:medicationId/due', async (req, res, next) => {
         return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json(`Failed to retrieve medication with id: ${medicationId}!`);
     }
 
-    await reminderServiceUtils.updateMedicationDueReminders(medication)
-    res.status(StatusCodes.OK).json(medication);
+    await reminderServiceUtils.updateMedicationDueReminders(medication);
+
+    try {
+        const reminder = await prisma.sentReminders.create({
+            data: {
+                provider_id: medication.patient.provider.id,
+                provider_email: medication.patient.provider.user.email,
+                patient_first_name: medication.patient.user.first_name,
+                patient_last_name: medication.patient.user.last_name,
+                medication_name: medication.name,
+                medication_dose: medication.dose
+            }
+        });
+
+        return res.status(StatusCodes.OK).json(reminder);
+    } catch (e) {
+        return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json(`Failed to retrieve create reminder log! Error: ${e.message}`);
+    }
+
+
 });
 
 /* --- Appointment Endpoints --- */
