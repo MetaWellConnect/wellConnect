@@ -96,7 +96,7 @@ model ProviderPreferences {
   start_hour                Int   @default(9)
   end_hour                  Int   @default(17)
   available_days            String[] @default(["sun", "mon", "tue", "wed", "thu", "fri", "sat"])
-  max_appointments_per_day  Int      @default(8)
+  max_appointments_per_day  Int      @default(10)
   min_buffer_minutes        Int      @default(15)
   appointment_lead_time_min Int      @default(120)
   future_appointment_limit  Int      @default(30)
