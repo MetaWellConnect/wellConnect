@@ -1,4 +1,3 @@
-const { StatusCodes } = require('http-status-codes');
 const nodemailer = require('nodemailer');
 const cron = require('node-cron');
 require('dotenv').config()

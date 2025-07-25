@@ -205,11 +205,13 @@ server.get('/patients/:patientId/medications/approved', async (req, res, next) =
         where: {
             id: patientId,
         },
-        include: { medications: {
-            where: {
-                approved: true
+        include: {
+            medications: {
+                where: {
+                    approved: true
+                }
             }
-        } }
+        }
     });
 
     if (!patient) {
@@ -388,7 +390,7 @@ server.put('/patients/:patientId/treatment', async (req, res, next) => {
 
 });
 
-/* --- Treatment Endpoints --- */
+/* --- Reminder Endpoints --- */
 
 server.get('/medications/due', async (req, res, next) => {
     const currentTime = new Date();
@@ -447,13 +449,14 @@ server.get('/providers/:providerId/appointments', async (req, res, next) => {
 
         // Censor outgoing information if requestor is a patient
         if (role === AccountTypes.PATIENT) {
-            appointments.filter((appointment) => {
+            appointments.map((appointment) => {
                 if (appointment.patient.id !== patientId) {
                     return appointment.patient = null;
                 }
                 return appointment;
             });
         }
+
         return res.status(StatusCodes.OK).json(appointments);
     } catch (e) {
         return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json(`Failed to retrieve appointments! Error: ${e.message}`)

@@ -49,19 +49,17 @@ async function deleteMedication(medication) {
     }
 }
 
-async function updateMedicationDueReminders(medicationsDue) {
+async function updateMedicationDueReminders(medication) {
     try {
-        medicationsDue.forEach((medication) => {
-            // If a patient has consumed all required doses of a medication, remove it
-            if (medication.number_of_taken_doses + 1 === medication.number_of_required_doses) {
-                deleteMedication(medication);
-                return;
-            }
+        // If a patient has consumed all required doses of a medication, remove it
+        if (medication.number_of_taken_doses + 1 === medication.number_of_required_doses) {
+            deleteMedication(medication);
+            return;
+        }
 
-            // Update the information of the medication for future reminders
-            updateMedicationTimes(medication);
-            updateMedicationNumberOfTakenDoses(medication);
-        });
+        // Update the information of the medication for future reminders
+        updateMedicationTimes(medication);
+        updateMedicationNumberOfTakenDoses(medication);
     } catch (e) {
         throw e;
     }

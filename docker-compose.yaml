@@ -72,6 +72,15 @@ services:
     networks:
       - mediscan-network
 
+  redis:
+    image: redis:7-alpine
+    container_name: redis-server
+    restart: always
+    ports: ["6379:6379"]
+    command: ["redis-server", "--appendonly", "yes"]
+    networks:
+      - mediscan-network
+
 networks:
   mediscan-network:
 
