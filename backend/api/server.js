@@ -205,11 +205,13 @@ server.get('/patients/:patientId/medications/approved', async (req, res, next) =
         where: {
             id: patientId,
         },
-        include: { medications: {
-            where: {
-                approved: true
+        include: {
+            medications: {
+                where: {
+                    approved: true
+                }
             }
-        } }
+        }
     });
 
     if (!patient) {
@@ -388,7 +390,7 @@ server.put('/patients/:patientId/treatment', async (req, res, next) => {
 
 });
 
-/* --- Treatment Endpoints --- */
+/* --- Reminder Endpoints --- */
 
 server.get('/medications/due', async (req, res, next) => {
     const currentTime = new Date();
@@ -408,11 +410,95 @@ server.get('/medications/due', async (req, res, next) => {
             }
         });
 
-        await reminderServiceUtils.updateMedicationDueReminders(medicationsDue)
         res.status(StatusCodes.OK).json(medicationsDue);
     } catch (e) {
         return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json(`Failed to retrieve medications due for reminders! Error: ${e.message}`);
     }
+});
+
+server.put('/medications/:medicationId/due', async (req, res, next) => {
+    const medicationId = Number(req.params.medicationId);
+    const medication = await prisma.medication.findUnique({
+        where: {
+            id: medicationId
+        }
+    });
+
+    if (!medication) {
+        return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json(`Failed to retrieve medication with id: ${medicationId}!`);
+    }
+
+    const patientId = medication.patient_id;
+    const patient = await prisma.patient.findUnique({
+        where: {
+            id: patientId
+        },
+        include: {
+            user: true,
+        }
+    })
+
+    const providerId = patient.provider_id;
+    const provider = await prisma.provider.findUnique({
+        where: {
+            id: providerId
+        },
+        include: {
+            user: true
+        }
+    })
+
+    await reminderServiceUtils.updateMedicationDueReminders(medication);
+
+    try {
+        const reminder = await prisma.sentReminders.create({
+            data: {
+                provider_id: provider.id,
+                provider_email: provider.user.email,
+                patient_first_name: patient.user.first_name,
+                patient_last_name: patient.user.last_name,
+                medication_name: medication.name,
+                medication_dose: medication.dose
+            }
+        });
+
+        return res.status(StatusCodes.OK).json(reminder);
+    } catch (e) {
+        return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json(`Failed to retrieve create reminder log! Error: ${e.message}`);
+    }
+});
+
+server.get('/reminders/sent', async (req, res, next) => {
+    const sinceTime =  Date.now() - 24 * 60 * 60 * 1000;
+    const reminder = await prisma.sentReminders.findMany({where: {
+        sent_at: {
+            gte: new Date(sinceTime)
+        }
+    }});
+
+    if (!reminder) {
+        return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json(`Failed to retrieve sent reminders!`);
+    }
+
+    const summaryByProvider = {};
+    reminder.forEach((reminder) => {
+        if (!summaryByProvider[reminder.provider_id]) {
+            summaryByProvider[reminder.provider_id] = {
+                providerEmail: reminder.provider_email,
+                reminders: []
+            };
+        }
+
+        summaryByProvider[reminder.provider_id].reminders.push({
+            sentAt: reminder.sent_at,
+            patientFirstName: reminder.patient_first_name,
+            patientLastName: reminder.patient_last_name,
+            medicationName: reminder.medication_name,
+            medicationDose: reminder.medication_dose
+        });
+    });
+
+    res.status(StatusCodes.OK).json(summaryByProvider);
 });
 
 /* --- Appointment Endpoints --- */
@@ -447,13 +533,14 @@ server.get('/providers/:providerId/appointments', async (req, res, next) => {
 
         // Censor outgoing information if requestor is a patient
         if (role === AccountTypes.PATIENT) {
-            appointments.filter((appointment) => {
+            appointments.map((appointment) => {
                 if (appointment.patient.id !== patientId) {
                     return appointment.patient = null;
                 }
                 return appointment;
             });
         }
+
         return res.status(StatusCodes.OK).json(appointments);
     } catch (e) {
         return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json(`Failed to retrieve appointments! Error: ${e.message}`)
