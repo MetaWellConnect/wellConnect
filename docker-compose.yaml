@@ -64,6 +64,15 @@ services:
     volumes:
       - ocr_service_data:/root/.ocr_service_data
 
+  redis:
+    image: redis:7-alpine
+    container_name: redis
+    restart: always
+    ports: ["6379:6379"]
+    command: ["redis-server", "--appendonly", "yes", "--bind", "0.0.0.0"]
+    networks:
+      - mediscan-network
+
   reminder_service:
     build: ./reminderService
     container_name: reminder-service
@@ -74,15 +83,10 @@ services:
       - '9000:9000'
     networks:
       - mediscan-network
+    environment:
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
 
-  redis:
-    image: redis:7-alpine
-    container_name: redis
-    restart: always
-    ports: ["6379:6379"]
-    command: ["redis-server", "--appendonly", "yes", "--bind", "0.0.0.0"]
-    networks:
-      - mediscan-network
 
 networks:
   mediscan-network:

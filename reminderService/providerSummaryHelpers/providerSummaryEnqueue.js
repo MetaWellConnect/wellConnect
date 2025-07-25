@@ -7,11 +7,11 @@ const MEDISCAN_DB_API_URL = process.env.MEDISCAN_DB_API_URL;
 async function enqueueProviderSummaries() {
     const response = await fetchWithErrorHandling(`${MEDISCAN_DB_API_URL}/reminders/sent`);
     const summaries = await response.json();
-    console.log(summaries)
-    summaries.forEach(async (summary) => {
+    Object.entries(summaries).forEach(async ([key, value]) => {
         await providerSummaryQueue.add(
             'SUMMARY',
-            { summary },
+            { summary: value },
+            { delay: 1000 }
         );
 
         console.log(`Summary Reminder Queued!`);

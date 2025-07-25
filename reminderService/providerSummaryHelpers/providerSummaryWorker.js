@@ -18,7 +18,12 @@ function startSummaryWorker() {
         const providerEmail = summary.providerEmail;
         const reminders = summary.reminders
         sendReminder(providerEmail, reminders);
-    }, { connection: providerSummaryQueue.connection, concurrency: 5 });
+    }, {
+        connection: {
+            host: process.env.REDIS_HOST,
+            port: process.env.REDIS_PORT
+        }, concurrency: 5
+    });
 }
 
 async function sendReminder(providerEmail, reminders) {
@@ -35,7 +40,7 @@ async function sendReminder(providerEmail, reminders) {
             from: `"MediScan" <mediScan@gmail.com>`,
             to: `${providerEmail}`,
             subject: "Reminders Summary",
-            text: textBody
+            text: textBody.join('\n - ')
         });
 
         console.log(info);

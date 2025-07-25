@@ -24,7 +24,12 @@ function startReminderWorker() {
         } catch (e) {
             console.error(`Error fetching medications! Status:${e.status} Message: ${e.message}`);
         }
-    }, { connection: medicationReminderQueue.connection, concurrency: 5 });
+    }, {
+        connection: {
+            host: process.env.REDIS_HOST,
+            port: process.env.REDIS_PORT
+        }, concurrency: 5
+    });
 }
 async function sendReminder(medication) {
     const template = `

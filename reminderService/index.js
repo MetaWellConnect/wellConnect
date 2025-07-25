@@ -6,7 +6,7 @@ const startReminderWorker = require('./medicationReminderHelpers/medicationRemin
 startReminderWorker();
 startSummaryWorker();
 
-cron.schedule('*/45 * * * * *', async () => {
+cron.schedule('0 */15 * * * *', async () => {
     try {
         await enqueueMedicationReminders();
     } catch (error) {
@@ -14,7 +14,8 @@ cron.schedule('*/45 * * * * *', async () => {
     }
 });
 
-cron.schedule('* * * * *', async () => {
+
+cron.schedule('0 7 * * *', async () => {
     try {
         await enqueueProviderSummaries();
     } catch (error) {

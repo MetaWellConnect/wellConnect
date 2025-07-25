@@ -421,16 +421,6 @@ server.put('/medications/:medicationId/due', async (req, res, next) => {
     const medication = await prisma.medication.findUnique({
         where: {
             id: medicationId
-        },
-        include: {
-            patient: {
-                include: {
-                    user: true,
-                    provider: {
-                        user: true
-                    }
-                }
-            }
         }
     });
 
@@ -438,15 +428,35 @@ server.put('/medications/:medicationId/due', async (req, res, next) => {
         return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json(`Failed to retrieve medication with id: ${medicationId}!`);
     }
 
+    const patientId = medication.patient_id;
+    const patient = await prisma.patient.findUnique({
+        where: {
+            id: patientId
+        },
+        include: {
+            user: true,
+        }
+    })
+
+    const providerId = patient.provider_id;
+    const provider = await prisma.provider.findUnique({
+        where: {
+            id: providerId
+        },
+        include: {
+            user: true
+        }
+    })
+
     await reminderServiceUtils.updateMedicationDueReminders(medication);
 
     try {
         const reminder = await prisma.sentReminders.create({
             data: {
-                provider_id: medication.patient.provider.id,
-                provider_email: medication.patient.provider.user.email,
-                patient_first_name: medication.patient.user.first_name,
-                patient_last_name: medication.patient.user.last_name,
+                provider_id: provider.id,
+                provider_email: provider.user.email,
+                patient_first_name: patient.user.first_name,
+                patient_last_name: patient.user.last_name,
                 medication_name: medication.name,
                 medication_dose: medication.dose
             }
