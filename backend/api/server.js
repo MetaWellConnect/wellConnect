@@ -417,6 +417,22 @@ server.get('/medications/due', async (req, res, next) => {
     }
 });
 
+server.put('/medications/:medicationId/due', async (req, res, next) => {
+    const medicationId = Number(req.params.medicationId);
+    const medication = await prisma.medication.findUnique({
+        where: {
+            id: medicationId
+        }
+    });
+
+    if (!medication) {
+        return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json(`Failed to retrieve medication with id: ${medicationId}!`);
+    }
+
+    await reminderServiceUtils.updateMedicationDueReminders(medication)
+    res.status(StatusCodes.OK).json(medication);
+});
+
 /* --- Appointment Endpoints --- */
 
 server.get('/providers/:providerId/appointments', async (req, res, next) => {
