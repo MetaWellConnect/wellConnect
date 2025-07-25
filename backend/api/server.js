@@ -237,7 +237,7 @@ server.get('/patients/:patientId/medications/:medicationId', async (req, res, ne
         return res.status(StatusCodes.NOT_FOUND).json(`No medication belonging to patient with id: ${patientId}`)
     }
 
-    return res.status(200).json(medication);
+    return res.status(StatusCodes.OK).json(medication);
 });
 
 server.get('/providers/:providerId/medicationsToApprove', async (req, res, next) => {
