@@ -145,7 +145,11 @@ export async function getPatient(patientId) {
 
 export async function getPatientMedications(patientId) {
     const response = await fetchWithErrorHandling(`${API_URL}/patients/${patientId}/medications`, getHttpOptions("GET"));
+    return (await response.json());
+}
 
+export async function getApprovedPatientMedications(patientId) {
+    const response = await fetchWithErrorHandling(`${API_URL}/patients/${patientId}/medications/approved`, getHttpOptions("GET"));
     return (await response.json());
 }
 
@@ -196,6 +200,8 @@ export async function runOCR(imgSrc) {
 
         return errorResponse;
     }
+
+    return (await response.json());
 }
 
 export async function getAppointments(id, role) {
@@ -217,6 +223,7 @@ export async function getAppointments(id, role) {
     const response = await fetchWithErrorHandling(url, getHttpOptions("GET"));
     return (await response.json());
 }
+
 
 export async function getSuggestedAppointments(id, role, duration) {
     const provider_id = await getProviderIdIfPatientRequest(id, role);
@@ -265,5 +272,18 @@ export async function postProviderPreferences(id, providerPreferencesInfo) {
 
 export async function getProviderPreferences(providerId) {
     const response = await fetchWithErrorHandling(`${API_URL}/providers/${providerId}/preferences`, getHttpOptions("GET"));
+
+export async function postMedication(patientId, name, strength) {
+    const medicationInfo = {
+        name,
+        strength
+    }
+
+    const response = await fetchWithErrorHandling(`${API_URL}/patients/${patientId}/medications`, getHttpOptions("POST", medicationInfo));
+    return (await response.json());
+}
+
+export async function putMedication(patientId, medicationId, medicationInfo) {
+    const response = await fetchWithErrorHandling(`${API_URL}/patients/${patientId}/medications/${medicationId}`, getHttpOptions("PUT", medicationInfo));
     return (await response.json());
 }

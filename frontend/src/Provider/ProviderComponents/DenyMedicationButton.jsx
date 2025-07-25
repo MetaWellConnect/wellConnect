@@ -1,9 +1,16 @@
-import React from "react";
+import * as API from "../../api";
 
-export default function DenyMedicationButton() {
+export default function DenyMedicationButton({ patient, pendingMedication, setMedicationList }) {
 
-  function handleDenyMedication() {
-
+  async function handleDenyMedication() {
+    try {
+      await API.putMedication(patient.id, pendingMedication.id, {approved: false});
+      setMedicationList((prevMedicationList) =>
+        prevMedicationList.filter((medication) =>
+          medication.id !== pendingMedication.id));
+    } catch (e) {
+      console.log(e);
+    }
   }
 
   return (
