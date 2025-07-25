@@ -1,3 +1,5 @@
+require('dotenv').config();
+
 const { PrismaClient } = require('../generated/prisma');
 const prisma = new PrismaClient({
     omit: {
@@ -11,6 +13,15 @@ const AccountTypes = {
     PATIENT: "PATIENT",
     PROVIDER: "PROVIDER"
 }
+
+const { Client } = require('minio');
+const minioClient = new Client({
+    endPoint: process.env.MINIO_ENDPOINT,
+    port: process.env.MINIO_PORT,
+    useSSL: false,
+    accessKey: process.env.MINIO_USER,
+    secretKey: process.env.MINIO_PASSWORD
+})
 
 const express = require('express');
 const helmet = require('helmet');
@@ -205,11 +216,13 @@ server.get('/patients/:patientId/medications/approved', async (req, res, next) =
         where: {
             id: patientId,
         },
-        include: { medications: {
-            where: {
-                approved: true
+        include: {
+            medications: {
+                where: {
+                    approved: true
+                }
             }
-        } }
+        }
     });
 
     if (!patient) {
