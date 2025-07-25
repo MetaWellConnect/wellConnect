@@ -121,7 +121,7 @@ server.get('/patients/:patientId/provider', async (req, res, next) => {
     }
 
     if (!patient.provider) {
-        return res.status(StatusCodes.NOT_FOUND).json(`No patient has no provider!`);
+        return res.status(StatusCodes.NOT_FOUND).json(`This patient has no provider!`);
     }
 
     return res.status(StatusCodes.OK).json(patient.provider);
@@ -237,7 +237,7 @@ server.get('/patients/:patientId/medications/:medicationId', async (req, res, ne
         return res.status(StatusCodes.NOT_FOUND).json(`No medication belonging to patient with id: ${patientId}`)
     }
 
-    return res.status(StatusCodes.OK).json(medication);
+    return res.status(200).json(medication);
 });
 
 server.get('/providers/:providerId/medicationsToApprove', async (req, res, next) => {
