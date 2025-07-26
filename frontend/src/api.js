@@ -30,6 +30,7 @@ function getHttpOptions(httpMethod, bodyContent) {
                 headers: {
                     accept: 'application/json'
                 },
+                credentials: 'include',
             }
 
             // If the user passed bodyContent, add it to the request
@@ -64,6 +65,7 @@ function getHttpOptions(httpMethod, bodyContent) {
                     accept: 'application/json',
                     'Content-Type': 'application/json'
                 },
+                credentials: 'include',
             }
 
             // If the user passed bodyContent, add it to the request
@@ -79,6 +81,7 @@ function getHttpOptions(httpMethod, bodyContent) {
                 headers: {
                     accept: 'application/json'
                 },
+                credentials: 'include',
             }
 
             // If the user passed bodyContent, add it to the request

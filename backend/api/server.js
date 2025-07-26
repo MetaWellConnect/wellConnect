@@ -34,8 +34,9 @@ const { parseOCRText, runOCROnImage } = require('./utils.js');
 const cookieParser = require('cookie-parser');
 const jwt = require('jsonwebtoken');
 const { StatusCodes } = require('http-status-codes');
-const reminderServiceUtils = require('./reminderServiceUtils.js')
-const generateSuggestions = require('./smartSchedulerUtils.js')
+const reminderServiceUtils = require('./reminderServiceUtils.js');
+const generateSuggestions = require('./smartSchedulerUtils.js');
+const requireAuth = require('./authMiddleware.js');
 
 const MAX_AGE = 2592000;
 const upload = multer({ storage: multer.memoryStorage() });
@@ -88,7 +89,7 @@ server.post('/login', async (req, res, next) => {
         const { id, role } = await getUserIdAndRole(email);
         const token = await generateJWT(email, id, role);
 
-        res.cookie('token', token, { maxAge: MAX_AGE });
+        res.cookie('token', token, { maxAge: MAX_AGE, saneSite: 'none' });
         return res.status(StatusCodes.OK).json("Successfully authenticated!");
     }
     return res.status(StatusCodes.UNAUTHORIZED).json("Invalid credentials!");
@@ -102,7 +103,7 @@ server.post('/logout', async (req, res, next) => {
 
 /* --- Patient Endpoints --- */
 
-server.get('/patients/:patientId', async (req, res, next) => {
+server.get('/patients/:patientId', requireAuth, async (req, res, next) => {
     const patientId = Number(req.params.patientId);
     const patient = await prisma.patient.findUnique({
         where: { id: patientId },
@@ -116,7 +117,7 @@ server.get('/patients/:patientId', async (req, res, next) => {
     return res.status(StatusCodes.OK).json(patient);
 });
 
-server.get('/patients/:patientId/provider', async (req, res, next) => {
+server.get('/patients/:patientId/provider', requireAuth, async (req, res, next) => {
     const patientId = Number(req.params.patientId);
     const patient = await prisma.patient.findUnique({
         where: { id: patientId },
@@ -140,7 +141,7 @@ server.get('/patients/:patientId/provider', async (req, res, next) => {
     return res.status(StatusCodes.OK).json(patient.provider);
 });
 
-server.put('/patients/:patientId/provider', async (req, res, next) => {
+server.put('/patients/:patientId/provider', requireAuth, async (req, res, next) => {
     const patientId = Number(req.params.patientId);
     const { providerId } = req.body;
 
@@ -160,7 +161,7 @@ server.put('/patients/:patientId/provider', async (req, res, next) => {
 
 /* --- Provider Endpoints --- */
 
-server.get('/providers/:providerId', async (req, res, next) => {
+server.get('/providers/:providerId', requireAuth, async (req, res, next) => {
     const providerId = Number(req.params.providerId);
     const provider = await prisma.provider.findUnique({
         where: { id: providerId },
@@ -174,7 +175,7 @@ server.get('/providers/:providerId', async (req, res, next) => {
     return res.status(StatusCodes.OK).json(provider);
 });
 
-server.get('/providers/:providerId/patients', async (req, res, next) => {
+server.get('/providers/:providerId/patients', requireAuth, async (req, res, next) => {
     const providerId = Number(req.params.providerId);
     const provider = await prisma.provider.findUnique({
         where: { id: providerId },
@@ -198,7 +199,7 @@ server.get('/providers/:providerId/patients', async (req, res, next) => {
 
 /* --- Medication Endpoints --- */
 
-server.get('/patients/:patientId/medications', async (req, res, next) => {
+server.get('/patients/:patientId/medications', requireAuth, async (req, res, next) => {
     const patientId = Number(req.params.patientId);
     const patient = await prisma.patient.findUnique({
         where: { id: patientId },
@@ -212,7 +213,7 @@ server.get('/patients/:patientId/medications', async (req, res, next) => {
     return res.status(StatusCodes.OK).json(patient.medications);
 });
 
-server.get('/patients/:patientId/medications/approved', async (req, res, next) => {
+server.get('/patients/:patientId/medications/approved', requireAuth, async (req, res, next) => {
     const patientId = Number(req.params.patientId);
     const patient = await prisma.patient.findUnique({
         where: {
@@ -235,7 +236,7 @@ server.get('/patients/:patientId/medications/approved', async (req, res, next) =
 });
 
 
-server.get('/patients/:patientId/medications/:medicationId', async (req, res, next) => {
+server.get('/patients/:patientId/medications/:medicationId', requireAuth, async (req, res, next) => {
     const patientId = Number(req.params.patientId);
     const medicationId = Number(req.params.medicationId);
     const medication = await prisma.medication.findUnique({
@@ -253,7 +254,7 @@ server.get('/patients/:patientId/medications/:medicationId', async (req, res, ne
     return res.status(StatusCodes.OK).json(medication);
 });
 
-server.get('/providers/:providerId/medicationsToApprove', async (req, res, next) => {
+server.get('/providers/:providerId/medicationsToApprove', requireAuth, async (req, res, next) => {
     const providerId = Number(req.params.providerId);
     const treatments = await prisma.provider.findUnique({
         where: { id: providerId },
@@ -277,7 +278,7 @@ server.get('/providers/:providerId/medicationsToApprove', async (req, res, next)
     return res.status(StatusCodes.OK).json(medications);
 });
 
-server.post('/patients/:patientId/medications', upload.single('image'), async (req, res, next) => {
+server.post('/patients/:patientId/medications', upload.single('image'), requireAuth, async (req, res, next) => {
     const patient_id = Number(req.params.patientId);
     const { name, strength } = req.body;
 
@@ -315,7 +316,7 @@ server.post('/patients/:patientId/medications', upload.single('image'), async (r
     }
 });
 
-server.delete('/patients/:patientId/medications/:medicationId', async (req, res, next) => {
+server.delete('/patients/:patientId/medications/:medicationId', requireAuth, async (req, res, next) => {
     const patientId = Number(req.params.patientId);
     const medicationId = Number(req.params.medicationId);
     const medication = await prisma.medication.findUnique({
@@ -337,7 +338,7 @@ server.delete('/patients/:patientId/medications/:medicationId', async (req, res,
     return res.status(StatusCodes.OK).json(medication);
 });
 
-server.put('/patients/:patientId/medications/:medicationId', async (req, res, next) => {
+server.put('/patients/:patientId/medications/:medicationId', requireAuth, async (req, res, next) => {
     const patientId = Number(req.params.patientId);
     const medicationId = Number(req.params.medicationId);
 
@@ -358,7 +359,7 @@ server.put('/patients/:patientId/medications/:medicationId', async (req, res, ne
 
 /* --- Treatment Endpoints --- */
 
-server.get('/patients/:patientId/treatment', async (req, res, next) => {
+server.get('/patients/:patientId/treatment', requireAuth, async (req, res, next) => {
     const patientId = Number(req.params.patientId);
     const patient = await prisma.patient.findUnique({
         where: { id: patientId },
@@ -378,7 +379,7 @@ server.get('/patients/:patientId/treatment', async (req, res, next) => {
     return res.status(StatusCodes.OK).json(patient.treatment);
 });
 
-server.put('/patients/:patientId/treatment', async (req, res, next) => {
+server.put('/patients/:patientId/treatment', requireAuth, async (req, res, next) => {
     const patientId = Number(req.params.patientId);
     const patient = await prisma.patient.findUnique({
         where: { id: patientId },
@@ -524,7 +525,7 @@ server.get('/reminders/sent', async (req, res, next) => {
 
 /* --- Appointment Endpoints --- */
 
-server.get('/providers/:providerId/appointments', async (req, res, next) => {
+server.get('/providers/:providerId/appointments', requireAuth, async (req, res, next) => {
     const providerId = Number(req.params.providerId);
     const patientId = Number(req.query.patientId);
     const role = req.query.role;
@@ -568,7 +569,7 @@ server.get('/providers/:providerId/appointments', async (req, res, next) => {
     }
 });
 
-server.get('/providers/:providerId/appointments/suggested', async (req, res, next) => {
+server.get('/providers/:providerId/appointments/suggested', requireAuth, async (req, res, next) => {
     const providerId = Number(req.params.providerId);
     const duration = Number(req.query.duration);
 
@@ -577,24 +578,7 @@ server.get('/providers/:providerId/appointments/suggested', async (req, res, nex
 
 });
 
-
-/* --- Image Endpoints --- */
-
-server.post('/images', upload.single('image'), async (req, res, next) => {
-    try {
-        const bucket = 'medication-images';
-        const key = req.file.originalname;
-        const url = await minioClient.putObject(bucket, key, req.file.buffer, {
-            'Content-Type': req.file.mimetype
-        });
-
-        return res.status(StatusCodes.OK).json(url);
-    } catch (e) {
-        return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json(e);
-    }
-});
-
-server.post('/providers/:providerId/appointments/', async (req, res, next) => {
+server.post('/providers/:providerId/appointments/', requireAuth, async (req, res, next) => {
     const providerId = Number(req.params.providerId);
     const { patient_id, date, duration_in_minutes, name } = req.body;
     const appointmentInformation = {
@@ -618,7 +602,7 @@ server.post('/providers/:providerId/appointments/', async (req, res, next) => {
 
 /* --- Provider Preferences Endpoints --- */
 
-server.get('/providers/:providerId/preferences/', async (req, res, next) => {
+server.get('/providers/:providerId/preferences/', requireAuth, async (req, res, next) => {
     const providerId = Number(req.params.providerId);
     const preferences = await prisma.providerPreferences.findUnique({
         where: {
@@ -633,7 +617,7 @@ server.get('/providers/:providerId/preferences/', async (req, res, next) => {
     return res.status(StatusCodes.OK).json(preferences);
 });
 
-server.put('/providers/:providerId/preferences/', async (req, res, next) => {
+server.put('/providers/:providerId/preferences/', requireAuth, async (req, res, next) => {
     const providerId = Number(req.params.providerId);
     const providerPreferencesInfo = req.body;
     const preferences = await prisma.providerPreferences.update({
@@ -647,6 +631,24 @@ server.put('/providers/:providerId/preferences/', async (req, res, next) => {
 
     return res.status(StatusCodes.OK).json(preferences);
 });
+
+
+/* --- Image Endpoints --- */
+
+server.post('/images', upload.single('image'), async (req, res, next) => {
+    try {
+        const bucket = 'medication-images';
+        const key = req.file.originalname;
+        const url = await minioClient.putObject(bucket, key, req.file.buffer, {
+            'Content-Type': req.file.mimetype
+        });
+
+        return res.status(StatusCodes.OK).json(url);
+    } catch (e) {
+        return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json(e);
+    }
+});
+
 
 /* --- Catch All Endpoints --- */
 
