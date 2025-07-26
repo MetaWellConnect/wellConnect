@@ -21,11 +21,7 @@ function TreatmentOverview({ id }) {
     return (
         <div className="bg-body-secondary rounded-3 p-3 my-3">
             <h2>Treatment Overview</h2>
-            <p>{treatment.overview}</p>
-            <h2>Time Until Next Dose</h2>
-            {/* Time of the next dose needs to be added to treatment schema */}
-            <p>Aspirin</p>
-            <p>8hrs, 20mins, 10s</p>
+            <p>{treatment?.overview || "No Treatment Assigned"}</p>
         </div>
     );
 }

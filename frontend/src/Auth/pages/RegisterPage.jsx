@@ -10,10 +10,11 @@ function RegisterPage() {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [accountType, setAccountType] = useState("");
+    const [providerEmail, setProviderEmail] = useState("");
 
     const handleSignUpSubmit = async (e) => {
         e.preventDefault();
-        await registerUser(firstName, lastName, email, password, accountType);
+        await registerUser(firstName, lastName, email, providerEmail, password, accountType);
 
         navigate('/login');
     }
@@ -54,7 +55,10 @@ function RegisterPage() {
                         </section>
                     </section>
 
-
+                    {
+                        accountType === AccountTypes.PATIENT &&
+                        <input type="email" className="rounded-pill form-control w-50 mb-3 p-3 mx-auto" placeholder="Provider Email" onChange={(e) => setProviderEmail(e.target.value)} required />
+                    }
 
                     <button className="btn btn-primary rounded-pill w-50 p-3" type="submit">Sign Up</button>
                 </form>
