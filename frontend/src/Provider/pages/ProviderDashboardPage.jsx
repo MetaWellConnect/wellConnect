@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import GoToAppointmentManagerButton from "../../components/GoToAppointmentManagerButton";
-import GoToChatButton from "../../components/GoToChatButton";
 import ListOfMedications from "../../components/ListOfMedications"
 import ListOfPatients from "../ProviderComponents/ListOfPatients";
 import * as API from "../../api";
@@ -38,7 +37,6 @@ function ProviderDashboardPage() {
                     <div className="col-sm">
                         <h2>Patients</h2>
                         <ListOfPatients providerId={provider.id} />
-                        <GoToChatButton />
                         <GoToAppointmentManagerButton />
                     </div>
                 </div>

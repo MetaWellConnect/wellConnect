@@ -18,7 +18,7 @@ function LogoutPage() {
                 console.error(error)
 
             } finally {
-                navigate('/');
+                setTimeout(() => { navigate('/'); }, 2000);
             }
         })();
     }, []);

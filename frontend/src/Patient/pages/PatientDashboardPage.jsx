@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import GoToAppointmentManagerButton from '../../components/GoToAppointmentManagerButton.jsx'
-import GoToChatButton from '../../components/GoToChatButton.jsx';
 import GoToUploadMedicationButton from '../PatientComponents/PatientDashboardPageComponents/GoToUploadMedicationButton.jsx';
 import ListOfMedications from '../../components/ListOfMedications.jsx'
 import TreatmentOverview from '../PatientComponents/PatientDashboardPageComponents/TreatmentOverview.jsx';
@@ -40,7 +39,6 @@ function PatientDashboardPage() {
 
                     <section className="navigation-buttons">
                         <GoToUploadMedicationButton />
-                        <GoToChatButton />
                         <GoToAppointmentManagerButton />
                     </section>
                 </div>
