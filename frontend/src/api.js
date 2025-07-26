@@ -249,7 +249,8 @@ export async function postAppointment(id, role, date, duration_in_minutes, name,
 
     if (role === AccountTypes.PATIENT) {
         patient_id = id;
-        provider_id = await getPatient(id).provider_id;
+        const patient = await getPatient(id);
+        provider_id = patient.provider_id;
     }
 
     if (role === AccountTypes.PROVIDER) {
