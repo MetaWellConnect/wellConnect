@@ -93,13 +93,14 @@ function getHttpOptions(httpMethod, bodyContent) {
     }
 }
 
-export async function registerUser(firstName, lastName, email, password, accountType) {
+export async function registerUser(firstName, lastName, email, providerEmail, password, accountType) {
     const userInfo = {
         user: {
             firstName,
             lastName,
             email,
             password,
+            providerEmail,
             accountType
         }
     }

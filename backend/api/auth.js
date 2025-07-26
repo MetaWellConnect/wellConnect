@@ -29,11 +29,40 @@ async function registerUser(user) {
     });
 
     if (user.accountType === "PATIENT") {
-        await prisma.patient.create({
+        const provider = await prisma.user.findUnique({
+            where: {
+                email: user.providerEmail
+            },
+            include: {
+                provider: true
+            }
+        })
+
+        const patient = await prisma.patient.create({
             data: {
-                id: createdUser.id
+                id: createdUser.id,
+                provider_id: provider.id,
+                treatment: {
+                    create: {
+                        overview: "You have not been assigned a treatment plan yet!",
+                        provider: { connect: { id: provider.id } }
+                    }
+                }
             }
         });
+
+        const { treatment } = await prisma.patient.findUnique({
+            where: { id: patient.id },
+            include: {
+                treatment: true
+            }
+        });
+        console.log(treatment)
+
+        await prisma.patient.update({
+            where: { id: patient.id },
+            data: { treatment_id: treatment.id }
+        })
 
         return true;
     }
