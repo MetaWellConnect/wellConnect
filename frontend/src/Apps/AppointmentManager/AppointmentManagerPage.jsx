@@ -191,7 +191,7 @@ function AppointmentManagerPage() {
                     7
                 )}
             />
-            <button className="btn btn-primary m-2" onClick={setTogglePreferencesModal}>Edit Scheduling Preferences</button>
+            {user.role === "PROVIDER" && <button className="btn btn-primary m-2" onClick={setTogglePreferencesModal}>Edit Scheduling Preferences</button>}
 
             <AppointmentCreationModal user={user} appointment_duration={duration} selectedSuggestedAppointment={selectedSuggestedAppointment} setFormattedAppointments={setFormattedAppointments} show={toggleAppointmentModal} onHide={() => setToggleAppointmentModal(false)} />
             {user.role === "PROVIDER" && <ProviderPreferencesModal user={user} show={togglePreferencesModal} onHide={() => setTogglePreferencesModal(false)} />}

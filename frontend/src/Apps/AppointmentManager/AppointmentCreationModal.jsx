@@ -29,12 +29,12 @@ export default function AppointmentCreationModal({ user, appointment_duration, s
 
     async function handleAppointmentCreation(e) {
         e.preventDefault();
-
+        console.log("hi")
         try {
             if (!selectedPatient && user.role === AccountTypes.PROVIDER) {
                 throw new Error("Patient must be selected!")
             }
-            await API.postAppointment(user.id, user.role, date.getTime(), duration, name, selectedPatient);
+            await API.postAppointment(user.id, user.role, date.getTime(), duration, name, (selectedPatient || user.id));
 
             selectedSuggestedAppointment.title = name;
             setFormattedAppointments((prevAppointments) => [...prevAppointments, selectedSuggestedAppointment]);
