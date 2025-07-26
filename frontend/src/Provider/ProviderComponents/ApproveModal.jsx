@@ -1,6 +1,7 @@
+import Modal from "react-bootstrap/Modal"
 import { useState } from "react";
 import * as API from "../../api";
-import Modal from "react-bootstrap/Modal";
+
 
 export default function ApproveModal({ patient, pendingMedication, setMedicationList, onHide, show }) {
     const [dose, setDose] = useState("");

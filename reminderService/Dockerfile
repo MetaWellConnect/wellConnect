@@ -7,4 +7,6 @@ RUN npm ci
 
 COPY . .
 
-CMD ["sh", "-c", "npm start"]
+RUN sleep 15
+
+CMD sh -c "node index.js"

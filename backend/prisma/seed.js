@@ -12,14 +12,14 @@ const User = [
     /* Patients */
     { first_name: 'Lucy', last_name: 'Adams', email: 'a@test.com', password_hash: '$argon2id$v=19$m=65536,t=3,p=4$QfoolOAKk1+gRXHner2BWg$DsUgYqJgjh8DV7/p8Z1Y58lFgFuNQNKuposxeYrS7Kk', role: Role.PATIENT },
     { first_name: 'Mike', last_name: 'Baker', email: 'th992984@ucf.edu', password_hash: '$argon2id$v=19$m=65536,t=3,p=4$QfoolOAKk1+gRXHner2BWg$DsUgYqJgjh8DV7/p8Z1Y58lFgFuNQNKuposxeYrS7Kk', role: Role.PATIENT },
-    { first_name: 'Sara', last_name: 'Clark', email: 'drt2063@gmail.com', password_hash: '$argon2id$v=19$m=65536,t=3,p=4$QfoolOAKk1+gRXHner2BWg$DsUgYqJgjh8DV7/p8Z1Y58lFgFuNQNKuposxeYrS7Kk', role: Role.PATIENT },
+    { first_name: 'Sara', last_name: 'Clark', email: 'c@test.com', password_hash: '$argon2id$v=19$m=65536,t=3,p=4$QfoolOAKk1+gRXHner2BWg$DsUgYqJgjh8DV7/p8Z1Y58lFgFuNQNKuposxeYrS7Kk', role: Role.PATIENT },
     { first_name: 'David', last_name: 'Duncan', email: 'david.duncan@example.com', password_hash: '$argon2id$v=19$m=65536,t=3,p=4$QfoolOAKk1+gRXHner2BWg$DsUgYqJgjh8DV7/p8Z1Y58lFgFuNQNKuposxeYrS7Kk', role: Role.PATIENT },
     { first_name: 'Emma', last_name: 'Evans', email: 'thomastrivino40@gmail.com', password_hash: '$argon2id$v=19$m=65536,t=3,p=4$QfoolOAKk1+gRXHner2BWg$DsUgYqJgjh8DV7/p8Z1Y58lFgFuNQNKuposxeYrS7Kk', role: Role.PATIENT },
     { first_name: 'Tom', last_name: 'Foster', email: 'tom.foster@example.com', password_hash: '$argon2id$v=19$m=65536,t=3,p=4$QfoolOAKk1+gRXHner2BWg$DsUgYqJgjh8DV7/p8Z1Y58lFgFuNQNKuposxeYrS7Kk', role: Role.PATIENT },
 
     /* Providers */
     { first_name: 'Anna', last_name: 'Lee', email: 'b@test.com', password_hash: '$argon2id$v=19$m=65536,t=3,p=4$QfoolOAKk1+gRXHner2BWg$DsUgYqJgjh8DV7/p8Z1Y58lFgFuNQNKuposxeYrS7Kk', role: Role.PROVIDER },
-    { first_name: 'Robert', last_name: 'Young', email: 'robert.young@health.org', password_hash: '$argon2id$v=19$m=65536,t=3,p=4$QfoolOAKk1+gRXHner2BWg$DsUgYqJgjh8DV7/p8Z1Y58lFgFuNQNKuposxeYrS7Kk', role: Role.PROVIDER },
+    { first_name: 'Robert', last_name: 'Young', email: 'drt2063@gmail.com', password_hash: '$argon2id$v=19$m=65536,t=3,p=4$QfoolOAKk1+gRXHner2BWg$DsUgYqJgjh8DV7/p8Z1Y58lFgFuNQNKuposxeYrS7Kk', role: Role.PROVIDER },
     { first_name: 'Karen', last_name: 'White', email: 'karen.white@health.org', password_hash: '$argon2id$v=19$m=65536,t=3,p=4$QfoolOAKk1+gRXHner2BWg$DsUgYqJgjh8DV7/p8Z1Y58lFgFuNQNKuposxeYrS7Kk', role: Role.PROVIDER },
 ];
 
@@ -48,53 +48,7 @@ const Patient = [
 ];
 
 /* ----------  APPOINTMENT  ---------- */
-const Appointment = [
-  // Provider 7 — Patients 1 & 2
-  { patient_id: 1, provider_id: 7, date: new Date('2025-07-14T16:00:00Z'), duration_in_minutes: 30, name: 'Checkup with Provider 7' },
-  { patient_id: 2, provider_id: 7, date: new Date('2025-07-14T16:45:00Z'), duration_in_minutes: 30, name: 'Consultation with Provider 7' },
-  { patient_id: 1, provider_id: 7, date: new Date('2025-07-14T17:30:00Z'), duration_in_minutes: 30, name: 'Follow-up with Provider 7' },
-  { patient_id: 2, provider_id: 7, date: new Date('2025-07-14T18:15:00Z'), duration_in_minutes: 30, name: 'Wellness visit with Provider 7' },
-  { patient_id: 1, provider_id: 7, date: new Date('2025-07-14T20:00:00Z'), duration_in_minutes: 30, name: 'Monitoring with Provider 7' },
-  { patient_id: 2, provider_id: 7, date: new Date('2025-07-14T20:45:00Z'), duration_in_minutes: 30, name: 'Lab results with Provider 7' },
-
-  { patient_id: 1, provider_id: 7, date: new Date('2025-07-18T16:00:00Z'), duration_in_minutes: 30, name: 'Checkup with Provider 7' },
-  { patient_id: 2, provider_id: 7, date: new Date('2025-07-18T16:45:00Z'), duration_in_minutes: 30, name: 'Consultation with Provider 7' },
-  { patient_id: 1, provider_id: 7, date: new Date('2025-07-18T17:30:00Z'), duration_in_minutes: 30, name: 'Follow-up with Provider 7' },
-  { patient_id: 2, provider_id: 7, date: new Date('2025-07-18T18:15:00Z'), duration_in_minutes: 30, name: 'Wellness visit with Provider 7' },
-  { patient_id: 1, provider_id: 7, date: new Date('2025-07-18T20:00:00Z'), duration_in_minutes: 30, name: 'Monitoring with Provider 7' },
-  { patient_id: 2, provider_id: 7, date: new Date('2025-07-18T20:45:00Z'), duration_in_minutes: 30, name: 'Lab results with Provider 7' },
-
-  // Provider 8 — Patients 3 & 4
-  { patient_id: 3, provider_id: 8, date: new Date('2025-07-14T16:00:00Z'), duration_in_minutes: 30, name: 'Checkup with Provider 8' },
-  { patient_id: 4, provider_id: 8, date: new Date('2025-07-14T16:45:00Z'), duration_in_minutes: 30, name: 'Consultation with Provider 8' },
-  { patient_id: 3, provider_id: 8, date: new Date('2025-07-14T17:30:00Z'), duration_in_minutes: 30, name: 'Follow-up with Provider 8' },
-  { patient_id: 4, provider_id: 8, date: new Date('2025-07-14T18:15:00Z'), duration_in_minutes: 30, name: 'Wellness visit with Provider 8' },
-  { patient_id: 3, provider_id: 8, date: new Date('2025-07-14T20:00:00Z'), duration_in_minutes: 30, name: 'Monitoring with Provider 8' },
-  { patient_id: 4, provider_id: 8, date: new Date('2025-07-14T20:45:00Z'), duration_in_minutes: 30, name: 'Lab results with Provider 8' },
-
-  { patient_id: 3, provider_id: 8, date: new Date('2025-07-18T16:00:00Z'), duration_in_minutes: 30, name: 'Checkup with Provider 8' },
-  { patient_id: 4, provider_id: 8, date: new Date('2025-07-18T16:45:00Z'), duration_in_minutes: 30, name: 'Consultation with Provider 8' },
-  { patient_id: 3, provider_id: 8, date: new Date('2025-07-18T17:30:00Z'), duration_in_minutes: 30, name: 'Follow-up with Provider 8' },
-  { patient_id: 4, provider_id: 8, date: new Date('2025-07-18T18:15:00Z'), duration_in_minutes: 30, name: 'Wellness visit with Provider 8' },
-  { patient_id: 3, provider_id: 8, date: new Date('2025-07-18T20:00:00Z'), duration_in_minutes: 30, name: 'Monitoring with Provider 8' },
-  { patient_id: 4, provider_id: 8, date: new Date('2025-07-18T20:45:00Z'), duration_in_minutes: 30, name: 'Lab results with Provider 8' },
-
-  // Provider 9 — Patients 5 & 6
-  { patient_id: 5, provider_id: 9, date: new Date('2025-07-14T16:00:00Z'), duration_in_minutes: 30, name: 'Checkup with Provider 9' },
-  { patient_id: 6, provider_id: 9, date: new Date('2025-07-14T16:45:00Z'), duration_in_minutes: 30, name: 'Consultation with Provider 9' },
-  { patient_id: 5, provider_id: 9, date: new Date('2025-07-14T17:30:00Z'), duration_in_minutes: 30, name: 'Follow-up with Provider 9' },
-  { patient_id: 6, provider_id: 9, date: new Date('2025-07-14T18:15:00Z'), duration_in_minutes: 30, name: 'Wellness visit with Provider 9' },
-  { patient_id: 5, provider_id: 9, date: new Date('2025-07-14T20:00:00Z'), duration_in_minutes: 30, name: 'Monitoring with Provider 9' },
-  { patient_id: 6, provider_id: 9, date: new Date('2025-07-14T20:45:00Z'), duration_in_minutes: 30, name: 'Lab results with Provider 9' },
-
-  { patient_id: 5, provider_id: 9, date: new Date('2025-07-18T16:00:00Z'), duration_in_minutes: 30, name: 'Checkup with Provider 9' },
-  { patient_id: 6, provider_id: 9, date: new Date('2025-07-18T16:45:00Z'), duration_in_minutes: 30, name: 'Consultation with Provider 9' },
-  { patient_id: 5, provider_id: 9, date: new Date('2025-07-16T17:30:00Z'), duration_in_minutes: 30, name: 'Follow-up with Provider 9' },
-  { patient_id: 6, provider_id: 9, date: new Date('2025-07-16T18:15:00Z'), duration_in_minutes: 30, name: 'Wellness visit with Provider 9' },
-  { patient_id: 5, provider_id: 9, date: new Date('2025-07-16T20:00:00Z'), duration_in_minutes: 30, name: 'Monitoring with Provider 9' },
-  { patient_id: 6, provider_id: 9, date: new Date('2025-07-16T20:45:00Z'), duration_in_minutes: 30, name: 'Lab results with Provider 9' },
-];
-
+const Appointment = require("./appointmentSeed");
 
 
 

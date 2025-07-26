@@ -224,6 +224,56 @@ export async function getAppointments(id, role) {
     return (await response.json());
 }
 
+export async function getSuggestedAppointments(id, role, duration) {
+    const provider_id = await getProviderIdIfPatientRequest(id, role);
+    const response = await fetchWithErrorHandling(`${API_URL}/providers/${provider_id}/appointments/suggested?duration=${duration}`, getHttpOptions("GET"));
+    return (await response.json());
+}
+
+async function getProviderIdIfPatientRequest(id, role) {
+    if (role === AccountTypes.PATIENT) {
+        const patient = await getPatient(id);
+        return patient.provider_id;
+    }
+
+    return id;
+}
+
+export async function postAppointment(id, role, date, duration_in_minutes, name, patientId) {
+    let patient_id = patientId;
+    let provider_id;
+
+    if (role === AccountTypes.PATIENT) {
+        patient_id = id;
+        provider_id = await getPatient(id).provider_id;
+    }
+
+    if (role === AccountTypes.PROVIDER) {
+        provider_id = id;
+    }
+
+    const appointmentInformation = {
+        provider_id,
+        patient_id,
+        date: new Date(date),
+        duration_in_minutes,
+        name
+    }
+
+    const response = await fetchWithErrorHandling(`${API_URL}/providers/${provider_id}/appointments/`, getHttpOptions("POST", appointmentInformation));
+    return (await response.json());
+}
+
+export async function postProviderPreferences(id, providerPreferencesInfo) {
+    const response = await fetchWithErrorHandling(`${API_URL}/providers/${id}/preferences`, getHttpOptions("PUT", providerPreferencesInfo));
+    return (await response.json());
+}
+
+export async function getProviderPreferences(providerId) {
+    const response = await fetchWithErrorHandling(`${API_URL}/providers/${providerId}/preferences`, getHttpOptions("GET"));
+    return (await response.json());
+}
+
 export async function postMedication(patientId, name, strength, imgSrc) {
     let imgBlob = await fetch(imgSrc).then(res => res.blob());
 
