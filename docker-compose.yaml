@@ -84,6 +84,8 @@ services:
     command: server /data --console-address ":9001"
     volumes:
       - minio_data:/root/.minio_data
+    networks:
+      - mediscan-network
 
 networks:
   mediscan-network:

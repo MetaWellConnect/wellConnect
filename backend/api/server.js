@@ -17,7 +17,7 @@ const AccountTypes = {
 const { Client } = require('minio');
 const minioClient = new Client({
     endPoint: process.env.MINIO_ENDPOINT,
-    port: process.env.MINIO_PORT,
+    port: Number(process.env.MINIO_PORT),
     useSSL: false,
     accessKey: process.env.MINIO_USER,
     secretKey: process.env.MINIO_PASSWORD
@@ -482,7 +482,21 @@ server.get('/providers/:providerId/appointments/suggested', async (req, res, nex
 
 });
 
+/* --- Image Endpoints --- */
 
+server.post('/images', upload.single('image'), async (req, res, next) => {
+    try {
+        const bucket = 'medication-images';
+        const key = req.file.originalname;
+        const url = await minioClient.putObject(bucket, key, req.file.buffer, {
+            'Content-Type': req.file.mimetype
+        });
+
+        return res.status(StatusCodes.OK).json(url);
+    } catch (e) {
+        return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json(e);
+    }
+});
 
 /* --- Catch All Endpoints --- */
 
