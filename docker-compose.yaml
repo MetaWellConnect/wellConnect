@@ -80,7 +80,22 @@ services:
       - redis
       - backend
     ports:
-      - '9000:9000'
+      - '9002:9002'
+    networks:
+      - mediscan-network
+
+  minio:
+    image: minio/minio:latest
+    container_name: minio
+    ports:
+      - 9000:9000
+      - 9001:9001
+    environment:
+      MINIO_ROOT_USER: admin
+      MINIO_ROOT_PASSWORD: password
+    command: server /data --console-address ":9001"
+    volumes:
+      - minio_data:/root/.minio_data
     networks:
       - mediscan-network
     environment:
@@ -95,3 +110,4 @@ volumes:
   mediscan_data:
   ollama_data:
   ocr_service_data:
+  minio_data:
