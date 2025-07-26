@@ -224,13 +224,18 @@ export async function getAppointments(id, role) {
     return (await response.json());
 }
 
-export async function postMedication(patientId, name, strength) {
-    const medicationInfo = {
-        name,
-        strength
-    }
+export async function postMedication(patientId, name, strength, imgSrc) {
+    let imgBlob = await fetch(imgSrc).then(res => res.blob());
 
-    const response = await fetchWithErrorHandling(`${API_URL}/patients/${patientId}/medications`, getHttpOptions("POST", medicationInfo));
+    const form = new FormData();
+    form.append("name", name);
+    form.append("strength", strength);
+    form.append("image", imgBlob, "photo.jpg");
+
+    const response = await fetch(`${API_URL}/patients/${patientId}/medications`, {
+        method: "POST",
+        body: form,
+    });
     return (await response.json());
 }
 

@@ -302,7 +302,7 @@ server.post('/patients/:patientId/medications', upload.single('image'), async (r
             strength,
             patient_id,
             treatment_id,
-            photo_url: `${process.env.MINIO_URL}/${bucket}/${key}`
+            photo_url: `http://localhost:9000/${bucket}/${key}`
         }
 
         const medication = await prisma.medication.create({
