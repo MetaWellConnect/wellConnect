@@ -592,6 +592,7 @@ server.post('/images', upload.single('image'), async (req, res, next) => {
     } catch (e) {
         return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json(e);
     }
+});
 
 server.post('/providers/:providerId/appointments/', async (req, res, next) => {
     const providerId = Number(req.params.providerId);
