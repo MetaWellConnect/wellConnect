@@ -21,8 +21,10 @@ const minioClient = new Client({
     useSSL: false,
     accessKey: process.env.MINIO_USER,
     secretKey: process.env.MINIO_PASSWORD
-})
+});
 
+const { v4: uuidv4 } = require('uuid');
+const path = require('path');
 const express = require('express');
 const helmet = require('helmet');
 const multer = require('multer');
@@ -275,26 +277,34 @@ server.get('/providers/:providerId/medicationsToApprove', async (req, res, next)
     return res.status(200).json(medications);
 });
 
-server.post('/patients/:patientId/medications', async (req, res, next) => {
+server.post('/patients/:patientId/medications', upload.single('image'), async (req, res, next) => {
     const patient_id = Number(req.params.patientId);
     const { name, strength } = req.body;
 
-    const patient = await prisma.patient.findUnique({
-        where: {
-            id: patient_id
-        }
-    });
-    const treatment_id = patient.treatment_id;
-
-    const medicationData = {
-        name,
-        strength,
-        patient_id,
-        treatment_id,
-        photo_url: "https://picsum.photos/seed/lisinopril/200/200"
-    }
-
     try {
+        const patient = await prisma.patient.findUnique({
+            where: {
+                id: patient_id
+            }
+        });
+        const treatment_id = patient.treatment_id;
+
+
+        const bucket = 'medication-images';
+        const extension = path.extname(req.file.originalname);
+        const key = `${uuidv4()}${extension}`;
+        await minioClient.putObject(bucket, key, req.file.buffer, {
+            'Content-Type': req.file.mimetype
+        });
+
+        const medicationData = {
+            name,
+            strength,
+            patient_id,
+            treatment_id,
+            photo_url: `${process.env.MINIO_URL}/${bucket}/${key}`
+        }
+
         const medication = await prisma.medication.create({
             data: medicationData
         });
