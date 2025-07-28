@@ -5,7 +5,6 @@ require('dotenv').config();
 
 async function requireAuth(req, res, next) {
     const token = req.cookies.token;
-    console.log(token)
     if (!token) {
         res.status(StatusCodes.UNAUTHORIZED);
     }
