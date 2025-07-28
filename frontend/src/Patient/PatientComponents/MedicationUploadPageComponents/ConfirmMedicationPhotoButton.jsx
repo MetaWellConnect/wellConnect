@@ -4,19 +4,28 @@ import * as API from '../../../api';
 import { useState } from 'react';
 
 function ConfirmMedicationPhotoButton({ medicationInformation, imgSrc }) {
-    const [isAlertShowing, setIsAlertShowing] = useState(false);
+    const [isFailureAlertShowing, setIsFailureAlertShowing] = useState(false);
+    const [isSuccessAlertShowing, setIsSuccessAlertShowing] = useState(false);
+    const [errorMsg, setErrorMsg] = useState("");
     const { user } = useAuth();
 
-    function handleShowAlert() {
-        setIsAlertShowing(true);
-        setTimeout(() => setIsAlertShowing(false), 3000);
+    function handleShowSuccessAlert() {
+        setIsSuccessAlertShowing(true);
+        setTimeout(() => setIsSuccessAlertShowing(false), 3000);
+    }
+
+    function handleShowFailureAlert() {
+        setIsFailureAlertShowing(true);
+        setTimeout(() => setIsFailureAlertShowing(false), 3000);
     }
 
     async function uploadMedication() {
         try {
             await API.postMedication(user.id, medicationInformation.name, medicationInformation.strength, imgSrc);
-            handleShowAlert();
+            handleShowSuccessAlert();
         } catch (e) {
+            setErrorMsg(e.message);
+            handleShowFailureAlert();
             console.error(e);
         }
     }
@@ -24,8 +33,11 @@ function ConfirmMedicationPhotoButton({ medicationInformation, imgSrc }) {
     return (
         <>
             <button className="btn btn-success w-100 p-4 mb-3" onClick={uploadMedication}>Confirm</button>
-            {isAlertShowing && <Alert variant='success' onClose={() => setIsAlertShowing(false)} dismissible className='position-fixed top-0 translate-middle-x mt-3'>
+            {isSuccessAlertShowing && <Alert variant='success' onClose={() => setIsSuccessAlertShowing(false)} dismissible className='position-fixed top-0 translate-middle-x mt-3'>
                 <strong>Medication Uploaded Successfully!</strong>
+            </Alert>}
+            {isFailureAlertShowing && <Alert variant='danger' onClose={() => setIsFailureAlertShowing(false)} dismissible className='position-fixed top-0 translate-middle-x mt-3'>
+                <strong>Medication Uploaded Failed! Error: {errorMsg}</strong>
             </Alert>}
         </>
     );
