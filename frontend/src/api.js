@@ -193,6 +193,7 @@ export async function runOCR(imgSrc) {
     const response = await fetch(`${API_URL}/medications/run-ocr`, {
         method: "POST",
         body: form,
+        credentials: 'include'
     });
 
     // If we recieved an error, return a JSON explaining the medication was unable to be parsed to the user
@@ -290,7 +291,18 @@ export async function postMedication(patientId, name, strength, imgSrc) {
     const response = await fetch(`${API_URL}/patients/${patientId}/medications`, {
         method: "POST",
         body: form,
+        credentials: 'include'
     });
+
+    if (!response.ok) {
+        const errorMessage = await response.json();
+        const errorStatus = response.status;
+
+        const error = new Error(errorMessage);
+        error.status = errorStatus;
+        throw error;
+    }
+
     return (await response.json());
 }
 
