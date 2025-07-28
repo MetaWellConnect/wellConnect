@@ -2,16 +2,20 @@ import { useCallback, useRef } from 'react';
 import * as API from '../../../api.js'
 import Webcam from 'react-webcam'
 
-function MedicationWebcam({ imgSrc, setImgSrc, setMedicationInformation }) {
+function MedicationWebcam({ imgSrc, setImgSrc, setMedicationInformation, setIsLoading }) {
     const webcamRef = useRef(null);
 
     const processCapture = useCallback(() => {
         (async () => {
+            setIsLoading(true);
+
             const image = webcamRef.current.getScreenshot();
             setImgSrc(image);
 
             const medicationInformation = await API.runOCR(image);
             setMedicationInformation(medicationInformation);
+
+            setIsLoading(false);
         })();
     }, [webcamRef]);
 

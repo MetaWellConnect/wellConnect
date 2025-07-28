@@ -1,12 +1,13 @@
-import MedicationWebcam from "../PatientComponents/MedicationUploadPageComponents/MedicationCamera";
-import MedicationInformationWidget from "../PatientComponents/MedicationUploadPageComponents/MedicationInformationWidget";
 import ConfirmMedicationPhotoButton from "../PatientComponents/MedicationUploadPageComponents/ConfirmMedicationPhotoButton";
+import MedicationInformationWidget from "../PatientComponents/MedicationUploadPageComponents/MedicationInformationWidget";
 import ResetMedicationPhotoButton from "../PatientComponents/MedicationUploadPageComponents/ResetMedicationPhotoButton";
+import MedicationWebcam from "../PatientComponents/MedicationUploadPageComponents/MedicationCamera";
 import { useState } from "react";
 
 function MedicationUploadPage() {
+    const [medicationInformation, setMedicationInformation] = useState("");
+    const [isLoading, setIsLoading] = useState(false);
     const [imgSrc, setImgSrc] = useState(null);
-    const [medicationInformation, setMedicationInformation] = useState(null);
 
     return (
         <div className="container text-left justify-content-left">
@@ -15,11 +16,11 @@ function MedicationUploadPage() {
 
             <div className="row d-flex flex-wrap">
                 <div className="col-sm">
-                    <MedicationWebcam imgSrc={imgSrc} setImgSrc={setImgSrc} setMedicationInformation={setMedicationInformation} />
+                    <MedicationWebcam imgSrc={imgSrc} setImgSrc={setImgSrc} setMedicationInformation={setMedicationInformation} setIsLoading={setIsLoading} />
                 </div>
 
                 <div className="col-sm">
-                    <MedicationInformationWidget medicationInformation={medicationInformation} />
+                    <MedicationInformationWidget medicationInformation={medicationInformation} isLoading={isLoading} />
                     <ResetMedicationPhotoButton setImgSrc={setImgSrc} />
                     <ConfirmMedicationPhotoButton medicationInformation={medicationInformation} imgSrc={imgSrc} />
                 </div>
