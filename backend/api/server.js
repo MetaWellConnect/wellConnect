@@ -37,6 +37,7 @@ const { StatusCodes } = require('http-status-codes');
 const reminderServiceUtils = require('./reminderServiceUtils.js');
 const generateSuggestions = require('./smartSchedulerUtils.js');
 const requireAuth = require('./authMiddleware.js');
+const { body, param, validationResult } = require(`express-validator`);
 
 const MAX_AGE = 2592000;
 const upload = multer({ storage: multer.memoryStorage() });
@@ -66,7 +67,7 @@ server.post('/medications/run-ocr', upload.single('medicationImage'), async (req
         const processedOCRText = await parseOCRText(ocrText); // Extract the name and strength of the medication
         return res.status(StatusCodes.OK).json(processedOCRText);
     } catch (e) {
-        return res.status(e.status).json(e.message)
+        return res.status(e.status).json(e.message);
     }
 });
 
@@ -278,11 +279,24 @@ server.get('/providers/:providerId/medicationsToApprove', requireAuth, async (re
     return res.status(StatusCodes.OK).json(medications);
 });
 
-server.post('/patients/:patientId/medications', upload.single('image'), requireAuth, async (req, res, next) => {
-    const patient_id = Number(req.params.patientId);
-    const { name, strength } = req.body;
+server.post('/patients/:patientId/medications', [
+    param('patientId').exists().withMessage('Patient ID required!').isInt().withMessage('PatientId must be an int!'),
+    body('name').exists({ checkNull: true }).withMessage('name cannot be null!').isEmpty('Name cannot be an empty string!').equals('Unable to identify medication name.').withMessage('Failed to extract name!'),
+    body('strength').exists({ checkNull: true }).withMessage('strength cannot be null!').isEmpty('Strength cannot be an empty string!').equals('Unable to identify medication strength.').withMessage('Failed to extract strength!')
+], upload.single('image'), requireAuth, async (req, res, next) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+        return res.status(StatusCodes.UNPROCESSABLE_ENTITY).json(errors.array());
+    }
+
+    if (!req.file) {
+        return res.status(StatusCodes.BAD_REQUEST).json('Medication image missing!');
+    }
 
     try {
+        const patient_id = Number(req.params.patientId);
+        const { name, strength } = req.body;
+
         const patient = await prisma.patient.findUnique({
             where: {
                 id: patient_id
@@ -491,12 +505,14 @@ server.put('/medications/:medicationId/due', async (req, res, next) => {
 });
 
 server.get('/reminders/sent', async (req, res, next) => {
-    const sinceTime =  Date.now() - 24 * 60 * 60 * 1000;
-    const reminder = await prisma.sentReminders.findMany({where: {
-        sent_at: {
-            gte: new Date(sinceTime)
+    const sinceTime = Date.now() - 24 * 60 * 60 * 1000;
+    const reminder = await prisma.sentReminders.findMany({
+        where: {
+            sent_at: {
+                gte: new Date(sinceTime)
+            }
         }
-    }});
+    });
 
     if (!reminder) {
         return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json(`Failed to retrieve sent reminders!`);
@@ -622,7 +638,7 @@ server.put('/providers/:providerId/preferences/', requireAuth, async (req, res, 
     const providerPreferencesInfo = req.body;
     const preferences = await prisma.providerPreferences.update({
         where: { provider_id: providerId },
-        data:  providerPreferencesInfo
+        data: providerPreferencesInfo
     });
 
     if (!preferences) {

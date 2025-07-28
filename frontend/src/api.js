@@ -281,6 +281,10 @@ export async function getProviderPreferences(providerId) {
 }
 
 export async function postMedication(patientId, name, strength, imgSrc) {
+    if (imgSrc === null) {
+        throw new Error("Image is null!");
+    }
+
     let imgBlob = await fetch(imgSrc).then(res => res.blob());
 
     const form = new FormData();
