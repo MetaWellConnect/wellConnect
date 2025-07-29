@@ -290,7 +290,7 @@ server.post('/patients/:patientId/medications', [
         const patient_id = Number(req.params.patientId);
         const { name, strength } = req.body;
 
-        if (name === null || name === "") {
+        if (name === "undefined" || name === "") {
             throw new Error('Name cannot be null or empty!')
         }
 
@@ -298,7 +298,7 @@ server.post('/patients/:patientId/medications', [
             throw new Error('Failed to parse medication name!')
         }
 
-        if (strength === null || strength === "") {
+        if (strength === "undefined" || strength === "") {
             throw new Error('Strength cannot be null or empty!')
         }
 

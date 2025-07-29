@@ -45,7 +45,7 @@ export default function ApproveModal({ patient, pendingMedication, setMedication
 
             <Modal.Body>
                 <div className="container-fluid row">
-                    <img className="col-sm" src={pendingMedication.photo_url} alt={pendingMedication.name} />
+                    <img className="col-sm h-100 w-50" src={pendingMedication.photo_url} alt={pendingMedication.name} />
 
                     <form className="col-sm d-flex flex-column justify-content-center align-items-center" id="medication-approval-form" onSubmit={(e) => handleMedicationApproval(e)}>
                         <input type="text" className={approveModalFormCss}
