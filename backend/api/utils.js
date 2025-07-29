@@ -86,15 +86,16 @@ async function runOCROnImage(medicationImage) {
 }
 
 function validateOCROutputWithFuzzyMatch(text, name, strength) {
+    const FUZZY_MATCH_MIN_RATIO = 70;
     const normalizedText = normalizeText(text);
     const nameScore = fuzz.partial_ratio(normalizeText(name), normalizedText);
     const strengthScore = fuzz.partial_ratio(normalizeText(strength), normalizedText);
 
-    if (nameScore < 70) {
+    if (nameScore < FUZZY_MATCH_MIN_RATIO) {
         throw new Error("Name is not present in original OCR text!");
     }
 
-    if (strengthScore < 70) {
+    if (strengthScore < FUZZY_MATCH_MIN_RATIO) {
         throw new Error("Strength is not present in original OCR text!");
     }
 

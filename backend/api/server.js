@@ -282,6 +282,10 @@ server.get('/providers/:providerId/medicationsToApprove', requireAuth, async (re
 server.post('/patients/:patientId/medications', [
     param('patientId').exists().withMessage('Patient ID required!').isInt().withMessage('PatientId must be an int!'),
 ], upload.single('image'), requireAuth, async (req, res, next) => {
+    const NAME_ERROR_MESSAGE = "Unable to identify medication name.";
+    const STRENGTH_ERROR_MESSAGE = "Unable to identify medication strength.";
+    const NULL = "undefined";
+
     if (!req.file) {
         return res.status(StatusCodes.BAD_REQUEST).json('Medication image missing!');
     }
@@ -290,19 +294,19 @@ server.post('/patients/:patientId/medications', [
         const patient_id = Number(req.params.patientId);
         const { name, strength } = req.body;
 
-        if (name === "undefined" || name === "") {
+        if (name === NULL || name === "") {
             throw new Error('Name cannot be null or empty!')
         }
 
-        if (name === 'Unable to identify medication name.') {
+        if (name === NAME_ERROR_MESSAGE) {
             throw new Error('Failed to parse medication name!')
         }
 
-        if (strength === "undefined" || strength === "") {
+        if (strength === NULL || strength === "") {
             throw new Error('Strength cannot be null or empty!')
         }
 
-        if (strength === 'Unable to identify medication strength.') {
+        if (strength === STRENGTH_ERROR_MESSAGE) {
             throw new Error('Failed to parse medication strength!')
         }
 
