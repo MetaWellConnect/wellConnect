@@ -498,7 +498,9 @@ server.put('/medications/:medicationId/due', async (req, res, next) => {
 });
 
 server.get('/reminders/sent', async (req, res, next) => {
-    const sinceTime = Date.now() - 24 * 60 * 60 * 1000;
+    const DAY_IN_MILLISECOND = 24 * 60 * 60 * 1000;
+
+    const sinceTime = Date.now() - DAY_IN_MILLISECOND; // Time of 24hrs ago
     const reminder = await prisma.sentReminders.findMany({
         where: {
             sent_at: {
