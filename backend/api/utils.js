@@ -47,9 +47,7 @@ async function parseOCRText(text) {
 
     let parsedMedicationInformation;
     try {
-        console.log(medicationInformation)
         parsedMedicationInformation = JSON.parse(medicationInformation);
-        console.log(parsedMedicationInformation)
         validateOCROutputWithFuzzyMatch(text.join(''), parsedMedicationInformation.name, parsedMedicationInformation.strength);
     } catch (e) {
         const errorMessage = e.message;

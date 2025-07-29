@@ -281,14 +281,7 @@ server.get('/providers/:providerId/medicationsToApprove', requireAuth, async (re
 
 server.post('/patients/:patientId/medications', [
     param('patientId').exists().withMessage('Patient ID required!').isInt().withMessage('PatientId must be an int!'),
-    body('name').exists({ checkNull: true }).withMessage('name cannot be null!').isEmpty('Name cannot be an empty string!').equals('Unable to identify medication name.').withMessage('Failed to extract name!'),
-    body('strength').exists({ checkNull: true }).withMessage('strength cannot be null!').isEmpty('Strength cannot be an empty string!').equals('Unable to identify medication strength.').withMessage('Failed to extract strength!')
 ], upload.single('image'), requireAuth, async (req, res, next) => {
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-        return res.status(StatusCodes.UNPROCESSABLE_ENTITY).json(errors.array());
-    }
-
     if (!req.file) {
         return res.status(StatusCodes.BAD_REQUEST).json('Medication image missing!');
     }
@@ -296,6 +289,22 @@ server.post('/patients/:patientId/medications', [
     try {
         const patient_id = Number(req.params.patientId);
         const { name, strength } = req.body;
+
+        if (name === null || name === "") {
+            throw new Error('Name cannot be null or empty!')
+        }
+
+        if (name === 'Unable to identify medication name.') {
+            throw new Error('Failed to parse medication name!')
+        }
+
+        if (strength === null || strength === "") {
+            throw new Error('Strength cannot be null or empty!')
+        }
+
+        if (strength === 'Unable to identify medication strength.') {
+            throw new Error('Failed to parse medication strength!')
+        }
 
         const patient = await prisma.patient.findUnique({
             where: {
