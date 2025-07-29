@@ -1,4 +1,7 @@
 const API_URL = import.meta.env.VITE_API_URL;
+const NAME_ERROR_MESSAGE = "Unable to identify medication name.";
+const STRENGTH_ERROR_MESSAGE = "Unable to identify medication strength.";
+const NULL = "undefined";
 
 const AccountTypes = {
     PATIENT: "PATIENT",
@@ -199,8 +202,8 @@ export async function runOCR(imgSrc) {
     // If we recieved an error, return a JSON explaining the medication was unable to be parsed to the user
     if (!response.ok) {
         const errorResponse = {
-            name: "Unable to identify medication name.",
-            strength: "Unable to identify medication strength."
+            name: NAME_ERROR_MESSAGE,
+            strength: STRENGTH_ERROR_MESSAGE
         }
 
         return errorResponse;
@@ -311,6 +314,28 @@ export async function postMedication(patientId, name, strength, imgSrc) {
 }
 
 export async function putMedication(patientId, medicationId, medicationInfo) {
+    try {
+        const { name, strength } = medicationInfo;
+
+        if (name === NULL || name === "") {
+            throw new Error('Name cannot be null or empty!');
+        }
+
+        if (name === NAME_ERROR_MESSAGE) {
+            throw new Error('Failed to parse medication name!');
+        }
+
+        if (strength === NULL || strength === "") {
+            throw new Error('Strength cannot be null or empty!');
+        }
+
+        if (strength === STRENGTH_ERROR_MESSAGE) {
+            throw new Error('Failed to parse medication strength!');
+        }
+    } catch (e) {
+        console.error(e.message);
+    }
+
     const response = await fetchWithErrorHandling(`${API_URL}/patients/${patientId}/medications/${medicationId}`, getHttpOptions("PUT", medicationInfo));
     return (await response.json());
 }
