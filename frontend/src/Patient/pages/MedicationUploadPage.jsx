@@ -21,7 +21,7 @@ function MedicationUploadPage() {
 
                 <div className="col-sm">
                     <MedicationInformationWidget medicationInformation={medicationInformation} isLoading={isLoading} />
-                    <ResetMedicationPhotoButton setImgSrc={setImgSrc} />
+                    <ResetMedicationPhotoButton setImgSrc={setImgSrc} setMedicationInformation={setMedicationInformation} />
                     <ConfirmMedicationPhotoButton medicationInformation={medicationInformation} imgSrc={imgSrc} />
                 </div>
             </div>
