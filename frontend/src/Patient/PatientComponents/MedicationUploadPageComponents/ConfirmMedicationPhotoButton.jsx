@@ -33,12 +33,12 @@ function ConfirmMedicationPhotoButton({ medicationInformation, imgSrc }) {
     return (
         <>
             <button className="btn btn-success w-100 p-4 mb-3" onClick={uploadMedication}>Confirm</button>
-            {isSuccessAlertShowing && <Alert variant='success' onClose={() => setIsSuccessAlertShowing(false)} dismissible className='position-fixed top-0 translate-middle-x mt-3'>
+            <Alert show={isSuccessAlertShowing} variant='success' onClose={() => setIsSuccessAlertShowing(false)} dismissible className='position-fixed top-0 translate-middle-x mt-3'>
                 <strong>Medication Uploaded Successfully!</strong>
-            </Alert>}
-            {isFailureAlertShowing && <Alert variant='danger' onClose={() => setIsFailureAlertShowing(false)} dismissible className='position-fixed top-0 translate-middle-x mt-3'>
+            </Alert>
+            <Alert show={isFailureAlertShowing} variant='danger' onClose={() => setIsFailureAlertShowing(false)} dismissible className='position-fixed top-0 translate-middle-x mt-3'>
                 <strong>Medication Uploaded Failed! Error: {errorMsg}</strong>
-            </Alert>}
+            </Alert>
         </>
     );
 }
