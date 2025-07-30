@@ -4,10 +4,9 @@ import * as API from "../../api"
 
 
 export default function ViewTreatmentPlanModal({ patient, onHide, show }) {
-    const [treatmentOverview, setTreatmentOverview] = useState();
+    const [treatmentOverview, setTreatmentOverview] = useState("");
     const [medications, setMedications] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
-    const [treatment, setTreatment] = useState("");
 
     const medicationFields = {
         MEDICATION_NAME: "Medication Name",
@@ -20,7 +19,6 @@ export default function ViewTreatmentPlanModal({ patient, onHide, show }) {
     useEffect(() => {
         (async () => {
             const treatmentResponse = await API.getPatientTreatment(patient.id);
-            setTreatment(treatmentResponse);
             setMedications([...treatmentResponse.medications]);
             setTreatmentOverview(treatmentResponse.overview);
 
@@ -28,8 +26,43 @@ export default function ViewTreatmentPlanModal({ patient, onHide, show }) {
         })();
     }, []);
 
-    function updateMedicationField(e, index) {
+    function updateMedicationField(e, id) {
+        switch (e.target.placeholder) {
+            case medicationFields.MEDICATION_NAME:
+                setMedications(prev =>
+                    prev.map(med =>
+                        med.id === id ? { ...med, name: e.target.value } : med
+                    ));
+                break;
 
+            case medicationFields.MEDICATION_STRENGTH:
+                setMedications(prev =>
+                    prev.map(med =>
+                        med.id === id ? { ...med, strength: e.target.value } : med
+                    ));
+                break;
+
+            case medicationFields.MEDICATION_REQUIRED_DOSES:
+                setMedications(prev =>
+                    prev.map(med =>
+                        med.id === id ? { ...med, number_of_required_doses: e.target.value } : med
+                    ));
+                break;
+
+            case medicationFields.MEDICATION_TAKEN_DOSES:
+                setMedications(prev =>
+                    prev.map(med =>
+                        med.id === id ? { ...med, number_of_taken_doses: e.target.value } : med
+                    ));
+                break;
+
+            case medicationFields.MEDICATION_FREQUENCY:
+                setMedications(prev =>
+                    prev.map(med =>
+                        med.id === id ? { ...med, frequency_in_hours: e.target.value } : med
+                    ));
+                break;
+        }
     }
 
     function handleTreatmentPlanEditSubmit() {
@@ -58,27 +91,27 @@ export default function ViewTreatmentPlanModal({ patient, onHide, show }) {
                         return (
                             <div key={index} className="d-flex flex-row mb-3">
                                 <div className="form-floating m-2">
-                                    <input type="text" className="rounded-2 form-control" value={medication.name} onChange={(e) => console.log(e)} placeholder={medicationFields.MEDICATION_NAME} required />
+                                    <input type="text" className="rounded-2 form-control" value={medication.name} onChange={(e) => updateMedicationField(e, medication.id)} placeholder={medicationFields.MEDICATION_NAME} required />
                                     <label htmlFor="floatingInput">Medication Name</label>
                                 </div>
 
                                 <div className="form-floating m-2">
-                                    <input type="text" className="rounded-2 form-control" value={medication.strength} onChange={(e) => console.log(e)} placeholder={medicationFields.MEDICATION_STRENGTH} required />
+                                    <input type="text" className="rounded-2 form-control" value={medication.strength} onChange={(e) => updateMedicationField(e, medication.id)} placeholder={medicationFields.MEDICATION_STRENGTH} required />
                                     <label htmlFor="floatingInput">Medication Strength</label>
                                 </div>
 
                                 <div className="form-floating m-2">
-                                    <input type="text" className="rounded-2 form-control" value={medication.number_of_required_doses} onChange={(e) => console.log(e)} placeholder={medicationFields.MEDICATION_REQUIRED_DOSES} required />
+                                    <input type="text" className="rounded-2 form-control" value={medication.number_of_required_doses} onChange={(e) => updateMedicationField(e, medication.id)} placeholder={medicationFields.MEDICATION_REQUIRED_DOSES} required />
                                     <label htmlFor="floatingInput">Required Doses</label>
                                 </div>
 
                                 <div className="form-floating m-2">
-                                    <input type="text" className="rounded-2 form-control" value={medication.number_of_taken_doses} onChange={(e) => console.log(e)} placeholder={medicationFields.MEDICATION_TAKEN_DOSES} required />
+                                    <input type="text" className="rounded-2 form-control" value={medication.number_of_taken_doses} onChange={(e) => updateMedicationField(e, medication.id)} placeholder={medicationFields.MEDICATION_TAKEN_DOSES} required />
                                     <label htmlFor="floatingInput">Taken Doses</label>
                                 </div>
 
                                 <div className="form-floating m-2">
-                                    <input type="text" className="rounded-2 form-control" value={medication.frequency_in_hours} onChange={(e) => console.log(e)} placeholder={medicationFields.MEDICATION_FREQUENCY} required />
+                                    <input type="text" className="rounded-2 form-control" value={medication.frequency_in_hours} onChange={(e) => updateMedicationField(e, medication.id)} placeholder={medicationFields.MEDICATION_FREQUENCY} required />
                                     <label htmlFor="floatingInput">Frequency of Doses</label>
                                 </div>
                             </div>
