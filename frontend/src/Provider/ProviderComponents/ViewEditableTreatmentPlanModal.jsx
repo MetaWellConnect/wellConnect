@@ -13,7 +13,8 @@ export default function ViewTreatmentPlanModal({ patient, onHide, show }) {
         MEDICATION_STRENGTH: "Medication Strength",
         MEDICATION_REQUIRED_DOSES: "Required Doses",
         MEDICATION_TAKEN_DOSES: "Taken Doses",
-        MEDICATION_FREQUENCY: "Frequency of Doses"
+        MEDICATION_FREQUENCY: "Frequency of Doses",
+        MEDICATION_DOSE: "Medication Dose"
     }
 
     useEffect(() => {
@@ -62,6 +63,13 @@ export default function ViewTreatmentPlanModal({ patient, onHide, show }) {
                         med.id === id ? { ...med, frequency_in_hours: e.target.value } : med
                     ));
                 break;
+
+            case medicationFields.MEDICATION_DOSE:
+                setMedications(prev =>
+                    prev.map(med =>
+                        med.id === id ? { ...med, dose: e.target.value } : med
+                    ));
+                break;
         }
     }
 
@@ -89,7 +97,8 @@ export default function ViewTreatmentPlanModal({ patient, onHide, show }) {
                     <h3>Medications</h3>
                     {medications.map((medication, index) => {
                         return (
-                            <div key={index} className="d-flex flex-row mb-3">
+                            <div key={index} className="d-flex flex-row align-items-center mb-3">
+                                <button type="button" className="btn-close" onClick={() => setMedications(prev => prev.filter(med => med.id !== medication.id))}></button>
                                 <div className="form-floating m-2">
                                     <input type="text" className="rounded-2 form-control" value={medication.name} onChange={(e) => updateMedicationField(e, medication.id)} placeholder={medicationFields.MEDICATION_NAME} required />
                                     <label htmlFor="floatingInput">Medication Name</label>
@@ -114,10 +123,15 @@ export default function ViewTreatmentPlanModal({ patient, onHide, show }) {
                                     <input type="text" className="rounded-2 form-control" value={medication.frequency_in_hours} onChange={(e) => updateMedicationField(e, medication.id)} placeholder={medicationFields.MEDICATION_FREQUENCY} required />
                                     <label htmlFor="floatingInput">Frequency of Doses</label>
                                 </div>
+
+                                <div className="form-floating m-2">
+                                    <input type="text" className="rounded-2 form-control" value={medication.dose} onChange={(e) => updateMedicationField(e, medication.id)} placeholder={medicationFields.MEDICATION_DOSE} required />
+                                    <label htmlFor="floatingInput">Medication Dose</label>
+                                </div>
                             </div>
                         );
                     })}
-                    <button type="button" className="btn btn-primary" onClick={() => setMedicationList([...medicationList, ""])}>Add another medication</button>
+                    <button type="button" className="btn btn-primary" onClick={() => setMedications(prev => [...prev, { name: "", strength: "", number_of_required_doses: "", number_of_taken_doses: "", frequency_in_hours: "", dose: "" }])}>Add another medication</button>
                 </form>
             </Modal.Body>
 
