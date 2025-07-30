@@ -1,4 +1,6 @@
 const API_URL = import.meta.env.VITE_API_URL;
+const NAME_ERROR_MESSAGE = "Unable to identify medication name.";
+const STRENGTH_ERROR_MESSAGE = "Unable to identify medication strength.";
 
 const AccountTypes = {
     PATIENT: "PATIENT",
@@ -193,13 +195,14 @@ export async function runOCR(imgSrc) {
     const response = await fetch(`${API_URL}/medications/run-ocr`, {
         method: "POST",
         body: form,
+        credentials: 'include'
     });
 
     // If we recieved an error, return a JSON explaining the medication was unable to be parsed to the user
     if (!response.ok) {
         const errorResponse = {
-            name: "Unable to identify medication name.",
-            strength: "Unable to identify medication strength."
+            name: NAME_ERROR_MESSAGE,
+            strength: STRENGTH_ERROR_MESSAGE
         }
 
         return errorResponse;
@@ -280,6 +283,27 @@ export async function getProviderPreferences(providerId) {
 }
 
 export async function postMedication(patientId, name, strength, imgSrc) {
+    if (imgSrc === null) {
+        throw new Error("Image is null!");
+    }
+
+    if (name === undefined || name === "") {
+        throw new Error('Name cannot be null or empty!');
+    }
+
+    if (name === NAME_ERROR_MESSAGE) {
+        throw new Error('Failed to parse medication name!');
+    }
+
+    if (strength === undefined || strength === "") {
+        throw new Error('Strength cannot be null or empty!');
+    }
+
+    if (strength === STRENGTH_ERROR_MESSAGE) {
+        throw new Error('Failed to parse medication strength!');
+    }
+
+
     let imgBlob = await fetch(imgSrc).then(res => res.blob());
 
     const form = new FormData();
@@ -290,7 +314,18 @@ export async function postMedication(patientId, name, strength, imgSrc) {
     const response = await fetch(`${API_URL}/patients/${patientId}/medications`, {
         method: "POST",
         body: form,
+        credentials: 'include'
     });
+
+    if (!response.ok) {
+        const errorMessage = await response.json();
+        const errorStatus = response.status;
+
+        const error = new Error(errorMessage);
+        error.status = errorStatus;
+        throw error;
+    }
+
     return (await response.json());
 }
 

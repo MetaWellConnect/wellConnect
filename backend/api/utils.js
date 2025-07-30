@@ -1,5 +1,6 @@
 require('dotenv').config();
-const FormData = require('form-data');
+const fuzz = require('fuzzball');
+
 
 const OLLAMA_API_URL = process.env.OLLAMA_API_URL;
 const OCR_SERVICE_API_URL = process.env.OCR_SERVICE_API_URL;
@@ -46,7 +47,8 @@ async function parseOCRText(text) {
 
     let parsedMedicationInformation;
     try {
-        parsedMedicationInformation = JSON.parse(medicationInformation)
+        parsedMedicationInformation = JSON.parse(medicationInformation);
+        validateOCROutputWithFuzzyMatch(text.join(''), parsedMedicationInformation.name, parsedMedicationInformation.strength);
     } catch (e) {
         const errorMessage = e.message;
         const errorStatus = 500;
@@ -81,6 +83,27 @@ async function runOCROnImage(medicationImage) {
     }
 
     return await response.json();
+}
+
+function validateOCROutputWithFuzzyMatch(text, name, strength) {
+    const FUZZY_MATCH_MIN_RATIO = 70;
+    const normalizedText = normalizeText(text);
+    const nameScore = fuzz.partial_ratio(normalizeText(name), normalizedText);
+    const strengthScore = fuzz.partial_ratio(normalizeText(strength), normalizedText);
+
+    if (nameScore < FUZZY_MATCH_MIN_RATIO) {
+        throw new Error("Name is not present in original OCR text!");
+    }
+
+    if (strengthScore < FUZZY_MATCH_MIN_RATIO) {
+        throw new Error("Strength is not present in original OCR text!");
+    }
+
+    return ({nameScore, strengthScore});
+}
+
+function normalizeText(str) {
+    return str.toLowerCase().replace(/\s/g, '');
 }
 
 module.exports = {

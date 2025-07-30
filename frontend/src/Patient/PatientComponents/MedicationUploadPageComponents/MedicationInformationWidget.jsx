@@ -1,6 +1,6 @@
 import Spinner from 'react-bootstrap/Spinner';
 
-function MedicationInformationWidget({ medicationInformation }) {
+function MedicationInformationWidget({ medicationInformation, isLoading }) {
     return (
         <>
             <section className="medication-information-view bg-body-secondary rounded-3 p-3 my-3">
@@ -8,7 +8,7 @@ function MedicationInformationWidget({ medicationInformation }) {
                 <h3>Name</h3>
                 <div>
                     {
-                        medicationInformation ?
+                        !isLoading ?
                             <p>{medicationInformation.name}</p>
                             :
                             <Spinner animation="border" role="status" />
@@ -17,7 +17,7 @@ function MedicationInformationWidget({ medicationInformation }) {
                 <h3>Strength</h3>
                 <div>
                     {
-                        medicationInformation ?
+                        !isLoading ?
                             <p>{medicationInformation.strength}</p>
                             :
                             <Spinner animation="border" role="status" />

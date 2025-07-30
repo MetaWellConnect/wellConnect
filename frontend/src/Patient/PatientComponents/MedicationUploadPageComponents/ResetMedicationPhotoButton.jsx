@@ -18,9 +18,10 @@ const shakeStyle = `
     }
 `
 
-function ResetMedicationPhotoButton({ setImgSrc }) {
+function ResetMedicationPhotoButton({ setImgSrc, setMedicationInformation }) {
     function resetWebcamImage() {
         setImgSrc(null);
+        setMedicationInformation("");
     }
 
     return (
