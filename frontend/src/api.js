@@ -1,7 +1,6 @@
 const API_URL = import.meta.env.VITE_API_URL;
 const NAME_ERROR_MESSAGE = "Unable to identify medication name.";
 const STRENGTH_ERROR_MESSAGE = "Unable to identify medication strength.";
-const NULL = "undefined";
 
 const AccountTypes = {
     PATIENT: "PATIENT",
@@ -288,6 +287,23 @@ export async function postMedication(patientId, name, strength, imgSrc) {
         throw new Error("Image is null!");
     }
 
+    if (name === undefined || name === "") {
+        throw new Error('Name cannot be null or empty!');
+    }
+
+    if (name === NAME_ERROR_MESSAGE) {
+        throw new Error('Failed to parse medication name!');
+    }
+
+    if (strength === undefined || strength === "") {
+        throw new Error('Strength cannot be null or empty!');
+    }
+
+    if (strength === STRENGTH_ERROR_MESSAGE) {
+        throw new Error('Failed to parse medication strength!');
+    }
+
+
     let imgBlob = await fetch(imgSrc).then(res => res.blob());
 
     const form = new FormData();
@@ -314,28 +330,6 @@ export async function postMedication(patientId, name, strength, imgSrc) {
 }
 
 export async function putMedication(patientId, medicationId, medicationInfo) {
-    try {
-        const { name, strength } = medicationInfo;
-
-        if (name === NULL || name === "") {
-            throw new Error('Name cannot be null or empty!');
-        }
-
-        if (name === NAME_ERROR_MESSAGE) {
-            throw new Error('Failed to parse medication name!');
-        }
-
-        if (strength === NULL || strength === "") {
-            throw new Error('Strength cannot be null or empty!');
-        }
-
-        if (strength === STRENGTH_ERROR_MESSAGE) {
-            throw new Error('Failed to parse medication strength!');
-        }
-    } catch (e) {
-        console.error(e.message);
-    }
-
     const response = await fetchWithErrorHandling(`${API_URL}/patients/${patientId}/medications/${medicationId}`, getHttpOptions("PUT", medicationInfo));
     return (await response.json());
 }
