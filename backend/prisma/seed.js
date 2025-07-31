@@ -59,8 +59,24 @@ const Treatment = [
         patient_id: 1,
         provider_id: 7,
         medications: [
-            { name: 'Lisinopril', strength: '10 mg' },
-            { name: 'Amlodipine', strength: '5 mg' }
+            {
+                id: 1,
+                name: 'Lisinopril',
+                strength: '10 mg',
+                dose: '10 mg orally once daily',
+                frequency_in_hours: 24,
+                number_of_required_doses: 30,
+                number_of_taken_doses: 5
+            },
+            {
+                id: 2,
+                name: 'Amlodipine',
+                strength: '5 mg',
+                dose: 'Take one tablet by mouth daily',
+                frequency_in_hours: 24,
+                number_of_required_doses: 30,
+                number_of_taken_doses: 5
+            }
         ]
     },
     {
@@ -74,8 +90,24 @@ const Treatment = [
         patient_id: 3,
         provider_id: 8,
         medications: [
-            { name: 'Metformin', strength: '500 mg' },
-            { name: 'Glipizide', strength: '5 mg' }
+            {
+                id: 1,
+                name: 'Metformin',
+                strength: '500 mg',
+                dose: '1000 mg (two tablets) orally three times a day with meals',
+                frequency_in_hours: 6,
+                number_of_required_doses: 60,
+                number_of_taken_doses: 12
+            },
+            {
+                id: 2,
+                name: 'Glipizide',
+                strength: '5 mg',
+                dose: 'Take one tablet orally before breakfast',
+                frequency_in_hours: 24,
+                number_of_required_doses: 30,
+                number_of_taken_doses: 6
+            }
         ]
     },
     {
@@ -89,8 +121,24 @@ const Treatment = [
         patient_id: 5,
         provider_id: 9,
         medications: [
-            { name: 'Albuterol Inhaler', strength: '90 µg/puff' },
-            { name: 'Budesonide + Formoterol', strength: '160/4.5 µg' }
+            {
+                id: 1,
+                name: 'Albuterol Inhaler',
+                strength: '90 µg/puff',
+                dose: '2 puffs as needed for symptoms',
+                frequency_in_hours: 1,
+                number_of_required_doses: 999,
+                number_of_taken_doses: 15
+            },
+            {
+                id: 2,
+                name: 'Budesonide + Formoterol',
+                strength: '160/4.5 µg',
+                dose: 'Inhale 2 inhalations twice daily',
+                frequency_in_hours: 12,
+                number_of_required_doses: 60,
+                number_of_taken_doses: 10
+            }
         ]
     },
     {
