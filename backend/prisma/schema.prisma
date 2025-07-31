@@ -70,7 +70,7 @@ model Medication {
 model Treatment {
   id          Int          @id @default(autoincrement())
   overview    String
-  medications Json?
+  medications Json
   patient     Patient      @relation(fields: [patient_id], references: [id])
   patient_id  Int          @unique
   provider    Provider     @relation(fields: [provider_id], references: [id])

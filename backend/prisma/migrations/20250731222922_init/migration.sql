@@ -41,7 +41,7 @@ CREATE TABLE "Medication" (
     "time_of_last_dose" TIMESTAMP(3),
     "time_of_next_dose" TIMESTAMP(3),
     "number_of_required_doses" INTEGER,
-    "number_of_taken_doses" INTEGER,
+    "number_of_taken_doses" INTEGER NOT NULL DEFAULT 0,
     "frequency_in_hours" INTEGER,
     "dose" TEXT,
 
@@ -52,7 +52,7 @@ CREATE TABLE "Medication" (
 CREATE TABLE "Treatment" (
     "id" SERIAL NOT NULL,
     "overview" TEXT NOT NULL,
-    "medications" JSONB,
+    "medications" JSONB NOT NULL,
     "patient_id" INTEGER NOT NULL,
     "provider_id" INTEGER NOT NULL,
 

@@ -15,7 +15,6 @@ export default function ViewTreatmentPlanModal({ patient, onHide, show }) {
         MEDICATION_NAME: "Medication Name",
         MEDICATION_STRENGTH: "Medication Strength",
         MEDICATION_REQUIRED_DOSES: "Required Doses",
-        MEDICATION_TAKEN_DOSES: "Taken Doses",
         MEDICATION_FREQUENCY: "Frequency of Doses",
         MEDICATION_DOSE: "Medication Dose"
     }
@@ -31,7 +30,6 @@ export default function ViewTreatmentPlanModal({ patient, onHide, show }) {
     }, []);
 
     function updateMedicationField(e, id) {
-        console.log(id)
         switch (e.target.placeholder) {
             case medicationFields.MEDICATION_NAME:
                 setMedications(prev =>
@@ -51,13 +49,6 @@ export default function ViewTreatmentPlanModal({ patient, onHide, show }) {
                 setMedications(prev =>
                     prev.map(med =>
                         med.id === id ? { ...med, number_of_required_doses: e.target.value } : med
-                    ));
-                break;
-
-            case medicationFields.MEDICATION_TAKEN_DOSES:
-                setMedications(prev =>
-                    prev.map(med =>
-                        med.id === id ? { ...med, number_of_taken_doses: e.target.value } : med
                     ));
                 break;
 
@@ -135,11 +126,6 @@ export default function ViewTreatmentPlanModal({ patient, onHide, show }) {
                                     <div className="form-floating m-2">
                                         <input type="text" className="rounded-2 form-control" value={medication.number_of_required_doses} onChange={(e) => updateMedicationField(e, medication.id)} placeholder={medicationFields.MEDICATION_REQUIRED_DOSES} required />
                                         <label htmlFor="floatingInput">Required Doses</label>
-                                    </div>
-
-                                    <div className="form-floating m-2">
-                                        <input type="text" className="rounded-2 form-control" value={medication.number_of_taken_doses} onChange={(e) => updateMedicationField(e, medication.id)} placeholder={medicationFields.MEDICATION_TAKEN_DOSES} required />
-                                        <label htmlFor="floatingInput">Taken Doses</label>
                                     </div>
 
                                     <div className="form-floating m-2">
