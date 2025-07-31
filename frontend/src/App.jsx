@@ -18,7 +18,7 @@ function App() {
 
     return (
         <BrowserRouter>
-            <nav className="navbar navbar-expand-lg bg-body-tertiary position-fixed container-fluid">
+            <nav className="navbar navbar-expand-lg bg-body-tertiary position-fixed container-fluid pb-1">
                 <div className="container-fluid">
                     <Link className="navbar-brand" to={user ? "/dashboard" : "/login"}>MediScan</Link>
                     {

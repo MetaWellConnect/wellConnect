@@ -25,7 +25,7 @@ function ProviderDashboardPage() {
 
     return (
         <>
-            <div className="container text-left justify-content-left">
+            <div className="container text-left justify-content-left pt-5">
                 <h1>Welcome {provider.user.first_name}!</h1>
 
                 <div className="row d-flex flex-wrap">

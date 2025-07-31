@@ -25,7 +25,7 @@ function PatientDashboardPage() {
     }
 
     return (
-        <div className="container text-left justify-content-left">
+        <div className="container text-left justify-content-left pt-5">
             <h1>Welcome {patient.user.first_name}!</h1>
             <h2>Prescriptions</h2>
 

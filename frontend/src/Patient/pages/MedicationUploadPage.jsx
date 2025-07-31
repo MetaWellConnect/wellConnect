@@ -10,7 +10,7 @@ function MedicationUploadPage() {
     const [imgSrc, setImgSrc] = useState(null);
 
     return (
-        <div className="container text-left justify-content-left">
+        <div className="container text-left justify-content-left pt-5">
             <h1>Medication Upload</h1>
             <h2>Take a photo of your medication</h2>
 
