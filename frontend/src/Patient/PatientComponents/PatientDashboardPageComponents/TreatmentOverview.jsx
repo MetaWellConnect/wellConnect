@@ -22,6 +22,10 @@ function TreatmentOverview({ id }) {
         <div className="bg-body-secondary rounded-3 p-3 my-3">
             <h2>Treatment Overview</h2>
             <p>{treatment?.overview || "No Treatment Assigned"}</p>
+            <h2>Assigned Prescriptions</h2>
+            {treatment && treatment.medications.map((med, index) =>
+                <p key={index}>{med.name}</p>
+            )}
         </div>
     );
 }
