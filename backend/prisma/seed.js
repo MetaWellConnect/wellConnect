@@ -55,34 +55,49 @@ const Appointment = require("./appointmentSeed");
 /* ----------  TREATMENT  ---------- */
 const Treatment = [
     {
-        overview: 'Hypertension management plan',
+        overview: 'Comprehensive hypertension management plan, including lifestyle modifications and medication therapy',
         patient_id: 1,
         provider_id: 7,
+        medications: [
+            { name: 'Lisinopril', strength: '10 mg' },
+            { name: 'Amlodipine', strength: '5 mg' }
+        ]
     },
     {
-        overview: 'General wellness assessment',
+        overview: 'General wellness assessment and preventive care plan, including routine check-ups and screenings',
         patient_id: 2,
         provider_id: 7,
+        medications: []
     },
     {
-        overview: 'Type 2 diabetes initial regimen',
+        overview: 'Initial treatment regimen for type 2 diabetes, including medication therapy and lifestyle modifications',
         patient_id: 3,
         provider_id: 8,
+        medications: [
+            { name: 'Metformin', strength: '500 mg' },
+            { name: 'Glipizide', strength: '5 mg' }
+        ]
     },
     {
-        overview: 'Weight management counseling',
+        overview: 'Personalized weight management counseling and support plan, including nutrition and exercise guidance',
         patient_id: 4,
         provider_id: 8,
+        medications: []
     },
     {
-        overview: 'Asthma control & education',
+        overview: 'Comprehensive asthma control and education plan, including medication therapy and lifestyle modifications',
         patient_id: 5,
         provider_id: 9,
+        medications: [
+            { name: 'Albuterol Inhaler', strength: '90 µg/puff' },
+            { name: 'Budesonide + Formoterol', strength: '160/4.5 µg' }
+        ]
     },
     {
-        overview: 'Seasonal allergies treatment',
+        overview: 'Treatment plan for seasonal allergies, including medication therapy and lifestyle modifications',
         patient_id: 6,
         provider_id: 9,
+        medications: []
     },
 ];
 
@@ -96,7 +111,6 @@ const Medication = [
     dose: '10 mg orally once daily',
     photo_url: 'https://picsum.photos/seed/lisinopril/200/200',
     patient_id: 1,
-    treatment_id: 1,
     approved: true,
     time_of_last_dose: new Date('2025-07-15T14:00:00Z'),
     time_of_next_dose: new Date('2025-07-16T02:00:00Z'),
@@ -110,7 +124,6 @@ const Medication = [
     dose: 'Take one tablet by mouth daily',
     photo_url: 'https://picsum.photos/seed/amlodipine/200/200',
     patient_id: 1,
-    treatment_id: 1,
     approved: null,
     time_of_last_dose: new Date('2025-07-15T14:00:00Z'),
     time_of_next_dose: new Date('2025-07-16T02:00:00Z'),
@@ -126,7 +139,6 @@ const Medication = [
     dose: '1000 mg (two tablets) orally three times a day with meals',
     photo_url: 'https://picsum.photos/seed/metformin/200/200',
     patient_id: 3,
-    treatment_id: 3,
     approved: null,
     time_of_last_dose: new Date('2025-07-15T14:00:00Z'),
     time_of_next_dose: new Date('2025-07-15T20:00:00Z'),
@@ -140,7 +152,6 @@ const Medication = [
     dose: 'Take one tablet orally before breakfast',
     photo_url: 'https://picsum.photos/seed/glipizide/200/200',
     patient_id: 3,
-    treatment_id: 3,
     approved: false,
     time_of_last_dose: new Date('2025-07-15T14:00:00Z'),
     time_of_next_dose: new Date('2025-07-16T02:00:00Z'),
@@ -156,7 +167,6 @@ const Medication = [
     dose: '2 puffs as needed for symptoms',
     photo_url: 'https://picsum.photos/seed/albuterol/200/200',
     patient_id: 5,
-    treatment_id: 5,
     approved: true,
     time_of_last_dose: new Date('2025-07-15T14:00:00Z'),
     time_of_next_dose: new Date('2025-07-15T20:00:00Z'),
@@ -170,7 +180,6 @@ const Medication = [
     dose: 'Inhale 2 inhalations twice daily',
     photo_url: 'https://picsum.photos/seed/budesonide/200/200',
     patient_id: 5,
-    treatment_id: 5,
     approved: true,
     time_of_last_dose: new Date('2025-07-15T14:00:00Z'),
     time_of_next_dose: new Date('2025-07-16T02:00:00Z'),

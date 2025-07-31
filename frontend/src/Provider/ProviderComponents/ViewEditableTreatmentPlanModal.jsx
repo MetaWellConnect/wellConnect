@@ -20,7 +20,7 @@ export default function ViewTreatmentPlanModal({ patient, onHide, show }) {
     useEffect(() => {
         (async () => {
             const treatmentResponse = await API.getPatientTreatment(patient.id);
-            setMedications([...treatmentResponse.medications]);
+            setMedications(treatmentResponse.medications);
             setTreatmentOverview(treatmentResponse.overview);
 
             setIsLoading(false);
@@ -73,8 +73,13 @@ export default function ViewTreatmentPlanModal({ patient, onHide, show }) {
         }
     }
 
-    function handleTreatmentPlanEditSubmit() {
-
+    async function handleTreatmentPlanEditSubmit(event) {
+        try {
+            event.preventDefault();
+            await API.putTreatmentPlan(patient.id, treatmentOverview, medications);
+        } catch(e) {
+            console.error(e);
+        }
     }
 
     if (isLoading) {
@@ -90,7 +95,7 @@ export default function ViewTreatmentPlanModal({ patient, onHide, show }) {
             </Modal.Header>
 
             <Modal.Body>
-                <form id="treatment-edit-form" onSubmit={handleTreatmentPlanEditSubmit}>
+                <form id="treatment-edit-form" onSubmit={(event) => handleTreatmentPlanEditSubmit(event)}>
                     <h3>Overview</h3>
                     <textarea form="treatment-edit-form" type="text" placeholder="Treatment Overview" className="form-control p-3 my-3" value={treatmentOverview} onChange={(e) => setTreatmentOverview(e.target.value)} required></textarea>
 

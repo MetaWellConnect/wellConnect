@@ -333,3 +333,13 @@ export async function putMedication(patientId, medicationId, medicationInfo) {
     const response = await fetchWithErrorHandling(`${API_URL}/patients/${patientId}/medications/${medicationId}`, getHttpOptions("PUT", medicationInfo));
     return (await response.json());
 }
+
+export async function putTreatmentPlan(patientId, treatmentOverview, medications) {
+    const treatmentInformation = {
+        overview: treatmentOverview,
+        medications: medications
+    }
+
+    const response = await fetchWithErrorHandling(`${API_URL}/patients/${patientId}/treatment`, getHttpOptions("PUT", treatmentInformation));
+    return (await response.json());
+}

@@ -58,8 +58,6 @@ model Medication {
   photo_url                String
   patient                  Patient   @relation(fields: [patient_id], references: [id])
   patient_id               Int
-  treatment                Treatment @relation(fields: [treatment_id], references: [id])
-  treatment_id             Int
   approved                 Boolean?
   time_of_last_dose        DateTime?
   time_of_next_dose        DateTime?
@@ -72,7 +70,7 @@ model Medication {
 model Treatment {
   id          Int          @id @default(autoincrement())
   overview    String
-  medications Medication[]
+  medications Json?
   patient     Patient      @relation(fields: [patient_id], references: [id])
   patient_id  Int          @unique
   provider    Provider     @relation(fields: [provider_id], references: [id])
