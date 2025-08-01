@@ -137,7 +137,7 @@ const Medication = [
   {
     name: 'Glipizide',
     strength: '5 mg',
-    dose: 'Take one tablet orally before breakfast',
+    dose: '5 mg',
     photo_url: 'https://picsum.photos/seed/glipizide/200/200',
     patient_id: 3,
     treatment_id: 3,
@@ -167,7 +167,7 @@ const Medication = [
   {
     name: 'Budesonide + Formoterol',
     strength: '160/4.5 µg',
-    dose: 'Inhale 2 inhalations twice daily',
+    dose: '320/4.5 µg',
     photo_url: 'https://picsum.photos/seed/budesonide/200/200',
     patient_id: 5,
     treatment_id: 5,
