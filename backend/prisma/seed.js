@@ -55,34 +55,97 @@ const Appointment = require("./appointmentSeed");
 /* ----------  TREATMENT  ---------- */
 const Treatment = [
     {
-        overview: 'Hypertension management plan',
+        overview: 'Comprehensive hypertension management plan, including lifestyle modifications and medication therapy',
         patient_id: 1,
         provider_id: 7,
+        medications: [
+            {
+                id: 1,
+                name: 'Lisinopril',
+                strength: '10 mg',
+                dose: '10 mg orally once daily',
+                frequency_in_hours: 24,
+                number_of_required_doses: 30,
+                number_of_taken_doses: 5
+            },
+            {
+                id: 2,
+                name: 'Amlodipine',
+                strength: '5 mg',
+                dose: 'Take one tablet by mouth daily',
+                frequency_in_hours: 24,
+                number_of_required_doses: 30,
+                number_of_taken_doses: 5
+            }
+        ]
     },
     {
-        overview: 'General wellness assessment',
+        overview: 'General wellness assessment and preventive care plan, including routine check-ups and screenings',
         patient_id: 2,
         provider_id: 7,
+        medications: []
     },
     {
-        overview: 'Type 2 diabetes initial regimen',
+        overview: 'Initial treatment regimen for type 2 diabetes, including medication therapy and lifestyle modifications',
         patient_id: 3,
         provider_id: 8,
+        medications: [
+            {
+                id: 1,
+                name: 'Metformin',
+                strength: '500 mg',
+                dose: '1000 mg (two tablets) orally three times a day with meals',
+                frequency_in_hours: 6,
+                number_of_required_doses: 60,
+                number_of_taken_doses: 12
+            },
+            {
+                id: 2,
+                name: 'Glipizide',
+                strength: '5 mg',
+                dose: 'Take one tablet orally before breakfast',
+                frequency_in_hours: 24,
+                number_of_required_doses: 30,
+                number_of_taken_doses: 6
+            }
+        ]
     },
     {
-        overview: 'Weight management counseling',
+        overview: 'Personalized weight management counseling and support plan, including nutrition and exercise guidance',
         patient_id: 4,
         provider_id: 8,
+        medications: []
     },
     {
-        overview: 'Asthma control & education',
+        overview: 'Comprehensive asthma control and education plan, including medication therapy and lifestyle modifications',
         patient_id: 5,
         provider_id: 9,
+        medications: [
+            {
+                id: 1,
+                name: 'Albuterol Inhaler',
+                strength: '90 µg/puff',
+                dose: '2 puffs as needed for symptoms',
+                frequency_in_hours: 1,
+                number_of_required_doses: 999,
+                number_of_taken_doses: 15
+            },
+            {
+                id: 2,
+                name: 'Budesonide + Formoterol',
+                strength: '160/4.5 µg',
+                dose: 'Inhale 2 inhalations twice daily',
+                frequency_in_hours: 12,
+                number_of_required_doses: 60,
+                number_of_taken_doses: 10
+            }
+        ]
     },
     {
-        overview: 'Seasonal allergies treatment',
+        overview: 'Treatment plan for seasonal allergies, including medication therapy and lifestyle modifications',
         patient_id: 6,
         provider_id: 9,
+        medications: []
     },
 ];
 
@@ -94,9 +157,8 @@ const Medication = [
     name: 'Lisinopril',
     strength: '10 mg',
     dose: '10 mg orally once daily',
-    photo_url: 'https://picsum.photos/seed/lisinopril/200/200',
+    photo_url: 'https://picsum.photos/seed/lisinopril/636/477',
     patient_id: 1,
-    treatment_id: 1,
     approved: true,
     time_of_last_dose: new Date('2025-07-15T14:00:00Z'),
     time_of_next_dose: new Date('2025-07-16T02:00:00Z'),
@@ -108,9 +170,8 @@ const Medication = [
     name: 'Amlodipine',
     strength: '5 mg',
     dose: 'Take one tablet by mouth daily',
-    photo_url: 'https://picsum.photos/seed/amlodipine/200/200',
+    photo_url: 'https://picsum.photos/seed/amlodipine/636/477',
     patient_id: 1,
-    treatment_id: 1,
     approved: null,
     time_of_last_dose: new Date('2025-07-15T14:00:00Z'),
     time_of_next_dose: new Date('2025-07-16T02:00:00Z'),
@@ -124,9 +185,8 @@ const Medication = [
     name: 'Metformin',
     strength: '500 mg',
     dose: '1000 mg (two tablets) orally three times a day with meals',
-    photo_url: 'https://picsum.photos/seed/metformin/200/200',
+    photo_url: 'https://picsum.photos/seed/metformin/636/477',
     patient_id: 3,
-    treatment_id: 3,
     approved: null,
     time_of_last_dose: new Date('2025-07-15T14:00:00Z'),
     time_of_next_dose: new Date('2025-07-15T20:00:00Z'),
@@ -140,7 +200,6 @@ const Medication = [
     dose: '5 mg',
     photo_url: 'https://picsum.photos/seed/glipizide/200/200',
     patient_id: 3,
-    treatment_id: 3,
     approved: false,
     time_of_last_dose: new Date('2025-07-15T14:00:00Z'),
     time_of_next_dose: new Date('2025-07-16T02:00:00Z'),
@@ -154,9 +213,8 @@ const Medication = [
     name: 'Albuterol Inhaler',
     strength: '90 µg/puff',
     dose: '2 puffs as needed for symptoms',
-    photo_url: 'https://picsum.photos/seed/albuterol/200/200',
+    photo_url: 'https://picsum.photos/seed/albuterol/636/477',
     patient_id: 5,
-    treatment_id: 5,
     approved: true,
     time_of_last_dose: new Date('2025-07-15T14:00:00Z'),
     time_of_next_dose: new Date('2025-07-15T20:00:00Z'),
@@ -167,10 +225,9 @@ const Medication = [
   {
     name: 'Budesonide + Formoterol',
     strength: '160/4.5 µg',
+    photo_url: 'https://picsum.photos/seed/budesonide/636/477',
     dose: '320/4.5 µg',
-    photo_url: 'https://picsum.photos/seed/budesonide/200/200',
     patient_id: 5,
-    treatment_id: 5,
     approved: true,
     time_of_last_dose: new Date('2025-07-15T14:00:00Z'),
     time_of_next_dose: new Date('2025-07-16T02:00:00Z'),

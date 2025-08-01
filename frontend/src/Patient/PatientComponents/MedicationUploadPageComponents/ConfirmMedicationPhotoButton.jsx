@@ -4,8 +4,8 @@ import * as API from '../../../api';
 import { useState } from 'react';
 
 function ConfirmMedicationPhotoButton({ medicationInformation, imgSrc }) {
-    const [isFailureAlertShowing, setIsFailureAlertShowing] = useState(false);
     const [isSuccessAlertShowing, setIsSuccessAlertShowing] = useState(false);
+    const [isFailureAlertShowing, setIsFailureAlertShowing] = useState(false);
     const [errorMsg, setErrorMsg] = useState("");
     const { user } = useAuth();
 
@@ -37,7 +37,7 @@ function ConfirmMedicationPhotoButton({ medicationInformation, imgSrc }) {
                 <strong>Medication Uploaded Successfully!</strong>
             </Alert>
             <Alert show={isFailureAlertShowing} variant='danger' onClose={() => setIsFailureAlertShowing(false)} dismissible className='position-fixed top-0 translate-middle-x mt-3'>
-                <strong>Medication Uploaded Failed! Error: {errorMsg}</strong>
+                <strong>Medication Upload Failed! Error: {errorMsg}</strong>
             </Alert>
         </>
     );

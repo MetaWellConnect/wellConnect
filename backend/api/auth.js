@@ -45,6 +45,7 @@ async function registerUser(user) {
                 treatment: {
                     create: {
                         overview: "You have not been assigned a treatment plan yet!",
+                        medications: [],
                         provider: { connect: { id: provider.id } }
                     }
                 }
@@ -57,7 +58,6 @@ async function registerUser(user) {
                 treatment: true
             }
         });
-        console.log(treatment)
 
         await prisma.patient.update({
             where: { id: patient.id },

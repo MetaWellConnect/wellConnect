@@ -257,21 +257,17 @@ server.get('/patients/:patientId/medications/:medicationId', requireAuth, async 
 
 server.get('/providers/:providerId/medicationsToApprove', requireAuth, async (req, res, next) => {
     const providerId = Number(req.params.providerId);
-    const treatments = await prisma.provider.findUnique({
-        where: { id: providerId },
-        include: {
-            treatments: {
-                include: {
-                    medications: true // Includes patient_id
-                }
-            }
-        }
+    const patients = await prisma.patient.findMany({
+        where: { provider_id: providerId },
+        include: { medications: true }
     });
 
     let medications = [];
-    treatments.treatments.forEach((treatment) => {
-        medications = [...medications, ...treatment.medications]
-    });
+    patients.forEach(patient =>
+        patient.medications.forEach(med =>
+            medications.push(med)
+        )
+    )
 
     // Medications that have a null approved field have yet to be examined by the provider
     medications = medications.filter((medication) => medication.approved === null);
@@ -295,8 +291,6 @@ server.post('/patients/:patientId/medications', [
                 id: patient_id
             }
         });
-        const treatment_id = patient.treatment_id;
-
 
         const bucket = 'medication-images';
         const extension = path.extname(req.file.originalname);
@@ -309,7 +303,6 @@ server.post('/patients/:patientId/medications', [
             name,
             strength,
             patient_id,
-            treatment_id,
             photo_url: `http://localhost:9000/${bucket}/${key}`
         }
 
@@ -371,11 +364,7 @@ server.get('/patients/:patientId/treatment', requireAuth, async (req, res, next)
     const patient = await prisma.patient.findUnique({
         where: { id: patientId },
         include: {
-            treatment: {
-                include: {
-                    medications: true
-                }
-            }
+            treatment: true
         }
     });
 
@@ -391,11 +380,7 @@ server.put('/patients/:patientId/treatment', requireAuth, async (req, res, next)
     const patient = await prisma.patient.findUnique({
         where: { id: patientId },
         include: {
-            treatment: {
-                include: {
-                    medications: true
-                }
-            }
+            treatment: true
         }
     });
 

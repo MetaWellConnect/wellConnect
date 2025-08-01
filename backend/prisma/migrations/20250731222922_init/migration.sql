@@ -18,6 +18,7 @@ CREATE TABLE "Patient" (
     "id" INTEGER NOT NULL,
     "provider_id" INTEGER,
     "treatment_id" INTEGER,
+    "timezone" TEXT NOT NULL DEFAULT 'America/Los_Angeles',
 
     CONSTRAINT "Patient_pkey" PRIMARY KEY ("id")
 );
@@ -36,12 +37,11 @@ CREATE TABLE "Medication" (
     "strength" TEXT NOT NULL,
     "photo_url" TEXT NOT NULL,
     "patient_id" INTEGER NOT NULL,
-    "treatment_id" INTEGER NOT NULL,
     "approved" BOOLEAN,
     "time_of_last_dose" TIMESTAMP(3),
     "time_of_next_dose" TIMESTAMP(3),
     "number_of_required_doses" INTEGER,
-    "number_of_taken_doses" INTEGER,
+    "number_of_taken_doses" INTEGER NOT NULL DEFAULT 0,
     "frequency_in_hours" INTEGER,
     "dose" TEXT,
 
@@ -52,6 +52,7 @@ CREATE TABLE "Medication" (
 CREATE TABLE "Treatment" (
     "id" SERIAL NOT NULL,
     "overview" TEXT NOT NULL,
+    "medications" JSONB NOT NULL,
     "patient_id" INTEGER NOT NULL,
     "provider_id" INTEGER NOT NULL,
 
@@ -86,6 +87,20 @@ CREATE TABLE "ProviderPreferences" (
     CONSTRAINT "ProviderPreferences_pkey" PRIMARY KEY ("id")
 );
 
+-- CreateTable
+CREATE TABLE "SentReminders" (
+    "id" SERIAL NOT NULL,
+    "sent_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "provider_id" INTEGER NOT NULL,
+    "provider_email" TEXT NOT NULL,
+    "patient_first_name" TEXT NOT NULL,
+    "patient_last_name" TEXT NOT NULL,
+    "medication_name" TEXT NOT NULL,
+    "medication_dose" TEXT NOT NULL,
+
+    CONSTRAINT "SentReminders_pkey" PRIMARY KEY ("id")
+);
+
 -- CreateIndex
 CREATE UNIQUE INDEX "User_email_key" ON "User"("email");
 
@@ -106,9 +121,6 @@ ALTER TABLE "Provider" ADD CONSTRAINT "Provider_id_fkey" FOREIGN KEY ("id") REFE
 
 -- AddForeignKey
 ALTER TABLE "Medication" ADD CONSTRAINT "Medication_patient_id_fkey" FOREIGN KEY ("patient_id") REFERENCES "Patient"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
-
--- AddForeignKey
-ALTER TABLE "Medication" ADD CONSTRAINT "Medication_treatment_id_fkey" FOREIGN KEY ("treatment_id") REFERENCES "Treatment"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "Treatment" ADD CONSTRAINT "Treatment_patient_id_fkey" FOREIGN KEY ("patient_id") REFERENCES "Patient"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
