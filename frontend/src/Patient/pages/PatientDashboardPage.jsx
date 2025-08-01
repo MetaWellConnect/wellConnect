@@ -25,16 +25,16 @@ function PatientDashboardPage() {
     }
 
     return (
-        <div className="container text-left justify-content-left">
+        <div className="container text-left justify-content-left pt-5">
             <h1>Welcome {patient.user.first_name}!</h1>
             <h2>Prescriptions</h2>
 
             <div className="row d-flex flex-wrap">
-                <div className="col">
+                <div className="col-sm">
                     <ListOfMedications renderApprovalMedicationCard={false} id={patient.id} />
                 </div>
 
-                <div className="col">
+                <div className="col-sm">
                     <TreatmentOverview id={patient.id} />
 
                     <section className="navigation-buttons">
