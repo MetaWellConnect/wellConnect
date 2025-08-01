@@ -87,6 +87,18 @@ services:
       - REDIS_HOST=redis
       - REDIS_PORT=6379
 
+  bullboard:
+    image: nauverse/bull-board:latest
+    environment:
+      REDIS_URL: redis://redis:6379
+      BULL_VERSION: BULLMQ
+    ports:
+      - "3003:3000"
+    depends_on:
+      - redis
+    networks:
+      - mediscan-network
+
   minio:
       image: minio/minio:latest
       container_name: minio

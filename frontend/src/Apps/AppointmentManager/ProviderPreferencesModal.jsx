@@ -1,9 +1,13 @@
 import { useEffect, useState } from "react";
 import Modal from "react-bootstrap/Modal";
+import { Alert } from 'react-bootstrap';
 import * as API from "../../api";
 
 export default function ProviderPreferencesModal({ user, onHide, show }) {
     const formCss = "rounded-2 form-control";
+    const [isFailureAlertShowing, setIsFailureAlertShowing] = useState(false);
+    const [isSuccessAlertShowing, setIsSuccessAlertShowing] = useState(false);
+    const [errorMsg, setErrorMsg] = useState("");
     const [availableDays, setAvailableDays] = useState(["sun", "mon", "tue", "wed", "thu", "fri", "sat"]);
     const [appointmentLeadTimeMin, setAppointmentLeadTimeMin] = useState(120);
     const [futureAppointmentLimit, setFutureAppointmentLimit] = useState(30);
@@ -26,7 +30,17 @@ export default function ProviderPreferencesModal({ user, onHide, show }) {
             setEndHour(preferences.end_hour);
             setTimezone(preferences.timezone);
         })();
-    }, [show])
+    }, [show]);
+
+    function handleShowSuccessAlert() {
+        setIsSuccessAlertShowing(true);
+        setTimeout(() => setIsSuccessAlertShowing(false), 3000);
+    }
+
+    function handleShowFailureAlert() {
+        setIsFailureAlertShowing(true);
+        setTimeout(() => setIsFailureAlertShowing(false), 3000);
+    }
 
     async function handlePreferencesUpdate(e) {
         e.preventDefault();
@@ -37,15 +51,18 @@ export default function ProviderPreferencesModal({ user, onHide, show }) {
                 future_appointment_limit: futureAppointmentLimit,
                 max_appointments_per_day: maxAppointmentsPerDay,
                 min_buffer_minutes: minBufferMinutes,
-                available_days: availableDays,
+                available_days: availableDays.split(","),
                 start_hour: startHour,
                 timezone: timezone,
                 end_hour: endHour,
             }
             await API.postProviderPreferences(user.id, preferences);
             onHide();
+            handleShowSuccessAlert();
         } catch (e) {
+            setErrorMsg(e.message);
             console.error(e);
+            handleShowFailureAlert();
         }
     }
 

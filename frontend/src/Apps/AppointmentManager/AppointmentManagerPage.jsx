@@ -124,7 +124,7 @@ function AppointmentManagerPage() {
     const today = new Date();
 
     return (
-        <div className="container">
+        <div className="container pt-5">
             <h1>Appointment Manager</h1>
             <section className="appointment-suggestion-selector border-secondary border-1 rounded-3 d-flex align-items-center">
                 <div className="p-2">
